@@ -3,10 +3,13 @@
   "short_name": "Cancer Passport",
   "description": "Organize cancer screening history, survivorship context, and clinician-ready exports.",
   "start_url": "/",
+  "scope": "/",
+  "id": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait",
+  "categories": ["health", "medical", "productivity"],
   "icons": [
     {
       "src": "/icon.svg",

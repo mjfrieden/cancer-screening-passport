@@ -40,6 +40,11 @@ Use this checklist before sending a staging link to beta testers.
 
 ## Mobile Checks
 
+- [ ] PWA manifest is reachable.
+- [ ] Service worker is reachable.
+- [ ] Offline fallback page is reachable.
+- [ ] App can be added to iOS Home Screen.
+- [ ] App can be installed from Android Chrome.
 - [ ] iOS Safari layout works.
 - [ ] Android Chrome layout works.
 - [ ] Bottom navigation respects safe areas.

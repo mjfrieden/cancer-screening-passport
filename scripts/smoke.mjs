@@ -13,8 +13,24 @@ const checks = [
   },
   {
     path: '/site.webmanifest',
-    expect: body => JSON.parse(body).name === 'Cancer Prevention Passport',
+    expect: body => {
+      const manifest = JSON.parse(body);
+      return manifest.name === 'Cancer Prevention Passport' &&
+        manifest.display === 'standalone' &&
+        manifest.start_url === '/' &&
+        manifest.scope === '/';
+    },
     label: 'web manifest',
+  },
+  {
+    path: '/sw.js',
+    expect: body => body.includes('self.addEventListener') && body.includes('CACHE_NAME'),
+    label: 'service worker',
+  },
+  {
+    path: '/offline.html',
+    expect: body => body.includes('You are offline') && body.includes('Cancer Prevention Passport'),
+    label: 'offline page',
   },
   {
     path: '/legal/privacy.html',
