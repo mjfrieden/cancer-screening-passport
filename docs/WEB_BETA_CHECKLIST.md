@@ -12,6 +12,12 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] Staging domain is added to Firebase Auth authorized domains.
 - [ ] Firestore rules are deployed to staging.
 - [ ] CI is green on `main`.
+- [ ] GitHub `staging` environment variables are configured.
+- [ ] GitHub `staging` environment secrets for Google Workload Identity are configured.
+- [ ] Artifact Registry repository exists.
+- [ ] Cloud Run service account has deploy and Artifact Registry permissions.
+- [ ] `Deploy Firestore Rules` workflow has passed for staging.
+- [ ] `Deploy Web` workflow has passed for staging.
 
 ## App Configuration
 

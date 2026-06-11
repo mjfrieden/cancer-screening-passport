@@ -66,6 +66,48 @@ docker build \
 
 Cloud Run injects `PORT`; the server now honors that automatically.
 
+## GitHub Deployment Workflows
+
+Two manual workflows are available:
+
+- `Deploy Web`: builds the Docker image, pushes it to Artifact Registry, deploys to Cloud Run, then runs `npm run smoke` against the deployed URL.
+- `Deploy Firestore Rules`: runs Firestore emulator tests, then deploys `firestore.rules`.
+
+Create GitHub Environments named `staging` and `production`. Each environment needs these variables:
+
+```bash
+GCP_PROJECT_ID=...
+GCP_REGION=us-central1
+ARTIFACT_REGISTRY_REPOSITORY=...
+CLOUD_RUN_SERVICE=cancer-screening-passport
+FIREBASE_PROJECT_ID=...
+VITE_ENABLE_CLINICAL_SIMULATOR=false
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+VITE_FIREBASE_MEASUREMENT_ID=
+VITE_FIREBASE_FIRESTORE_DATABASE_ID=(default)
+```
+
+Each environment also needs these secrets for Google Workload Identity Federation:
+
+```bash
+GCP_WORKLOAD_IDENTITY_PROVIDER=...
+GCP_SERVICE_ACCOUNT=...
+```
+
+The deployment service account needs permission to:
+
+- push images to Artifact Registry,
+- deploy Cloud Run services,
+- read Cloud Run service metadata,
+- deploy Firebase Firestore rules.
+
+Production should use GitHub Environment protection rules before deployment is enabled.
+
 ## Smoke Test
 
 After deployment:

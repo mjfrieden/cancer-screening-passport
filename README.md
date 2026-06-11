@@ -26,6 +26,7 @@ The app runs at [http://localhost:3000](http://localhost:3000).
 npm run lint
 npm run build
 npm run audit
+npm run smoke
 npm run test:rules
 ```
 
