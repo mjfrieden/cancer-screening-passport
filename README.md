@@ -41,6 +41,8 @@ Copy `.firebaserc.example` to `.firebaserc` and replace the project IDs after cr
 
 See [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) before using this with real patients or submitting to app stores.
 
+For the first hosted beta, see [docs/WEB_BETA_DEPLOYMENT.md](docs/WEB_BETA_DEPLOYMENT.md) and [docs/WEB_BETA_CHECKLIST.md](docs/WEB_BETA_CHECKLIST.md).
+
 ## Beta Legal Pages
 
 - `/legal/privacy.html`
