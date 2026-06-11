@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import { UserProfile, ScreeningEvent, Recommendation } from '../types';
 import { QRCodeSVG } from 'qrcode.react';
-import { Download, FileJson, Share2, ShieldCheck, Zap, FileText, FileDown } from 'lucide-react';
+import { FileJson, Share2, ShieldCheck, Zap, FileText, FileDown, Loader2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { generateScreeningPDF } from '../lib/pdfGenerator';
 
 interface FHIRSharingProps {
   profile: UserProfile;
@@ -11,6 +11,8 @@ interface FHIRSharingProps {
 }
 
 export default function FHIRSharing({ profile, events, recommendations }: FHIRSharingProps) {
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+
   // Simple FHIR R4 Bundle Generator
   const generateFHIRBundle = () => {
     const bundle: any = {
@@ -77,6 +79,16 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
     downloadAnchorNode.remove();
   };
 
+  const downloadPdf = async () => {
+    setIsGeneratingPdf(true);
+    try {
+      const { generateScreeningPDF } = await import('../lib/pdfGenerator');
+      generateScreeningPDF(profile, recommendations, events);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div className="text-center space-y-2">
@@ -141,11 +153,12 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
 
         <button
           id="btn-generate-pdf-summary"
-          onClick={() => generateScreeningPDF(profile, recommendations, events)}
-          className="w-full sm:w-auto px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm shadow-blue-600/10 hover:shadow-md flex items-center justify-center gap-2 cursor-pointer shrink-0"
+          onClick={downloadPdf}
+          disabled={isGeneratingPdf}
+          className="w-full sm:w-auto px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm shadow-blue-600/10 hover:shadow-md flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:cursor-wait disabled:opacity-75"
         >
-          <FileDown className="w-4 h-4" />
-          <span>Save Physician PDF</span>
+          {isGeneratingPdf ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
+          <span>{isGeneratingPdf ? 'Preparing PDF' : 'Save Physician PDF'}</span>
         </button>
       </div>
 

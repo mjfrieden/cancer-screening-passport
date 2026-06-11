@@ -14,5 +14,20 @@ export default defineConfig(() => {
     server: {
       hmr: process.env.DISABLE_HMR !== 'true',
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return;
+            if (id.includes('/@firebase/') || id.includes('/firebase/')) return 'firebase';
+            if (id.includes('/recharts/') || id.includes('/d3-')) return 'charts';
+            if (id.includes('/jspdf/')) return 'jspdf';
+            if (id.includes('/html2canvas/')) return 'html2canvas';
+            if (id.includes('/dompurify/')) return 'dompurify';
+            if (id.includes('/qrcode.react/')) return 'qr-vendor';
+          },
+        },
+      },
+    },
   };
 });

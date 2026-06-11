@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
+import { Suspense, lazy, useState, useEffect } from 'react';
 import { useAuth, AuthProvider } from './hooks/useAuth';
 import { db, auth, signInWithGoogle, OperationType, handleFirestoreError } from './lib/firebase';
 import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { UserProfile, ScreeningEvent, Recommendation } from './types';
-import Dashboard from './components/Dashboard';
-import ProfileForm from './components/ProfileForm';
-import SurvivorshipForm from './components/SurvivorshipForm';
-import HealthyLiving from './components/HealthyLiving';
-import FHIRSharing from './components/FHIRSharing';
 import AddScreeningModal from './components/AddScreeningModal';
 import { Heart, LayoutDashboard, User as UserIcon, Share2, LogOut, Loader2, Plus, LogIn, Shield, Apple } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
+
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const ProfileForm = lazy(() => import('./components/ProfileForm'));
+const SurvivorshipForm = lazy(() => import('./components/SurvivorshipForm'));
+const HealthyLiving = lazy(() => import('./components/HealthyLiving'));
+const FHIRSharing = lazy(() => import('./components/FHIRSharing'));
 
 function AppContent() {
   const { user, loading: authLoading } = useAuth();
@@ -201,48 +202,50 @@ function AppContent() {
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto p-4 pt-8">
-        <AnimatePresence mode="wait">
-          {activeTab === 'dashboard' && (
-             <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-               <Dashboard recommendations={recommendations} events={events} profile={profile} />
-             </motion.div>
-           )}
-          {activeTab === 'profile' && (
-            <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <ProfileForm initialData={profile || undefined} onSave={handleSaveProfile} loading={loading} />
-            </motion.div>
-          )}
-          {activeTab === 'survivorship' && (
-            <motion.div key="survivorship" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <SurvivorshipForm 
-                initialData={profile?.survivorshipPlan} 
-                onSave={handleSaveSurvivorship} 
-                onRemove={handleRemoveSurvivorship}
-                loading={loading} 
-                recommendations={recommendations}
-                events={events}
-                onAddEvent={() => setIsModalOpen(true)}
-              />
-            </motion.div>
-          )}
-          {activeTab === 'lifestyle' && (
-            <motion.div key="lifestyle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <HealthyLiving recommendations={recommendations} />
-            </motion.div>
-          )}
-          {activeTab === 'share' && (
-             <motion.div key="share" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-               {profile ? (
-                 <FHIRSharing profile={profile} events={events} recommendations={recommendations} />
-               ) : (
-                 <div className="text-center py-12">
-                   <p className="text-gray-500">Complete your profile to enable sharing.</p>
-                   <button onClick={() => setActiveTab('profile')} className="mt-4 text-blue-600 font-bold underline">Go to Profile</button>
-                 </div>
-               )}
-             </motion.div>
-          )}
-        </AnimatePresence>
+        <Suspense fallback={<TabLoadingState />}>
+          <AnimatePresence mode="wait">
+            {activeTab === 'dashboard' && (
+               <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                 <Dashboard recommendations={recommendations} events={events} profile={profile} />
+               </motion.div>
+             )}
+            {activeTab === 'profile' && (
+              <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <ProfileForm initialData={profile || undefined} onSave={handleSaveProfile} loading={loading} />
+              </motion.div>
+            )}
+            {activeTab === 'survivorship' && (
+              <motion.div key="survivorship" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <SurvivorshipForm 
+                  initialData={profile?.survivorshipPlan} 
+                  onSave={handleSaveSurvivorship} 
+                  onRemove={handleRemoveSurvivorship}
+                  loading={loading} 
+                  recommendations={recommendations}
+                  events={events}
+                  onAddEvent={() => setIsModalOpen(true)}
+                />
+              </motion.div>
+            )}
+            {activeTab === 'lifestyle' && (
+              <motion.div key="lifestyle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <HealthyLiving recommendations={recommendations} />
+              </motion.div>
+            )}
+            {activeTab === 'share' && (
+               <motion.div key="share" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                 {profile ? (
+                   <FHIRSharing profile={profile} events={events} recommendations={recommendations} />
+                 ) : (
+                   <div className="text-center py-12">
+                     <p className="text-gray-500">Complete your profile to enable sharing.</p>
+                     <button onClick={() => setActiveTab('profile')} className="mt-4 text-blue-600 font-bold underline">Go to Profile</button>
+                   </div>
+                 )}
+               </motion.div>
+            )}
+          </AnimatePresence>
+        </Suspense>
       </main>
 
       {/* Floating Plus for adding record */}
@@ -277,6 +280,14 @@ function AppContent() {
           <LegalLinks compact />
         </div>
       </div>
+    </div>
+  );
+}
+
+function TabLoadingState() {
+  return (
+    <div className="flex min-h-[320px] items-center justify-center text-blue-600">
+      <Loader2 className="h-6 w-6 animate-spin" />
     </div>
   );
 }
