@@ -26,11 +26,16 @@ The app runs at [http://localhost:3000](http://localhost:3000).
 npm run lint
 npm run build
 npm run audit
+npm run test:rules
 ```
+
+`npm run test:rules` uses the Firebase Firestore emulator and requires Java locally. GitHub Actions installs Java automatically.
 
 ## Configuration
 
-Firebase client configuration currently lives in `firebase-applet-config.json`. For production, create a dedicated Firebase project and keep separate local, staging, and production configs.
+Copy `.env.example` to `.env.local` for local development and set the `VITE_FIREBASE_*` values for your Firebase environment. Use separate Firebase projects for local/staging/production before inviting beta users.
+
+Copy `.firebaserc.example` to `.firebaserc` and replace the project IDs after creating dedicated Firebase projects.
 
 ## Production Readiness
 

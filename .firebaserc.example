@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "dev": "cancer-passport-dev",
+    "staging": "cancer-passport-staging",
+    "production": "cancer-passport-production"
+  }
+}
