@@ -46,6 +46,8 @@ For the first hosted beta, see [docs/WEB_BETA_DEPLOYMENT.md](docs/WEB_BETA_DEPLO
 
 For installable browser beta behavior, see [docs/PWA_BETA.md](docs/PWA_BETA.md).
 
+For iOS/Android wrapper work, see [docs/CAPACITOR_NATIVE.md](docs/CAPACITOR_NATIVE.md).
+
 ## Beta Legal Pages
 
 - `/legal/privacy.html`

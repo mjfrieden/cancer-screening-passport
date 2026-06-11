@@ -51,6 +51,14 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] PDF download behavior is acceptable.
 - [ ] JSON download/share behavior is acceptable.
 
+## Native Shell Checks
+
+- [ ] `npm run cap:sync` completes.
+- [ ] iOS project opens in Xcode.
+- [ ] Android project opens in Android Studio.
+- [ ] Bundle/application ID is approved for store use.
+- [ ] Native Google sign-in behavior is tested.
+
 ## Product Safety
 
 - [ ] No "HIPAA-ready" claim unless compliance review supports it.

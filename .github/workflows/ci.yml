@@ -48,6 +48,9 @@ jobs:
           SMOKE_BASE_URL=http://127.0.0.1:3000 npm run smoke
           kill $(cat /tmp/cancer-passport.pid)
 
+      - name: Capacitor asset sync
+        run: npx cap sync
+
       - name: Audit dependencies
         run: npm run audit
 
