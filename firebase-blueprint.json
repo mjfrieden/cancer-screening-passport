@@ -1,0 +1,95 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User demographic and clinical risk factors",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "dob": { "type": "string", "format": "date" },
+        "sexAssignedAtBirth": { "type": "string", "enum": ["male", "female"] },
+        "genderIdentity": { "type": "string" },
+        "smokingHistory": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["never", "former", "current"] },
+            "packYears": { "type": "number" },
+            "quitDate": { "type": "string", "format": "date" }
+          }
+        },
+        "familyHistory": { "type": "array" },
+        "personalHistoryOfCancer": { "type": "boolean" },
+        "immunocompromised": { "type": "boolean" },
+        "cervixPresent": { "type": "boolean" },
+        "geneticMutations": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "dob", "sexAssignedAtBirth"]
+    },
+    "ScreeningEvent": {
+      "title": "Screening Event",
+      "description": "A completed cancer screening test record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["mammogram", "pap", "hpv", "colonoscopy", "fit", "ldct", "psa"] },
+        "date": { "type": "string", "format": "date" },
+        "result": { "type": "string" },
+        "provider": { "type": "string" },
+        "notes": { "type": "string" },
+        "isAbnormal": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["completed", "scheduled", "ordered"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "date", "status"]
+    },
+    "CervicalResult": {
+      "title": "Cervical Result Detail",
+      "description": "Detailed abnormal cervical screening results",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "screeningEventId": { "type": "string" },
+        "userId": { "type": "string" },
+        "cytology": { "type": "string" },
+        "hpvStatus": { "type": "string" },
+        "genotype1618": { "type": "boolean" },
+        "histology": { "type": "string" },
+        "procedureType": { "type": "string" }
+      }
+    },
+    "SurvivorshipPlan": {
+      "title": "Survivorship Plan",
+      "description": "Cancer history and survivorship surveillance plan",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "cancerType": { "type": "string" },
+        "diagnosisDate": { "type": "string", "format": "date" },
+        "stage": { "type": "string" },
+        "treatments": { "type": "array" },
+        "surveillanceNeeds": { "type": "array" }
+      }
+    }
+  },
+  "firestore": {
+    "user_profiles/{userId}": {
+      "schema": "UserProfile",
+      "description": "User demographic and risk data"
+    },
+    "screening_events/{eventId}": {
+      "schema": "ScreeningEvent",
+      "description": "List of screening records"
+    },
+    "cervical_results/{resultId}": {
+      "schema": "CervicalResult",
+      "description": "Detailed cervical abnormal results"
+    },
+    "survivorship_plans/{planId}": {
+      "schema": "SurvivorshipPlan",
+      "description": "Survivorship tracking"
+    }
+  }
+}

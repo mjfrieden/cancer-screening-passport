@@ -1,0 +1,13 @@
+{
+  "name": "Cancer Prevention Passport",
+  "description": "A secure, interoperable mobile health app for tracking cancer screenings, abnormal results, and survivorship surveillance with FHIR-based QR share capabilities.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "Health Data Interoperability",
+    "Clinical Guideline Engine",
+    "FHIR R4 Export",
+    "Secure Healthcare Wallet"
+  ]
+}
