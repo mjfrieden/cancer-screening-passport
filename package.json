@@ -11,8 +11,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "test": "vitest run",
-    "test:rules": "npx -y firebase-tools@13.13.3 emulators:exec --only firestore \"vitest run firestore.rules.emulator.ts\"",
+    "test": "vitest run src",
+    "test:rules": "npx -y firebase-tools@13.13.3 emulators:exec --only firestore \"vitest run firestore.rules.test.ts\"",
     "audit": "npm audit --audit-level=moderate"
   },
   "dependencies": {
