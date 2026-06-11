@@ -131,7 +131,7 @@ export default function SurvivorshipForm({
           <div>
             <h3 className="font-extrabold text-purple-900 text-sm sm:text-base tracking-tight">Configure Survivorship Surveillance</h3>
             <p className="text-xs text-purple-700 leading-relaxed mt-1 font-medium">
-              Specify your primary oncological history, diagnosis timeline, and therapeutic pathways. This prompts our guideline engine to output versioned, NCCN-consistent active surveillance tracking instructions.
+              Specify your primary cancer history, diagnosis timeline, and treatments. This helps generate survivorship reminders for clinician review.
             </p>
           </div>
         </div>
@@ -256,7 +256,7 @@ export default function SurvivorshipForm({
           <div className="space-y-1">
             <div className="text-[10px] font-bold uppercase tracking-widest text-purple-300 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-              <span>NCCN Clinical Survivorship Pathway</span>
+              <span>Survivorship Review Pathway</span>
             </div>
             <h2 className="text-2xl font-extrabold tracking-tight">
               {cancerLabelMapping[data.cancerType] || "Survivorship Program"}
@@ -298,7 +298,7 @@ export default function SurvivorshipForm({
           <div className="space-y-0.5">
             <h3 className="font-extrabold text-gray-900 text-base sm:text-lg tracking-tight">Survivorship Screening Completion Timeline</h3>
             <p className="text-xs text-gray-550 leading-relaxed font-medium">
-              Synchronized directly with your clinical records, checking and proving NCCN guideline compliance.
+              Based on the information you enter here; confirm intervals and records with your care team.
             </p>
           </div>
           {onAddEvent && (
@@ -433,10 +433,10 @@ export default function SurvivorshipForm({
       <div className="p-5 bg-purple-50/50 border border-purple-100 rounded-2xl space-y-2">
         <h4 className="text-xs font-bold text-purple-900 uppercase tracking-wider flex items-center gap-1.5">
           <Activity className="w-4 h-4 text-purple-600" />
-          <span>Clinical Disclaimer & NCCN Interoperability</span>
+          <span>Clinical Disclaimer</span>
         </h4>
         <p className="text-xs text-purple-800/80 leading-normal font-medium">
-          Surveillance pathways align with the National Comprehensive Cancer Network® (NCCN) Guidelines for Cancer Survivorship. This protocol assists with care co-ordination across survivorship teams and general practitioners. Always authenticate test selections in consultation with your primary oncology physicians.
+          Survivorship reminders are intended to support care conversations and may reference published guideline concepts. Always confirm tests, timing, symptoms, and follow-up plans with your oncology and primary care teams.
         </p>
       </div>
 

@@ -148,7 +148,7 @@ function AppContent() {
         <div className="space-y-2">
           <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Cancer Prevention Passport</h1>
           <p className="text-gray-500 font-medium leading-relaxed">
-            Your clinical history, versioned guidelines, and FHIR interoperability – all in your pocket.
+            Organize your screening history, prevention reminders, and clinician-ready summaries in one secure-feeling place.
           </p>
         </div>
 
@@ -165,15 +165,16 @@ function AppContent() {
         <div className="pt-8 grid grid-cols-2 gap-4">
           <div className="p-4 bg-gray-50 rounded-2xl text-left">
             <ShieldCheckIcon className="w-6 h-6 text-blue-600 mb-2" />
-            <div className="font-bold text-sm">HIPAA-Ready</div>
-            <div className="text-[10px] text-gray-500">Encrypted at rest and transit.</div>
+            <div className="font-bold text-sm">Private by Design</div>
+            <div className="text-[10px] text-gray-500">Built around signed-in patient access.</div>
           </div>
           <div className="p-4 bg-gray-50 rounded-2xl text-left">
             <WorkflowIcon className="w-6 h-6 text-teal-600 mb-2" />
-            <div className="font-bold text-sm">HL7 FHIR</div>
-            <div className="text-[10px] text-gray-500">Built for modern EMR systems.</div>
+            <div className="font-bold text-sm">Structured Export</div>
+            <div className="text-[10px] text-gray-500">Share a patient-held FHIR-style summary.</div>
           </div>
         </div>
+        <LegalLinks />
       </motion.div>
     </div>
   );
@@ -271,6 +272,26 @@ function AppContent() {
           <NavButton active={activeTab === 'share'} onClick={() => setActiveTab('share')} icon={Share2} label="Share" />
         </div>
       </nav>
+      <div className="fixed bottom-[82px] left-0 right-0 z-20 pointer-events-none">
+        <div className="max-w-2xl mx-auto px-4 pointer-events-auto">
+          <LegalLinks compact />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LegalLinks({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={cn(
+      "flex items-center justify-center gap-3 text-[10px] text-gray-400",
+      compact ? "bg-white/80 backdrop-blur-sm rounded-full py-1.5 shadow-sm border border-gray-100" : "pt-2"
+    )}>
+      <a className="hover:text-blue-600" href="/legal/privacy.html" target="_blank" rel="noreferrer">Privacy</a>
+      <span aria-hidden="true">|</span>
+      <a className="hover:text-blue-600" href="/legal/terms.html" target="_blank" rel="noreferrer">Terms</a>
+      <span aria-hidden="true">|</span>
+      <a className="hover:text-blue-600" href="/legal/medical-disclaimer.html" target="_blank" rel="noreferrer">Medical Disclaimer</a>
     </div>
   );
 }

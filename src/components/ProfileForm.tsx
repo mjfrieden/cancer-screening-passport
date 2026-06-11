@@ -139,6 +139,7 @@ interface ProfileFormProps {
 }
 
 export default function ProfileForm({ initialData, onSave, loading }: ProfileFormProps) {
+  const enableClinicalSimulator = import.meta.env.VITE_ENABLE_CLINICAL_SIMULATOR === 'true';
   const [formData, setFormData] = useState<Partial<UserProfile>>(initialData || {
     sexAssignedAtBirth: 'female',
     smokingHistory: { status: 'never', packYears: 0 },
@@ -170,7 +171,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 pb-32">
-      {/* 🔬 Clinical Verification & Preset Simulator */}
+      {enableClinicalSimulator && (
       <div className="bg-gradient-to-r from-blue-50/70 to-purple-50/70 border border-blue-100/60 p-5 rounded-2xl space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-blue-800">
@@ -236,6 +237,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
           )}
         </AnimatePresence>
       </div>
+      )}
       <section className="space-y-4">
         <div className="flex items-center gap-2 text-blue-600 mb-2">
           <User className="w-5 h-5" />
@@ -359,7 +361,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
           <div className="flex items-start gap-3 p-4 bg-amber-50 rounded-xl border border-amber-100">
             <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
             <p className="text-[11px] text-amber-800 leading-normal">
-              We use these clinical factors to determine which USPSTF guidelines apply to you. Your data is encrypted and only accessible by you.
+              These factors help tailor guideline-inspired reminders. Confirm all screening decisions with your clinician.
             </p>
           </div>
         </div>

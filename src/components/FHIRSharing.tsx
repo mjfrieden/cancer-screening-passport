@@ -80,8 +80,8 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
   return (
     <div className="space-y-8">
       <div className="text-center space-y-2">
-        <h3 className="text-2xl font-bold text-gray-900">FHIR Health Passport</h3>
-        <p className="text-sm text-gray-500">Share your structured screening history with clinicians via QR or FHIR JSON.</p>
+        <h3 className="text-2xl font-bold text-gray-900">Structured Health Passport</h3>
+        <p className="text-sm text-gray-500">Share a patient-held screening summary with clinicians via QR or FHIR-style JSON.</p>
       </div>
 
       <motion.div
@@ -99,10 +99,10 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
         </div>
         <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1 rounded-full text-xs font-bold mb-4">
           <ShieldCheck className="w-4 h-4" />
-          HIPAA-READY PAYLOAD
+          PATIENT-HELD EXPORT
         </div>
         <p className="text-[10px] text-center text-gray-400 max-w-[200px]">
-          Clinicians can scan this to import your history into FHIR-compatible EMRs (Epic, Cerner, etc.)
+          Clinicians can review this structured summary during intake or care planning.
         </p>
       </motion.div>
 
@@ -134,7 +134,7 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
               Preparing for a Primary Care Visit?
             </h4>
             <p className="text-xs text-gray-500 leading-normal mt-1 max-w-lg">
-              Download a consolidated, physician-friendly clinical summary PDF. Includes your age and demographic details, documented historical procedures, and upcoming USPSTF/NCCN preventative due dates.
+              Download a consolidated clinician-friendly summary PDF. Includes demographic details, documented screening procedures, and guideline-inspired follow-up dates for shared review.
             </p>
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
           <h4 className="font-bold">Interoperability Pro-Tip</h4>
         </div>
         <p className="text-sm leading-relaxed text-blue-50/90">
-          This QR code uses the clinical HL7 FHIR R4 standard. When you visit a new clinic, show this screen to the registration desk to expedite your preventive care intake.
+          This QR code contains a compact patient-held summary. During a clinic visit, show it to your care team as a conversation aid, not as a substitute for official medical records.
         </p>
       </div>
     </div>

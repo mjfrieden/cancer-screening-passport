@@ -36,6 +36,12 @@ Firebase client configuration currently lives in `firebase-applet-config.json`. 
 
 See [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) before using this with real patients or submitting to app stores.
 
+## Beta Legal Pages
+
+- `/legal/privacy.html`
+- `/legal/terms.html`
+- `/legal/medical-disclaimer.html`
+
 ## Important Medical Disclaimer
 
 This project is not a medical device and does not replace care from a licensed clinician. Recommendation logic must be clinically validated, legally reviewed, and backed by traceable guideline sources before public clinical use.

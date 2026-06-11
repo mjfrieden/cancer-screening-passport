@@ -130,7 +130,7 @@ export function generateScreeningPDF(
     pdfDoc.setFontSize(8);
     pdfDoc.setTextColor(160, 174, 192);
     pdfDoc.text(
-      'Cancer Prevention Passport | Patient Clinician Care Copy (NCCN & USPSTF Compliant)',
+      'Cancer Prevention Passport | Patient Clinician Review Copy',
       marginX,
       pageHeight - 10
     );
@@ -439,7 +439,7 @@ export function generateScreeningPDF(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(120, 130, 145);
-  const disclaimerText = 'This screening plan corresponds with consolidated preventive pathways compiled from the US Preventive Services Task Force (USPSTF), National Comprehensive Cancer Network (NCCN), and ASCCP guidelines. It is generated to guide shared patient-doc dialogue and cannot override manual clinical assessment. Discuss all interval changes, symptoms, and familial genomic traits with your primary practitioner before modifying test intervals.';
+  const disclaimerText = 'This screening plan is a patient-held summary generated from profile and screening history. It may reference published guideline concepts, but it is not a diagnosis, prescription, medical device, or substitute for clinician judgment. Discuss all interval changes, symptoms, family history, and genetic risk factors with a licensed clinician before changing care.';
   const splitDisclaimer = doc.splitTextToSize(disclaimerText, contentWidth - 8);
   doc.text(splitDisclaimer, marginX + 4, y + 9);
 
