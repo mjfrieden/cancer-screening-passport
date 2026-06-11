@@ -51,6 +51,9 @@ jobs:
       - name: Capacitor asset sync
         run: npx cap sync
 
+      - name: Native identity checks
+        run: npm run native:check
+
       - name: Audit dependencies
         run: npm run audit
 

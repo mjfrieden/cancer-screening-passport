@@ -27,6 +27,7 @@ npm run lint
 npm run build
 npm run audit
 npm run smoke
+npm run native:check
 npm run test:rules
 ```
 
@@ -47,6 +48,8 @@ For the first hosted beta, see [docs/WEB_BETA_DEPLOYMENT.md](docs/WEB_BETA_DEPLO
 For installable browser beta behavior, see [docs/PWA_BETA.md](docs/PWA_BETA.md).
 
 For iOS/Android wrapper work, see [docs/CAPACITOR_NATIVE.md](docs/CAPACITOR_NATIVE.md).
+
+For App Store and Google Play preparation, see [docs/STORE_SUBMISSION_PREP.md](docs/STORE_SUBMISSION_PREP.md).
 
 ## Beta Legal Pages
 
