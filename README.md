@@ -45,6 +45,8 @@ See [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) before using th
 
 For the first hosted beta, see [docs/WEB_BETA_DEPLOYMENT.md](docs/WEB_BETA_DEPLOYMENT.md) and [docs/WEB_BETA_CHECKLIST.md](docs/WEB_BETA_CHECKLIST.md).
 
+For GitHub deployment environment setup, see [docs/GITHUB_ENVIRONMENTS.md](docs/GITHUB_ENVIRONMENTS.md).
+
 For installable browser beta behavior, see [docs/PWA_BETA.md](docs/PWA_BETA.md).
 
 For iOS/Android wrapper work, see [docs/CAPACITOR_NATIVE.md](docs/CAPACITOR_NATIVE.md).

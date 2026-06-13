@@ -73,6 +73,8 @@ Two manual workflows are available:
 - `Deploy Web`: builds the Docker image, pushes it to Artifact Registry, deploys to Cloud Run, then runs `npm run smoke` against the deployed URL.
 - `Deploy Firestore Rules`: runs Firestore emulator tests, then deploys `firestore.rules`.
 
+See `docs/GITHUB_ENVIRONMENTS.md` for the GitHub Environment setup checklist.
+
 Create GitHub Environments named `staging` and `production`. Each environment needs these variables:
 
 ```bash

@@ -47,6 +47,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate rules deployment environment
+        run: npm run validate:rules-deploy-env
+
       - name: Test Firestore rules
         run: npm run test:rules
 
