@@ -1,0 +1,54 @@
+name: Beta feedback
+description: Share product feedback from beta testing.
+title: "[Beta feedback]: "
+labels:
+  - beta-feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not include protected health information, real medical records, or sensitive personal details in this public issue.
+  - type: dropdown
+    id: tester_type
+    attributes:
+      label: Tester perspective
+      options:
+        - Patient or caregiver
+        - Clinician
+        - Product reviewer
+        - Technical reviewer
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: useful
+    attributes:
+      label: What felt useful?
+    validations:
+      required: true
+  - type: textarea
+    id: confusing
+    attributes:
+      label: What felt confusing, risky, or missing?
+    validations:
+      required: true
+  - type: textarea
+    id: trust
+    attributes:
+      label: Trust and safety notes
+      description: Note any language that felt too clinical, too certain, or insufficiently reviewed.
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow notes
+      description: Describe where the app fit or failed to fit into a screening/survivorship conversation.
+  - type: dropdown
+    id: release_blocker
+    attributes:
+      label: Should this block broader beta rollout?
+      options:
+        - "Yes"
+        - "No"
+        - Unsure
+    validations:
+      required: true

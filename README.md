@@ -45,6 +45,8 @@ See [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) before using th
 
 For the first hosted beta, see [docs/WEB_BETA_DEPLOYMENT.md](docs/WEB_BETA_DEPLOYMENT.md) and [docs/WEB_BETA_CHECKLIST.md](docs/WEB_BETA_CHECKLIST.md).
 
+For beta tester instructions, known issues, and release notes, see [docs/BETA_TESTING.md](docs/BETA_TESTING.md), [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md), and [docs/BETA_RELEASE_NOTES.md](docs/BETA_RELEASE_NOTES.md).
+
 For GitHub deployment environment setup, see [docs/GITHUB_ENVIRONMENTS.md](docs/GITHUB_ENVIRONMENTS.md).
 
 For installable browser beta behavior, see [docs/PWA_BETA.md](docs/PWA_BETA.md).

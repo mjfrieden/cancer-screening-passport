@@ -69,7 +69,11 @@ Use this checklist before sending a staging link to beta testers.
 
 ## Feedback Loop
 
-- [ ] Tester intake form exists.
-- [ ] Bug report channel exists.
+- [ ] Tester instructions are published in `docs/BETA_TESTING.md`.
+- [ ] Known issues are published in `docs/KNOWN_ISSUES.md`.
+- [ ] Beta release notes are updated in `docs/BETA_RELEASE_NOTES.md`.
+- [ ] GitHub bug report issue template exists.
+- [ ] GitHub beta feedback issue template exists.
+- [ ] Private intake path exists for security, privacy, or health-data concerns.
 - [ ] Support owner is assigned.
 - [ ] Beta cohort list is documented outside the app.

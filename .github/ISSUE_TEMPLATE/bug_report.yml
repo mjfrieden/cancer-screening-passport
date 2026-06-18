@@ -1,0 +1,78 @@
+name: Bug report
+description: Report something that is broken or confusing in the beta app.
+title: "[Bug]: "
+labels:
+  - bug
+  - beta-feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. Do not include protected health information, real medical records, or sensitive personal details in this public issue.
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Local development
+        - Staging web beta
+        - Production web
+        - iOS PWA
+        - Android PWA
+        - iOS native shell
+        - Android native shell
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: App URL or build
+      description: Use the staging URL or build identifier. Do not paste private tokens.
+      placeholder: https://...
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the bug in plain language.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Sign in
+        2. Open ...
+        3. Click ...
+        4. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - Blocks sign-in or app launch
+        - Blocks saving or viewing user data
+        - Incorrect recommendation or export content
+        - Broken export/download/share flow
+        - Layout, accessibility, or usability issue
+        - Copy, documentation, or legal page issue
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      placeholder: iPhone 15 Safari, Pixel Chrome, Mac Chrome, etc.
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or logs
+      description: Attach screenshots only after removing personal or health information.
