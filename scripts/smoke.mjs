@@ -47,6 +47,11 @@ const checks = [
     expect: body => body.includes('Medical Disclaimer'),
     label: 'medical disclaimer page',
   },
+  {
+    path: '/support.html',
+    expect: body => body.includes('Support') && body.includes('Cancer Prevention Passport'),
+    label: 'support page',
+  },
 ];
 
 async function fetchWithRetry(url, attempts = 20) {

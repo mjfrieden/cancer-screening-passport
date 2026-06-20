@@ -6,6 +6,10 @@ Use this file to summarize each staging beta deploy. Keep entries brief and test
 
 ## Unreleased
 
+- Added a public production roadmap.
+- Added post-sign-in acknowledgement for privacy, terms, and medical disclaimer versions before health data entry.
+- Added Firestore owner rules and tests for saved consent records.
+- Added a beta support page and linked it from legal navigation.
 - Added Profile account/data controls for local data export and permanent app data/account deletion.
 - Limited TypeScript checks to source/config files so generated build output cannot break `npm run lint`.
 - Added beta feedback and bug report issue templates.

@@ -48,6 +48,29 @@ describe('Firestore security rules', () => {
     await assertFails(getDoc(aliceProfileAnon));
   });
 
+  it('allows users to read and write only their own consent record', async () => {
+    const alice = testEnv.authenticatedContext('alice').firestore();
+    const bob = testEnv.authenticatedContext('bob').firestore();
+    const anonymous = testEnv.unauthenticatedContext().firestore();
+
+    const aliceConsent = doc(alice, 'user_consents/alice');
+    const aliceConsentAsBob = doc(bob, 'user_consents/alice');
+    const aliceConsentAnon = doc(anonymous, 'user_consents/alice');
+
+    await assertSucceeds(setDoc(aliceConsent, {
+      userId: 'alice',
+      acceptedAt: '2026-06-20T00:00:00.000Z',
+      privacyVersion: '2026-06-20',
+      termsVersion: '2026-06-20',
+      medicalDisclaimerVersion: '2026-06-20',
+    }));
+    await assertSucceeds(getDoc(aliceConsent));
+    await assertFails(getDoc(aliceConsentAsBob));
+    await assertFails(setDoc(aliceConsentAsBob, { userId: 'bob' }));
+    await assertFails(setDoc(aliceConsent, { userId: 'bob' }));
+    await assertFails(getDoc(aliceConsentAnon));
+  });
+
   it('allows users to create and manage only their own screening events', async () => {
     const alice = testEnv.authenticatedContext('alice').firestore();
     const bob = testEnv.authenticatedContext('bob').firestore();

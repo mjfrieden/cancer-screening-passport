@@ -43,6 +43,8 @@ Copy `.firebaserc.example` to `.firebaserc` and replace the project IDs after cr
 
 See [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) before using this with real patients or submitting to app stores.
 
+For the public launch path, see [docs/PUBLIC_PRODUCTION_ROADMAP.md](docs/PUBLIC_PRODUCTION_ROADMAP.md).
+
 For the first hosted beta, see [docs/WEB_BETA_DEPLOYMENT.md](docs/WEB_BETA_DEPLOYMENT.md) and [docs/WEB_BETA_CHECKLIST.md](docs/WEB_BETA_CHECKLIST.md).
 
 For beta tester instructions, known issues, and release notes, see [docs/BETA_TESTING.md](docs/BETA_TESTING.md), [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md), and [docs/BETA_RELEASE_NOTES.md](docs/BETA_RELEASE_NOTES.md).

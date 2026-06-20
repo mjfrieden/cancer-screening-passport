@@ -25,6 +25,12 @@ service cloud.firestore {
       // Optional: allow creating profile with specific fields
     }
 
+    // User Consent
+    match /user_consents/{userId} {
+      allow get, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId) && request.resource.data.userId == userId;
+    }
+
     // Screening Events
     match /screening_events/{eventId} {
       allow list: if isSignedIn() && resource.data.userId == request.auth.uid;

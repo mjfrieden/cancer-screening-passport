@@ -8,6 +8,8 @@ import { Heart, LayoutDashboard, User as UserIcon, Share2, LogOut, Loader2, Plus
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
 import AccountDataControls from './components/AccountDataControls';
+import ConsentGate from './components/ConsentGate';
+import { POLICY_VERSIONS } from './lib/policyVersions';
 
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const ProfileForm = lazy(() => import('./components/ProfileForm'));
@@ -23,13 +25,45 @@ function AppContent() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
+  const [hasCurrentConsent, setHasCurrentConsent] = useState(false);
 
   // Initial Fetch
   useEffect(() => {
     if (user) {
-      fetchData();
+      fetchConsentAndData();
+    } else {
+      setConsentChecked(false);
+      setHasCurrentConsent(false);
+      setProfile(null);
+      setEvents([]);
+      setRecommendations([]);
     }
   }, [user]);
+
+  const hasAcceptedCurrentPolicies = (data: any) => (
+    data?.privacyVersion === POLICY_VERSIONS.privacy &&
+    data?.termsVersion === POLICY_VERSIONS.terms &&
+    data?.medicalDisclaimerVersion === POLICY_VERSIONS.medicalDisclaimer
+  );
+
+  const fetchConsentAndData = async () => {
+    if (!user) return;
+    setConsentChecked(false);
+    try {
+      const consentDoc = await getDoc(doc(db, 'user_consents', user.uid));
+      const consentAccepted = consentDoc.exists() && hasAcceptedCurrentPolicies(consentDoc.data());
+      setHasCurrentConsent(consentAccepted);
+      if (consentAccepted) {
+        await fetchData();
+      }
+    } catch (error) {
+      console.error('Error fetching consent:', error);
+      setHasCurrentConsent(false);
+    } finally {
+      setConsentChecked(true);
+    }
+  };
 
   const fetchData = async () => {
     if (!user) return;
@@ -132,6 +166,8 @@ function AppContent() {
     setProfile(null);
     setEvents([]);
     setRecommendations([]);
+    setHasCurrentConsent(false);
+    setConsentChecked(false);
     setActiveTab('dashboard');
   };
 
@@ -186,6 +222,23 @@ function AppContent() {
         <LegalLinks />
       </motion.div>
     </div>
+  );
+
+  if (!consentChecked) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+    </div>
+  );
+
+  if (!hasCurrentConsent) return (
+    <ConsentGate
+      user={user}
+      onAccepted={() => {
+        setHasCurrentConsent(true);
+        setConsentChecked(true);
+        void fetchData();
+      }}
+    />
   );
 
   return (
@@ -318,6 +371,8 @@ function LegalLinks({ compact = false }: { compact?: boolean }) {
       <a className="hover:text-blue-600" href="/legal/terms.html" target="_blank" rel="noreferrer">Terms</a>
       <span aria-hidden="true">|</span>
       <a className="hover:text-blue-600" href="/legal/medical-disclaimer.html" target="_blank" rel="noreferrer">Medical Disclaimer</a>
+      <span aria-hidden="true">|</span>
+      <a className="hover:text-blue-600" href="/support.html" target="_blank" rel="noreferrer">Support</a>
     </div>
   );
 }

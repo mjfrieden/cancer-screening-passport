@@ -1,6 +1,6 @@
 # Production Readiness Review
 
-Last reviewed: 2026-06-11
+Last reviewed: 2026-06-20
 
 ## Current Status
 
@@ -21,10 +21,10 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 
 - Clinical validation: the recommendation engine has hard-coded dates, simplified intervals, and guideline claims that need clinician review, citations, versioning, and test fixtures.
 - Medical/legal positioning: remove or soften unverified claims such as "HIPAA-ready" and direct EMR import until compliance, BAA coverage, audit logging, and integration testing are complete.
-- Health data governance: add privacy policy, terms, consent flow, data deletion/export flow, breach response process, and support contact.
+- Health data governance: beta privacy policy, terms, medical disclaimer, consent acknowledgement, and data export/deletion controls exist; production legal review, breach response process, and monitored support contact are still required.
 - Firebase production setup: move from the AI Studio Firebase project to a clean product Firebase project with staging and production environments.
 - Firestore rules: list-query rules should be tested with the Firebase emulator; collection queries commonly require query constraints that rules can prove.
-- Mobile packaging: no native iOS/Android projects exist yet. Use Capacitor for store builds or keep the first release as a PWA/web app.
+- Mobile packaging: Capacitor iOS/Android shells exist, but native build signing and device QA are not complete.
 - Store assets: create raster app icons, splash screens, screenshots, store descriptions, privacy nutrition labels, and support URLs.
 - Observability: add structured server logs, client error monitoring, uptime monitoring, and crash reporting.
 - Accessibility and QA: add keyboard/screen-reader checks, mobile viewport checks, and user-flow tests.

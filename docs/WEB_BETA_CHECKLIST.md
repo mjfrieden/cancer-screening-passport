@@ -26,6 +26,8 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] `APP_URL` points to the staging URL.
 - [ ] Legal pages include real support contact information.
 - [ ] Privacy/terms/disclaimer links are reachable from the app.
+- [ ] Support page is reachable from the app.
+- [ ] Current privacy, terms, and medical disclaimer acknowledgement is required after sign-in.
 
 ## Functional Checks
 
