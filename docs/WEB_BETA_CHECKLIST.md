@@ -35,6 +35,8 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] View generated recommendations.
 - [ ] Download FHIR JSON.
 - [ ] Download clinician PDF.
+- [ ] Export local account data JSON from Profile.
+- [ ] Delete app data/account with a throwaway tester account.
 - [ ] Sign out.
 - [ ] Confirm a second user cannot access the first user's documents.
 

@@ -22,5 +22,19 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "src",
+    "server.ts",
+    "vite.config.ts",
+    "capacitor.config.ts",
+    "firestore.rules.test.ts"
+  ],
+  "exclude": [
+    "android",
+    "dist",
+    "ios",
+    "node_modules",
+    "server-dist"
+  ]
 }

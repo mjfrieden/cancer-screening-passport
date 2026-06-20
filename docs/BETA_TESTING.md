@@ -33,8 +33,11 @@ Ask each tester to complete this flow on one desktop browser and one phone brows
 6. Review recommendations and note whether the language feels clear and appropriately cautious.
 7. Export FHIR JSON.
 8. Export the clinician PDF.
-9. Sign out.
-10. Reopen the app and confirm the session/user data behavior is expected.
+9. Open Profile and export a local account data JSON file.
+10. Sign out.
+11. Reopen the app and confirm the session/user data behavior is expected.
+
+Use a separate throwaway tester account when validating permanent account deletion. The Profile tab includes a deletion flow that removes saved app records and the Firebase sign-in account for this app.
 
 ## Feedback Categories
 

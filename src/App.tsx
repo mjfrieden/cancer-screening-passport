@@ -7,6 +7,7 @@ import AddScreeningModal from './components/AddScreeningModal';
 import { Heart, LayoutDashboard, User as UserIcon, Share2, LogOut, Loader2, Plus, LogIn, Shield, Apple } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
+import AccountDataControls from './components/AccountDataControls';
 
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const ProfileForm = lazy(() => import('./components/ProfileForm'));
@@ -127,6 +128,13 @@ function AppContent() {
     await handleSaveProfile(updated);
   };
 
+  const handleAccountDeleted = () => {
+    setProfile(null);
+    setEvents([]);
+    setRecommendations([]);
+    setActiveTab('dashboard');
+  };
+
   if (authLoading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
@@ -212,6 +220,13 @@ function AppContent() {
             {activeTab === 'profile' && (
               <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <ProfileForm initialData={profile || undefined} onSave={handleSaveProfile} loading={loading} />
+                <AccountDataControls
+                  user={user}
+                  profile={profile}
+                  events={events}
+                  recommendations={recommendations}
+                  onDeleted={handleAccountDeleted}
+                />
               </motion.div>
             )}
             {activeTab === 'survivorship' && (

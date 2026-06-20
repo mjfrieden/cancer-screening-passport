@@ -10,7 +10,7 @@ This file tracks issues that beta testers should know before using a staging bui
 - Native Google sign-in behavior has not been validated inside iOS or Android webviews.
 - Production privacy, terms, and medical disclaimer pages still need final legal/clinical review.
 - Recommendation logic is guideline-inspired and must be clinically reviewed before public clinical use.
-- Account deletion, data deletion, and support workflows are not yet implemented in the app UI.
+- Account/data export and deletion controls exist in the Profile tab, but the deletion flow still needs staging QA with a throwaway Google account.
 - Firestore rules tests pass in CI, but local rules testing requires Java to be installed.
 
 ## Resolved Issues

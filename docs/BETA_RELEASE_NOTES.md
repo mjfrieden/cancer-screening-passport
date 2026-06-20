@@ -6,6 +6,8 @@ Use this file to summarize each staging beta deploy. Keep entries brief and test
 
 ## Unreleased
 
+- Added Profile account/data controls for local data export and permanent app data/account deletion.
+- Limited TypeScript checks to source/config files so generated build output cannot break `npm run lint`.
 - Added beta feedback and bug report issue templates.
 - Added beta testing guidance, known issue tracking, and deployment feedback loop documentation.
 - Added deployment environment validation for staging and production workflows.
