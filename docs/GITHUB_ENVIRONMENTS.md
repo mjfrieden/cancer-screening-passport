@@ -4,6 +4,8 @@ Last updated: 2026-06-13
 
 The manual deployment workflows expect GitHub Environments named `staging` and `production`.
 
+Status: `staging` and `production` have been created in GitHub for `mjfrieden/cancer-screening-passport`. They still need real environment variables and secrets after the Google Cloud/Firebase staging project is created.
+
 Create them in GitHub at:
 
 ```text
@@ -59,6 +61,14 @@ npm run validate:rules-deploy-env
 `validate:deploy-env` catches missing Cloud Run, Artifact Registry, Firebase, and production simulator settings before Docker or Google Cloud deployment starts.
 
 `validate:rules-deploy-env` catches a missing or malformed Firebase project ID before attempting to deploy Firestore rules.
+
+You can bulk set GitHub Environment values from a local filled-in env file:
+
+```bash
+node scripts/set-github-env-from-file.mjs staging /path/to/staging.env
+```
+
+Start from `docs/staging.env.example`, but do not commit the filled-in file.
 
 ## Recommended Staging Values
 

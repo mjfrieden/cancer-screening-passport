@@ -83,4 +83,8 @@ Exit criteria:
 
 ## Current Next Step
 
-Implement and validate policy acknowledgement before health data entry, then deploy staging and run the controlled beta checklist.
+Configure the real staging Firebase/GCP project, set GitHub Environment values, deploy staging, and run the controlled beta checklist.
+
+See `docs/STAGING_CLOUD_SETUP_RUNBOOK.md` for the exact cloud setup sequence.
+
+GitHub Environments named `staging` and `production` now exist. Google Cloud/Firebase project creation is blocked until the intended Google account and billing account are confirmed.

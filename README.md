@@ -51,6 +51,8 @@ For beta tester instructions, known issues, and release notes, see [docs/BETA_TE
 
 For GitHub deployment environment setup, see [docs/GITHUB_ENVIRONMENTS.md](docs/GITHUB_ENVIRONMENTS.md).
 
+For real staging Firebase/GCP setup, see [docs/STAGING_CLOUD_SETUP_RUNBOOK.md](docs/STAGING_CLOUD_SETUP_RUNBOOK.md).
+
 For installable browser beta behavior, see [docs/PWA_BETA.md](docs/PWA_BETA.md).
 
 For iOS/Android wrapper work, see [docs/CAPACITOR_NATIVE.md](docs/CAPACITOR_NATIVE.md).
