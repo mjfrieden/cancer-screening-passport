@@ -4,7 +4,7 @@ Last updated: 2026-06-13
 
 The manual deployment workflows expect GitHub Environments named `staging` and `production`.
 
-Status: `staging` and `production` have been created in GitHub for `mjfrieden/cancer-screening-passport`. They still need real environment variables and secrets after the Google Cloud/Firebase staging project is created.
+Status: `staging` and `production` have been created in GitHub for `mjfrieden/cancer-screening-passport`. Cloud Run deployment variables/secrets are not needed for the static no-cost path unless the project later moves back to container deployment.
 
 Create them in GitHub at:
 

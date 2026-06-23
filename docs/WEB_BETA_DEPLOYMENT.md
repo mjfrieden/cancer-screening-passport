@@ -1,13 +1,15 @@
 # Web Beta Deployment
 
-Last updated: 2026-06-11
+Last updated: 2026-06-23
 
-This app is ready to deploy as a single Node service that serves both:
+This app can now be deployed in two ways:
 
-- the React/Vite static app from `dist/`
-- the Express API under `/api/*`
+- preferred no-cost path: static PWA from `dist/`
+- optional paid/server path: Node service serving `dist/` and Express APIs under `/api/*`
 
-The recommended first web beta target is a container host such as Cloud Run, Render, Fly.io, or Railway. Cloud Run is the cleanest fit if Firebase and Google Cloud are already part of the operating model.
+The recommended first web beta target is now static hosting through Firebase Hosting Spark or Cloudflare Pages Free. See `docs/STATIC_FREE_DEPLOYMENT.md`.
+
+Cloud Run remains available later if server-side APIs, private integrations, or container hosting become worth the billing risk.
 
 ## Required Environments
 
@@ -46,7 +48,14 @@ VITE_FIREBASE_MEASUREMENT_ID=
 VITE_FIREBASE_FIRESTORE_DATABASE_ID=(default)
 ```
 
-## Cloud Run Container Build
+## Static Hosting Build
+
+```bash
+npm run build:static
+SMOKE_BASE_URL="https://your-staging-url" npm run smoke:static
+```
+
+## Optional Cloud Run Container Build
 
 Example local container build for staging:
 
@@ -68,7 +77,7 @@ Cloud Run injects `PORT`; the server now honors that automatically.
 
 ## GitHub Deployment Workflows
 
-Two manual workflows are available:
+Two manual workflows are available for the optional Cloud Run path:
 
 - `Deploy Web`: builds the Docker image, pushes it to Artifact Registry, deploys to Cloud Run, then runs `npm run smoke` against the deployed URL.
 - `Deploy Firestore Rules`: runs Firestore emulator tests, then deploys `firestore.rules`.
@@ -112,20 +121,22 @@ Production should use GitHub Environment protection rules before deployment is e
 
 ## Smoke Test
 
-After deployment:
+After static deployment:
 
 ```bash
-SMOKE_BASE_URL="https://your-staging-url" npm run smoke
+SMOKE_BASE_URL="https://your-staging-url" npm run smoke:static
 ```
 
 The smoke test verifies:
 
-- `/api/health`
 - app shell
 - web manifest
+- service worker
+- offline page
 - privacy page
 - terms page
 - medical disclaimer page
+- support page
 
 ## Staging Go/No-Go
 

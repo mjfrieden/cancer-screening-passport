@@ -2,7 +2,11 @@
 
 Last updated: 2026-06-20
 
-Use this runbook to create the real staging infrastructure for Cancer Prevention Passport. GitHub Environments named `staging` and `production` already exist in the repository, but they still need real Google Cloud/Firebase values and Workload Identity secrets.
+Use this runbook only if you decide to continue with the optional Cloud Run path. For the current no-cost path, prefer `docs/STATIC_FREE_DEPLOYMENT.md`.
+
+GitHub Environments named `staging` and `production` already exist in the repository. A `cancer-passport-staging` Google Cloud project and default Firestore database have been created under `marshall@whitecloudmedical.com`, but billing is not linked.
+
+Cloud Run, Cloud Build, and Artifact Registry setup should remain paused while the cost ceiling is $0.05/month.
 
 ## Prerequisites
 

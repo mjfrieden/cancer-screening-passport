@@ -10,6 +10,7 @@ import { cn } from './lib/utils';
 import AccountDataControls from './components/AccountDataControls';
 import ConsentGate from './components/ConsentGate';
 import { POLICY_VERSIONS } from './lib/policyVersions';
+import { getRecommendations } from './lib/guidelineEngine';
 
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const ProfileForm = lazy(() => import('./components/ProfileForm'));
@@ -88,17 +89,7 @@ function AppContent() {
   };
 
   const fetchRecommendations = async (prof: UserProfile, history: ScreeningEvent[]) => {
-    try {
-      const res = await fetch('/api/recommendations/preventive-screening', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: prof, history })
-      });
-      const data = await res.json();
-      setRecommendations(data.recommendations);
-    } catch (error) {
-      console.error("Engine fetch error:", error);
-    }
+    setRecommendations(getRecommendations(prof, history));
   };
 
   const handleSaveProfile = async (data: UserProfile) => {

@@ -53,6 +53,8 @@ For GitHub deployment environment setup, see [docs/GITHUB_ENVIRONMENTS.md](docs/
 
 For real staging Firebase/GCP setup, see [docs/STAGING_CLOUD_SETUP_RUNBOOK.md](docs/STAGING_CLOUD_SETUP_RUNBOOK.md).
 
+For the recommended no-cost static deployment path, see [docs/STATIC_FREE_DEPLOYMENT.md](docs/STATIC_FREE_DEPLOYMENT.md).
+
 For installable browser beta behavior, see [docs/PWA_BETA.md](docs/PWA_BETA.md).
 
 For iOS/Android wrapper work, see [docs/CAPACITOR_NATIVE.md](docs/CAPACITOR_NATIVE.md).

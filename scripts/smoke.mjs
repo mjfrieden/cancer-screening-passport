@@ -1,10 +1,12 @@
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://127.0.0.1:3000';
+const staticOnly = process.env.SMOKE_STATIC_ONLY === 'true';
 
 const checks = [
   {
     path: '/api/health',
     expect: body => JSON.parse(body).status === 'ok',
     label: 'health endpoint',
+    serverOnly: true,
   },
   {
     path: '/',
@@ -73,6 +75,11 @@ async function fetchWithRetry(url, attempts = 20) {
 }
 
 for (const check of checks) {
+  if (staticOnly && check.serverOnly) {
+    console.log(`skip - ${check.label} (static-only smoke)`);
+    continue;
+  }
+
   const url = new URL(check.path, baseUrl).toString();
   const body = await fetchWithRetry(url);
   if (!check.expect(body)) {

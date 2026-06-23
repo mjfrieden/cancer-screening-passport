@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getRecommendations } from './guidelineEngine.server';
+import { getRecommendations } from './guidelineEngine';
 import { ScreeningEvent, UserProfile } from '../types';
 
 function baseProfile(overrides: Partial<UserProfile> = {}): UserProfile {

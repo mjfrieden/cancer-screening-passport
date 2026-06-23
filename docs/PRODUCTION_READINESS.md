@@ -12,7 +12,7 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 
 - Google sign-in through Firebase Auth.
 - Per-user profile and screening event persistence in Firestore.
-- Local rules-based recommendation generation through `/api/recommendations/preventive-screening`.
+- Local rules-based recommendation generation bundled into the client app, with the Express API retained only for optional server deployments.
 - Responsive, mobile-shaped React UI with bottom navigation.
 - Clinician-facing PDF export and simplified FHIR JSON bundle export.
 - Production Vite build plus bundled Express server.
@@ -26,14 +26,14 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 - Firestore rules: list-query rules should be tested with the Firebase emulator; collection queries commonly require query constraints that rules can prove.
 - Mobile packaging: Capacitor iOS/Android shells exist, but native build signing and device QA are not complete.
 - Store assets: create raster app icons, splash screens, screenshots, store descriptions, privacy nutrition labels, and support URLs.
-- Observability: add structured server logs, client error monitoring, uptime monitoring, and crash reporting.
+- Observability: add client error monitoring, uptime monitoring, and crash reporting. Structured server logs are only needed if the optional server path is used.
 - Accessibility and QA: add keyboard/screen-reader checks, mobile viewport checks, and user-flow tests.
 
 ## Recommended Release Path
 
 1. Web beta: deploy the current app behind a production Firebase project and a custom domain.
 2. PWA beta: keep the app installable on mobile browsers while collecting feedback.
-3. Native shell: add Capacitor once the web beta is stable, then build iOS and Android wrappers.
+3. Native shell: Capacitor exists; build iOS and Android wrappers once the web beta is stable.
 4. Store submission: submit after privacy, clinical validation, screenshots, native project signing, and review metadata are complete.
 
 ## Technical Next Steps

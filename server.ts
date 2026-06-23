@@ -2,7 +2,7 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 
-import { getRecommendations } from "./src/lib/guidelineEngine.server.ts";
+import { getRecommendations } from "./src/lib/guidelineEngine.ts";
 
 async function startServer() {
   const app = express();

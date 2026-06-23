@@ -1,6 +1,6 @@
 # PWA Beta
 
-Last updated: 2026-06-11
+Last updated: 2026-06-23
 
 Cancer Prevention Passport now includes a basic progressive web app foundation:
 
@@ -12,7 +12,7 @@ Cancer Prevention Passport now includes a basic progressive web app foundation:
 
 ## Current Offline Behavior
 
-The PWA shell and static legal pages can be cached. Clinical data workflows still require a network connection because authentication, Firestore records, recommendations, and exports depend on online services.
+The PWA shell, static legal pages, and recommendation logic can be cached. Clinical data workflows still require a network connection because authentication and Firestore records depend on online services.
 
 Offline mode must be described as a connectivity fallback, not as offline medical-record access.
 

@@ -1,6 +1,6 @@
 # Public Production Roadmap
 
-Last updated: 2026-06-20
+Last updated: 2026-06-23
 
 This roadmap separates a controlled web beta from public production and app-store launch. Cancer Prevention Passport handles sensitive health-related information, so production means more than a passing build.
 
@@ -11,7 +11,7 @@ Goal: deploy a controlled staging beta for invited testers using non-sensitive o
 - Create dedicated Firebase/GCP staging and production projects.
 - Configure GitHub `staging` and `production` environments.
 - Deploy Firestore rules to staging.
-- Deploy the web service to Cloud Run staging.
+- Deploy the static PWA to Firebase Hosting Spark, Cloudflare Pages Free, or another static host.
 - Add the staging URL to Firebase Auth authorized domains.
 - Run the web beta checklist end to end.
 - Validate account data export and account/data deletion with throwaway Google accounts.
@@ -20,7 +20,7 @@ Goal: deploy a controlled staging beta for invited testers using non-sensitive o
 Exit criteria:
 
 - CI is green.
-- Staging deploy workflows pass.
+- Static staging deploy and `npm run smoke:static` pass.
 - Sign-in, profile save, screening event save, recommendations, exports, deletion, and sign-out work on staging.
 - No unresolved P0/P1 beta issues remain.
 
@@ -83,8 +83,8 @@ Exit criteria:
 
 ## Current Next Step
 
-Configure the real staging Firebase/GCP project, set GitHub Environment values, deploy staging, and run the controlled beta checklist.
+Deploy a static no-cost staging PWA and run the controlled beta checklist.
 
-See `docs/STAGING_CLOUD_SETUP_RUNBOOK.md` for the exact cloud setup sequence.
+See `docs/STATIC_FREE_DEPLOYMENT.md` for the recommended no-cost deployment path.
 
-GitHub Environments named `staging` and `production` now exist. Google Cloud/Firebase project creation is blocked until the intended Google account and billing account are confirmed.
+GitHub Environments named `staging` and `production` now exist. A `cancer-passport-staging` Google Cloud project and default Firestore database exist under `marshall@whitecloudmedical.com`, but billing is not linked and Cloud Run should remain paused under the $0.05/month ceiling.
