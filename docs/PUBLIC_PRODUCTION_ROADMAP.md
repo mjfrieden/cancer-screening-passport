@@ -88,3 +88,5 @@ Deploy a static no-cost staging PWA and run the controlled beta checklist.
 See `docs/STATIC_FREE_DEPLOYMENT.md` for the recommended no-cost deployment path.
 
 GitHub Environments named `staging` and `production` now exist. A `cancer-passport-staging` Google Cloud project and default Firestore database exist under `marshall@whitecloudmedical.com`, but billing is not linked and Cloud Run should remain paused under the $0.05/month ceiling.
+
+Firebase activation is currently blocked by `PERMISSION_DENIED`; see `docs/STAGING_STATUS.md`.

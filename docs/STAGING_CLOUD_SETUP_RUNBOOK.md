@@ -8,6 +8,8 @@ GitHub Environments named `staging` and `production` already exist in the reposi
 
 Cloud Run, Cloud Build, and Artifact Registry setup should remain paused while the cost ceiling is $0.05/month.
 
+For the current state of the created staging project and Firebase activation blocker, see `docs/STAGING_STATUS.md`.
+
 ## Prerequisites
 
 - Google Cloud account with permission to create projects.

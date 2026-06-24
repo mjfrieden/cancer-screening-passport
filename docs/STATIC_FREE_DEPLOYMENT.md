@@ -39,6 +39,8 @@ This verifies the app shell, manifest, service worker, legal pages, offline page
 
 Firebase Hosting can serve the `dist/` folder without Cloud Run.
 
+Current blocker: Firebase activation for `cancer-passport-staging` returns `PERMISSION_DENIED` for `marshall@whitecloudmedical.com` even after explicit Firebase Admin and Owner permissions. See `docs/STAGING_STATUS.md`.
+
 Required setup:
 
 - Firebase project enabled.
@@ -66,6 +68,8 @@ It builds `dist/` and deploys Firebase Hosting without Docker, Cloud Run, Cloud 
 
 Cloudflare Pages can build and serve the static app directly from GitHub.
 
+This is the best static host fallback while Firebase Hosting activation is blocked. It still needs a working Firebase web app config for sign-in and Firestore data.
+
 Suggested settings:
 
 - Build command: `npm run build:static`
@@ -78,6 +82,8 @@ Add the Cloudflare Pages domain to Firebase Authentication authorized domains be
 ## GitHub Pages
 
 GitHub Pages can work for a simple public beta, but Cloudflare Pages or Firebase Hosting are better fits for preview deployments and custom domains.
+
+Avoid GitHub Pages until a custom domain is ready. The app manifest and service worker are simplest on a root domain, which Cloudflare Pages and Firebase Hosting provide more naturally.
 
 ## What Still Requires Manual QA
 
