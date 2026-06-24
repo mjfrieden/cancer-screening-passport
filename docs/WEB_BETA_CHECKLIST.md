@@ -17,7 +17,7 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] Static hosting target exists.
 - [ ] Staging deploy does not require Cloud Run, Cloud Build, or Artifact Registry while the cost ceiling is near $0.
 - [ ] `Deploy Firestore Rules` workflow has passed for staging, or rules were deployed manually.
-- [ ] `Deploy Static Firebase Hosting` or equivalent static-host deploy has passed for staging.
+- [ ] `Deploy Static Cloudflare Pages`, `Deploy Static Firebase Hosting`, or equivalent static-host deploy has passed for staging.
 
 ## App Configuration
 

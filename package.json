@@ -18,6 +18,7 @@
     "smoke:static": "SMOKE_STATIC_ONLY=true node scripts/smoke.mjs",
     "native:check": "node scripts/native-check.mjs",
     "validate:env": "node scripts/validate-env.mjs",
+    "validate:cloudflare-pages-env": "node scripts/validate-cloudflare-pages-env.mjs",
     "validate:deploy-env": "node scripts/validate-deploy-env.mjs",
     "validate:rules-deploy-env": "node scripts/validate-rules-deploy-env.mjs",
     "cap:sync": "npm run build:static && cap sync",

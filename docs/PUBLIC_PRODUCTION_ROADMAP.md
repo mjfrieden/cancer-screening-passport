@@ -1,6 +1,6 @@
 # Public Production Roadmap
 
-Last updated: 2026-06-23
+Last updated: 2026-06-24
 
 This roadmap separates a controlled web beta from public production and app-store launch. Cancer Prevention Passport handles sensitive health-related information, so production means more than a passing build.
 
@@ -11,7 +11,7 @@ Goal: deploy a controlled staging beta for invited testers using non-sensitive o
 - Create dedicated Firebase/GCP staging and production projects.
 - Configure GitHub `staging` and `production` environments.
 - Deploy Firestore rules to staging.
-- Deploy the static PWA to Firebase Hosting Spark, Cloudflare Pages Free, or another static host.
+- Deploy the static PWA to Cloudflare Pages Free, Firebase Hosting Spark, or another static host.
 - Add the staging URL to Firebase Auth authorized domains.
 - Run the web beta checklist end to end.
 - Validate account data export and account/data deletion with throwaway Google accounts.
@@ -20,7 +20,7 @@ Goal: deploy a controlled staging beta for invited testers using non-sensitive o
 Exit criteria:
 
 - CI is green.
-- Static staging deploy and `npm run smoke:static` pass.
+- Cloudflare Pages or Firebase Hosting static staging deploy and `npm run smoke:static` pass.
 - Sign-in, profile save, screening event save, recommendations, exports, deletion, and sign-out work on staging.
 - No unresolved P0/P1 beta issues remain.
 
@@ -83,9 +83,9 @@ Exit criteria:
 
 ## Current Next Step
 
-Deploy a static no-cost staging PWA and run the controlled beta checklist.
+Deploy a static no-cost staging PWA through the manual Cloudflare Pages workflow, then run the controlled beta checklist.
 
-See `docs/STATIC_FREE_DEPLOYMENT.md` for the recommended no-cost deployment path.
+See `docs/STATIC_FREE_DEPLOYMENT.md` and `docs/CLOUDFLARE_PAGES_DEPLOYMENT.md` for the recommended no-cost deployment path.
 
 GitHub Environments named `staging` and `production` now exist. A `cancer-passport-staging` Google Cloud project and default Firestore database exist under `marshall@whitecloudmedical.com`, but billing is not linked and Cloud Run should remain paused under the $0.05/month ceiling.
 

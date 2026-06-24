@@ -1,6 +1,6 @@
 # Static Free Deployment
 
-Last updated: 2026-06-23
+Last updated: 2026-06-24
 
 This is the recommended path while the project needs to stay at or near $0/month.
 
@@ -78,6 +78,14 @@ Suggested settings:
 - Smoke check: `npm run smoke:static`
 
 Add the Cloudflare Pages domain to Firebase Authentication authorized domains before testing Google sign-in.
+
+A manual GitHub Actions workflow is also available:
+
+```text
+Deploy Static Cloudflare Pages
+```
+
+It validates the static Firebase build variables, validates Cloudflare credentials, builds `dist/`, and deploys with Wrangler Pages. See `docs/CLOUDFLARE_PAGES_DEPLOYMENT.md`.
 
 ## GitHub Pages
 

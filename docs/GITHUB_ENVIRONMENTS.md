@@ -1,6 +1,6 @@
 # GitHub Environments
 
-Last updated: 2026-06-13
+Last updated: 2026-06-24
 
 The manual deployment workflows expect GitHub Environments named `staging` and `production`.
 
@@ -14,15 +14,11 @@ Settings -> Environments -> New environment
 
 Use environment protection rules for `production` before enabling production deployment.
 
-## Required Variables
+## Required Static Variables
 
-Set these values on both `staging` and `production`.
+Set these values on both `staging` and `production` for Firebase Hosting or Cloudflare Pages static deploys.
 
 ```bash
-GCP_PROJECT_ID=...
-GCP_REGION=us-central1
-ARTIFACT_REGISTRY_REPOSITORY=...
-CLOUD_RUN_SERVICE=cancer-screening-passport
 FIREBASE_PROJECT_ID=...
 VITE_ENABLE_CLINICAL_SIMULATOR=false
 VITE_FIREBASE_API_KEY=...
@@ -37,16 +33,44 @@ VITE_FIREBASE_FIRESTORE_DATABASE_ID=(default)
 
 `FIREBASE_PROJECT_ID` must match `VITE_FIREBASE_PROJECT_ID` for the selected environment.
 
-## Required Secrets
+## Required Cloudflare Pages Values
 
-Set these secrets on both `staging` and `production`.
+Set this variable if using `Deploy Static Cloudflare Pages`:
+
+```bash
+CLOUDFLARE_PAGES_PROJECT=cancer-screening-passport
+```
+
+Set these secrets if using `Deploy Static Cloudflare Pages`:
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=...
+CLOUDFLARE_API_TOKEN=...
+```
+
+Start from `docs/cloudflare-pages.env.example`.
+
+## Required Firebase Hosting Secrets
+
+Set these secrets only if using `Deploy Static Firebase Hosting` or the optional Cloud Run workflow.
 
 ```bash
 GCP_WORKLOAD_IDENTITY_PROVIDER=...
 GCP_SERVICE_ACCOUNT=...
 ```
 
-The service account should have only the permissions needed to push the image, deploy Cloud Run, inspect the Cloud Run service URL, and deploy Firestore rules.
+The service account should have only the permissions needed to deploy Firebase Hosting or Firestore rules. If the project later moves back to Cloud Run, add the separate Cloud Run, Artifact Registry, and service deployment permissions at that time.
+
+## Optional Cloud Run Variables
+
+These are paused under the current no-cost budget and are only needed for `.github/workflows/deploy-web.yml`.
+
+```bash
+GCP_PROJECT_ID=...
+GCP_REGION=us-central1
+ARTIFACT_REGISTRY_REPOSITORY=...
+CLOUD_RUN_SERVICE=cancer-screening-passport
+```
 
 ## Validation
 
@@ -54,9 +78,12 @@ The workflows run these checks before deployment:
 
 ```bash
 npm run validate:env
+npm run validate:cloudflare-pages-env
 npm run validate:deploy-env
 npm run validate:rules-deploy-env
 ```
+
+`validate:cloudflare-pages-env` catches missing Cloudflare Pages credentials and invalid project names before Wrangler deploy starts.
 
 `validate:deploy-env` catches missing Cloud Run, Artifact Registry, Firebase, and production simulator settings before Docker or Google Cloud deployment starts.
 
@@ -81,7 +108,7 @@ VITE_FIREBASE_PROJECT_ID=cancer-passport-staging
 VITE_ENABLE_CLINICAL_SIMULATOR=false
 ```
 
-After the first staging deployment completes, add the Cloud Run service URL and any custom staging domain to Firebase Authentication authorized domains.
+After the first staging deployment completes, add the Cloudflare Pages URL, Firebase Hosting URL, Cloud Run service URL, or custom staging domain to Firebase Authentication authorized domains.
 
 ## Recommended Production Gates
 
