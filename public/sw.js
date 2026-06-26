@@ -8,6 +8,7 @@ const CORE_ASSETS = [
   '/legal/privacy.html',
   '/legal/terms.html',
   '/legal/medical-disclaimer.html',
+  '/support.html',
 ];
 
 self.addEventListener('install', (event) => {

@@ -1,0 +1,173 @@
+import { existsSync, readFileSync } from 'node:fs';
+
+const checks = [];
+
+function addCheck(label, run) {
+  checks.push({ label, run });
+}
+
+function readText(path) {
+  if (!existsSync(path)) {
+    throw new Error(`${path} does not exist`);
+  }
+  return readFileSync(path, 'utf8');
+}
+
+function readJson(path) {
+  return JSON.parse(readText(path));
+}
+
+function expectIncludes(path, expected) {
+  const body = readText(path);
+  for (const value of expected) {
+    if (!body.includes(value)) {
+      throw new Error(`${path} is missing expected text: ${value}`);
+    }
+  }
+}
+
+function expectScript(name) {
+  const pkg = readJson('package.json');
+  if (!pkg.scripts?.[name]) {
+    throw new Error(`package.json is missing script: ${name}`);
+  }
+}
+
+addCheck('required beta scripts exist', () => {
+  for (const name of [
+    'build:static',
+    'smoke:static',
+    'preflight:beta',
+    'validate:cloudflare-pages-env',
+    'native:check',
+    'test:rules',
+  ]) {
+    expectScript(name);
+  }
+});
+
+addCheck('PWA manifest is installable', () => {
+  const manifest = readJson('public/site.webmanifest');
+  if (manifest.name !== 'Cancer Prevention Passport') {
+    throw new Error('manifest name must be Cancer Prevention Passport');
+  }
+  if (manifest.display !== 'standalone') {
+    throw new Error('manifest display must be standalone');
+  }
+  if (manifest.start_url !== '/' || manifest.scope !== '/') {
+    throw new Error('manifest start_url and scope must be rooted at /');
+  }
+  if (!Array.isArray(manifest.icons) || manifest.icons.length === 0) {
+    throw new Error('manifest must declare at least one icon');
+  }
+});
+
+addCheck('service worker caches required public routes', () => {
+  expectIncludes('public/sw.js', [
+    '/offline.html',
+    '/site.webmanifest',
+    '/legal/privacy.html',
+    '/legal/terms.html',
+    '/legal/medical-disclaimer.html',
+    '/support.html',
+  ]);
+});
+
+addCheck('legal and support pages keep beta safety warnings', () => {
+  expectIncludes('public/legal/privacy.html', [
+    'protected health information',
+    'Firebase Authentication and Firestore',
+    '/support.html',
+  ]);
+  expectIncludes('public/legal/terms.html', [
+    'Beta Status',
+    'not a medical device',
+    '/support.html',
+  ]);
+  expectIncludes('public/legal/medical-disclaimer.html', [
+    'not medical advice',
+    'licensed clinician',
+  ]);
+  expectIncludes('public/support.html', [
+    'GitHub Security Advisories',
+    'protected health information',
+    'Public Beta Feedback',
+  ]);
+});
+
+addCheck('public issue templates protect sensitive reports', () => {
+  const advisoryUrl = 'https://github.com/mjfrieden/cancer-screening-passport/security/advisories/new';
+  for (const path of [
+    '.github/ISSUE_TEMPLATE/bug_report.yml',
+    '.github/ISSUE_TEMPLATE/beta_feedback.yml',
+  ]) {
+    expectIncludes(path, [
+      'Public issue safety',
+      'protected health information',
+      'private tokens',
+      advisoryUrl,
+    ]);
+  }
+});
+
+addCheck('private intake and traceability docs are present', () => {
+  expectIncludes('SECURITY.md', [
+    'GitHub Security Advisories',
+    'protected health information',
+    'Current Beta Boundary',
+  ]);
+  expectIncludes('docs/SECURITY_PRIVACY_INTAKE.md', [
+    'Private security, privacy, or health-data concerns',
+    'Do not collect protected health information',
+    'Production Gap',
+  ]);
+  expectIncludes('docs/GUIDELINE_TRACEABILITY.md', [
+    'source_url',
+    'clinical_review_status',
+    'needs_clinical_review',
+    'Production Gate',
+  ]);
+});
+
+addCheck('Cloudflare static deployment path remains wired', () => {
+  expectIncludes('.github/workflows/deploy-static-cloudflare.yml', [
+    'Deploy Static Cloudflare Pages',
+    'npm run validate:env',
+    'npm run validate:cloudflare-pages-env',
+    'npm run build:static',
+    'pages deploy dist',
+  ]);
+  expectIncludes('docs/CLOUDFLARE_PAGES_DEPLOYMENT.md', [
+    'Cloudflare Pages Free',
+    'does not require Cloud Run',
+    'SMOKE_BASE_URL="https://your-pages-url.pages.dev" npm run smoke:static',
+  ]);
+});
+
+addCheck('beta checklist covers safety, source trace, and deploy gates', () => {
+  expectIncludes('docs/WEB_BETA_CHECKLIST.md', [
+    'Deploy Static Cloudflare Pages',
+    'Recommendation source URLs and clinical review status',
+    'Private GitHub Security Advisory intake path',
+    'Staging deploy does not require Cloud Run',
+  ]);
+});
+
+let failures = 0;
+for (const check of checks) {
+  try {
+    check.run();
+    console.log(`ok - ${check.label}`);
+  } catch (error) {
+    failures += 1;
+    console.error(`not ok - ${check.label}`);
+    console.error(error.message);
+  }
+}
+
+if (failures > 0) {
+  console.error(`${failures} beta preflight check(s) failed.`);
+  process.exit(1);
+}
+
+console.log(`${checks.length} beta preflight checks passed.`);

@@ -15,6 +15,7 @@ Use this file to summarize each staging beta deploy. Keep entries brief and test
 - Added beta feedback and bug report issue templates.
 - Added public-issue safety checkboxes and private GitHub Security Advisory intake guidance.
 - Added guideline source URL and clinical-review-status metadata to recommendations.
+- Added a beta preflight check for static hosting, PWA, legal, support, issue-template, private-intake, and traceability readiness.
 - Added beta testing guidance, known issue tracking, and deployment feedback loop documentation.
 - Added deployment environment validation for staging and production workflows.
 - Updated build tooling to patched Vite, tsx, and esbuild versions.
