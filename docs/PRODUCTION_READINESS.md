@@ -41,6 +41,7 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 - Replace fixed due dates with dates calculated from event history and guideline intervals.
 - Move guideline content into structured, cited data fixtures instead of inline strings.
 - Add unit tests for age boundaries, smoking history, abnormal results, and survivorship branches.
+- Complete clinician review using the trace metadata described in `docs/GUIDELINE_TRACEABILITY.md`.
 - Hide the profile preset simulator behind a development flag.
 - Add Firebase emulator tests for Firestore security rules.
 - Code-split heavy PDF/chart/FHIR dependencies to reduce the initial bundle.

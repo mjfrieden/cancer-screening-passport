@@ -89,4 +89,47 @@ describe('guideline recommendation engine', () => {
 
     expect(recommendations.map(rec => rec.due_date)).not.toContain('2026-05-03');
   });
+
+  it('attaches source trace metadata to every recommendation', () => {
+    const recommendations = getRecommendations(baseProfile({
+      sexAssignedAtBirth: 'male',
+      genderIdentity: 'male',
+      cervixPresent: false,
+      smokingHistory: { status: 'current', packYears: 25 },
+      personalHistoryOfCancer: true,
+      survivorshipPlan: {
+        cancerType: 'prostate',
+        diagnosisDate: '2023-06-01',
+        stage: '2',
+        treatments: ['Radiation', 'Hormonal Therapy'],
+      },
+    }));
+
+    expect(recommendations.length).toBeGreaterThan(0);
+    for (const rec of recommendations) {
+      expect(rec.source_url).toMatch(/^https:\/\//);
+      expect(rec.clinical_review_note.length).toBeGreaterThan(20);
+      expect(['source_traced', 'needs_clinical_review']).toContain(rec.clinical_review_status);
+    }
+  });
+
+  it('keeps survivorship abstractions behind clinician review status', () => {
+    const recommendations = getRecommendations(baseProfile({
+      personalHistoryOfCancer: true,
+      survivorshipPlan: {
+        cancerType: 'breast',
+        diagnosisDate: '2024-01-15',
+        stage: '2',
+        treatments: ['Surgery', 'Hormonal Therapy'],
+      },
+    }));
+
+    const survivorship = recommendations.filter(rec => rec.status === 'survivorship');
+    expect(survivorship.length).toBeGreaterThan(0);
+    for (const rec of survivorship) {
+      expect(rec.requires_clinician_review).toBe(true);
+      expect(rec.clinical_review_status).toBe('needs_clinical_review');
+      expect(rec.source_url).toBe('https://www.nccn.org/guidelines/category_1');
+    }
+  });
 });

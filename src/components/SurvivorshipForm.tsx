@@ -379,7 +379,13 @@ export default function SurvivorshipForm({
                     <div className="bg-gray-50/70 p-3 rounded-xl border border-gray-100/60 space-y-2">
                       <div className="flex items-center gap-1.5 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">
                         <Award className="w-3.5 h-3.5 text-blue-600" />
-                        <span>{rec.source} • {rec.source_version} • {rec.recommendation_grade}</span>
+                        <span>
+                          <a className="underline-offset-2 hover:underline" href={rec.source_url} target="_blank" rel="noreferrer">
+                            {rec.source} • {rec.source_version}
+                          </a>
+                          {' • '}
+                          {rec.recommendation_grade} • Clinician review needed
+                        </span>
                       </div>
                       <p className="text-xs text-gray-600 leading-relaxed font-sans">
                         {rec.reason}

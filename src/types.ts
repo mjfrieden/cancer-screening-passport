@@ -43,7 +43,10 @@ export interface Recommendation {
   reason: string;
   source: string;
   source_version: string;
+  source_url: string;
   recommendation_grade: string;
   confidence: "high" | "medium" | "low";
   requires_clinician_review: boolean;
+  clinical_review_status: "source_traced" | "needs_clinical_review";
+  clinical_review_note: string;
 }

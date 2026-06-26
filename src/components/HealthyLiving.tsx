@@ -68,9 +68,12 @@ export default function HealthyLiving({ recommendations = [] }: HealthyLivingPro
         reason: g.reason,
         source: "AICR",
         source_version: "2024",
+        source_url: "https://www.aicr.org/cancer-prevention/recommendations/",
         recommendation_grade: "N/A",
         confidence: "high" as const,
-        requires_clinician_review: false
+        requires_clinician_review: false,
+        clinical_review_status: "source_traced" as const,
+        clinical_review_note: "Public prevention recommendation source traced; final product wording still needs release review."
       }));
 
   // Track adherence status in localStorage: 'undone' | 'improving' | 'following'

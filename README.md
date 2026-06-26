@@ -67,6 +67,8 @@ For App Store and Google Play preparation, see [docs/STORE_SUBMISSION_PREP.md](d
 
 For security and privacy reporting, see [SECURITY.md](SECURITY.md) and [docs/SECURITY_PRIVACY_INTAKE.md](docs/SECURITY_PRIVACY_INTAKE.md).
 
+For guideline source traceability, see [docs/GUIDELINE_TRACEABILITY.md](docs/GUIDELINE_TRACEABILITY.md).
+
 ## Beta Legal Pages
 
 - `/legal/privacy.html`

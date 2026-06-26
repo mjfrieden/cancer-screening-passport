@@ -567,7 +567,16 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
 
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-[10px] font-medium text-gray-400">
-                    Source: {rec.source} v{rec.source_version}
+                    Source:{' '}
+                    <a
+                      className="text-blue-600 underline-offset-2 hover:underline"
+                      href={rec.source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {rec.source} v{rec.source_version}
+                    </a>
+                    {rec.clinical_review_status === 'needs_clinical_review' ? ' • Clinician review needed' : ' • Source traced'}
                   </span>
                   <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors" />
                 </div>

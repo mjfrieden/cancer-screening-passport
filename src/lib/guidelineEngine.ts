@@ -1,7 +1,9 @@
 import { UserProfile, ScreeningEvent, Recommendation } from '../types';
 
+type DraftRecommendation = Omit<Recommendation, 'source_url' | 'clinical_review_status' | 'clinical_review_note'>;
+
 export function getRecommendations(profile: UserProfile, history: ScreeningEvent[] = []): Recommendation[] {
-  const recommendations: Recommendation[] = [];
+  const recommendations: DraftRecommendation[] = [];
   const age = calculateAge(profile.dob);
   const today = startOfToday();
 
@@ -695,7 +697,61 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
     requires_clinician_review: false
   });
 
-  return recommendations;
+  return recommendations.map(attachGuidelineTrace);
+}
+
+const guidelineSourceUrls = {
+  aicrPrevention: 'https://www.aicr.org/cancer-prevention/recommendations/',
+  nccnGuidelines: 'https://www.nccn.org/guidelines/category_1',
+  uspstfBreast: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening',
+  uspstfCervical: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening',
+  uspstfColorectal: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening',
+  uspstfLung: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening',
+  uspstfProstate: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening',
+} as const;
+
+function attachGuidelineTrace(recommendation: DraftRecommendation): Recommendation {
+  const trace = getGuidelineTrace(recommendation);
+
+  return {
+    ...recommendation,
+    source_url: trace.source_url,
+    clinical_review_status: trace.clinical_review_status,
+    clinical_review_note: trace.clinical_review_note,
+  };
+}
+
+function getGuidelineTrace(recommendation: DraftRecommendation): Pick<Recommendation, 'source_url' | 'clinical_review_status' | 'clinical_review_note'> {
+  if (recommendation.source === 'AICR') {
+    return {
+      source_url: guidelineSourceUrls.aicrPrevention,
+      clinical_review_status: 'source_traced',
+      clinical_review_note: 'Public prevention recommendation source traced; final product wording still needs release review.',
+    };
+  }
+
+  if (recommendation.source === 'USPSTF') {
+    return {
+      source_url: uspstfSourceUrl(recommendation.id),
+      clinical_review_status: 'source_traced',
+      clinical_review_note: 'USPSTF source traced; recommendation should still be reviewed before public clinical use.',
+    };
+  }
+
+  return {
+    source_url: guidelineSourceUrls.nccnGuidelines,
+    clinical_review_status: 'needs_clinical_review',
+    clinical_review_note: 'Survivorship abstraction requires clinician review against the current NCCN guideline before beta or production use.',
+  };
+}
+
+function uspstfSourceUrl(id: string): string {
+  if (id === 'breast-rec') return guidelineSourceUrls.uspstfBreast;
+  if (id === 'cervical-rec') return guidelineSourceUrls.uspstfCervical;
+  if (id === 'crc-rec') return guidelineSourceUrls.uspstfColorectal;
+  if (id === 'lung-rec') return guidelineSourceUrls.uspstfLung;
+  if (id === 'prostate-rec') return guidelineSourceUrls.uspstfProstate;
+  return 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation-topics';
 }
 
 function getLastCompleted(history: ScreeningEvent[], type: ScreeningEvent['type']): ScreeningEvent | undefined {

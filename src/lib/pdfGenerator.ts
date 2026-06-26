@@ -272,7 +272,10 @@ export function generateScreeningPDF(
 
       const splitType = doc.splitTextToSize(cType, 50);
       const splitMod = doc.splitTextToSize(modText, 50);
-      const splitReason = doc.splitTextToSize(`Rationale: ${actionText}`, contentWidth - 8);
+      const reviewText = rec.clinical_review_status === 'needs_clinical_review'
+        ? 'Clinical review status: clinician review needed.'
+        : 'Clinical review status: source traced; release review still required.';
+      const splitReason = doc.splitTextToSize(`Rationale: ${actionText} ${reviewText}`, contentWidth - 8);
 
       const cellHeight = Math.max(splitType.length * 4.5, splitMod.length * 4.5) + 6;
       const rationaleHeight = splitReason.length * 3.8 + 4;

@@ -70,6 +70,7 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] Medical disclaimer is visible.
 - [ ] Recommendation output is described as guideline-inspired and clinician-reviewable.
 - [ ] Survivorship recommendations require clinician review.
+- [ ] Recommendation source URLs and clinical review status are present for generated recommendations.
 
 ## Feedback Loop
 
