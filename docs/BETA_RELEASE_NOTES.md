@@ -1,6 +1,6 @@
 # Beta Release Notes
 
-Last updated: 2026-06-18
+Last updated: 2026-06-25
 
 Use this file to summarize each staging beta deploy. Keep entries brief and tester-facing.
 
@@ -13,6 +13,7 @@ Use this file to summarize each staging beta deploy. Keep entries brief and test
 - Added Profile account/data controls for local data export and permanent app data/account deletion.
 - Limited TypeScript checks to source/config files so generated build output cannot break `npm run lint`.
 - Added beta feedback and bug report issue templates.
+- Added public-issue safety checkboxes and private GitHub Security Advisory intake guidance.
 - Added beta testing guidance, known issue tracking, and deployment feedback loop documentation.
 - Added deployment environment validation for staging and production workflows.
 - Updated build tooling to patched Vite, tsx, and esbuild versions.
@@ -41,5 +42,5 @@ Staging URL:
 ### Tester Notes
 
 - Do not enter protected health information or sensitive personal details.
-- Report bugs through GitHub issues or the private beta intake form.
+- Report non-sensitive bugs through GitHub issues. Use GitHub Security Advisories for private security, privacy, or health-data concerns.
 ```

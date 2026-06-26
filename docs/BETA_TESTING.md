@@ -1,6 +1,6 @@
 # Beta Testing
 
-Last updated: 2026-06-18
+Last updated: 2026-06-25
 
 Use this guide once a staging URL exists and before inviting a broader public audience.
 
@@ -19,7 +19,7 @@ Testers should not enter protected health information, real medical records, or 
 - Confirm legal pages use the current beta support contact.
 - Confirm known issues are documented in `docs/KNOWN_ISSUES.md`.
 - Confirm release notes are updated in `docs/BETA_RELEASE_NOTES.md`.
-- Confirm feedback will be collected through GitHub issues or a private intake form.
+- Confirm public feedback will be collected through GitHub issues and private security/privacy/health-data reports will use GitHub Security Advisories.
 
 ## Core Test Script
 
@@ -60,4 +60,10 @@ During beta:
 
 ## Privacy Reminder For Public GitHub
 
-GitHub issues in this repository are public. Use them only for product, technical, UX, or non-sensitive clinical-language feedback. Private security, privacy, or health-data concerns should use GitHub private security advisories or a private support channel.
+GitHub issues in this repository are public. Use them only for product, technical, UX, or non-sensitive clinical-language feedback. Private security, privacy, or health-data concerns should use GitHub Security Advisories:
+
+```text
+https://github.com/mjfrieden/cancer-screening-passport/security/advisories/new
+```
+
+See `SECURITY.md` and `docs/SECURITY_PRIVACY_INTAKE.md`.

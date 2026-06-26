@@ -78,6 +78,6 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] Beta release notes are updated in `docs/BETA_RELEASE_NOTES.md`.
 - [ ] GitHub bug report issue template exists.
 - [ ] GitHub beta feedback issue template exists.
-- [ ] Private intake path exists for security, privacy, or health-data concerns.
+- [ ] Private GitHub Security Advisory intake path exists for security, privacy, or health-data concerns.
 - [ ] Support owner is assigned.
 - [ ] Beta cohort list is documented outside the app.

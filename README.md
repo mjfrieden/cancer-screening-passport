@@ -65,6 +65,8 @@ For iOS/Android wrapper work, see [docs/CAPACITOR_NATIVE.md](docs/CAPACITOR_NATI
 
 For App Store and Google Play preparation, see [docs/STORE_SUBMISSION_PREP.md](docs/STORE_SUBMISSION_PREP.md).
 
+For security and privacy reporting, see [SECURITY.md](SECURITY.md) and [docs/SECURITY_PRIVACY_INTAKE.md](docs/SECURITY_PRIVACY_INTAKE.md).
+
 ## Beta Legal Pages
 
 - `/legal/privacy.html`

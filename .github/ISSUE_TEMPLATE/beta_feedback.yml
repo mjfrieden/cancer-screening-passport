@@ -8,6 +8,14 @@ body:
     attributes:
       value: |
         Please do not include protected health information, real medical records, or sensitive personal details in this public issue.
+        For private security, privacy, or health-data concerns, use GitHub Security Advisories instead: https://github.com/mjfrieden/cancer-screening-passport/security/advisories/new
+  - type: checkboxes
+    id: public_safety
+    attributes:
+      label: Public issue safety
+      options:
+        - label: I have removed protected health information, real medical records, private tokens, and sensitive personal details.
+          required: true
   - type: dropdown
     id: tester_type
     attributes:
