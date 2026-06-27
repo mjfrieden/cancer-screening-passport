@@ -153,6 +153,27 @@ addCheck('beta checklist covers safety, source trace, and deploy gates', () => {
   ]);
 });
 
+addCheck('authenticated shell retains keyboard and screen-reader semantics', () => {
+  expectIncludes('src/App.tsx', [
+    'Skip to main content',
+    'id="main-content"',
+    'aria-label="Sign out"',
+    'aria-label="Add screening record"',
+    'aria-label="Primary"',
+    "aria-current={active ? 'page' : undefined}",
+  ]);
+  expectIncludes('src/components/AddScreeningModal.tsx', [
+    'role="dialog"',
+    'aria-modal="true"',
+    'aria-labelledby="add-screening-title"',
+    'aria-label="Close add screening dialog"',
+  ]);
+  expectIncludes('src/index.css', [
+    ':focus-visible',
+    'prefers-reduced-motion: reduce',
+  ]);
+});
+
 let failures = 0;
 for (const check of checks) {
   try {

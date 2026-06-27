@@ -125,6 +125,9 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
 
           {/* Modal Container */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="add-screening-title"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -132,9 +135,11 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
             className="relative z-10 w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl overflow-hidden"
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Add Past Screening</h3>
+              <h2 id="add-screening-title" className="text-xl font-bold text-gray-900">Add Past Screening</h2>
               <button 
+                type="button"
                 onClick={onClose}
+                aria-label="Close add screening dialog"
                 className="p-1.5 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
               >
                 <X className="w-5 h-5" />

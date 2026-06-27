@@ -72,6 +72,9 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] Recommendation output is described as guideline-inspired and clinician-reviewable.
 - [ ] Survivorship recommendations require clinician review.
 - [ ] Recommendation source URLs and clinical review status are present for generated recommendations.
+- [x] Baseline keyboard focus, skip navigation, named icon actions, dialog semantics, and reduced-motion support are guarded by beta preflight.
+- [x] Signed-out entry screen renders without horizontal overflow or console errors at desktop and 390x844 phone viewports.
+- [ ] Complete authenticated keyboard and screen-reader walkthrough with a throwaway account.
 
 ## Feedback Loop
 

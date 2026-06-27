@@ -27,7 +27,7 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 - Mobile packaging: Capacitor iOS/Android shells exist, but native build signing and device QA are not complete.
 - Store assets: create raster app icons, splash screens, screenshots, store descriptions, privacy nutrition labels, and support URLs.
 - Observability: add client error monitoring, uptime monitoring, and crash reporting. Structured server logs are only needed if the optional server path is used.
-- Accessibility and QA: add keyboard/screen-reader checks, mobile viewport checks, and user-flow tests.
+- Accessibility and QA: baseline keyboard focus, skip navigation, named icon actions, dialog semantics, reduced-motion support, and signed-out desktop/mobile viewport checks are complete. Authenticated screen-reader flows and real-device user-flow tests remain.
 
 ## Recommended Release Path
 

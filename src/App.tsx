@@ -234,6 +234,12 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
+      <a
+        href="#main-content"
+        className="sr-only z-50 rounded-md bg-white px-4 py-2 font-semibold text-blue-700 shadow focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Skip to main content
+      </a>
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100 p-4">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -244,7 +250,9 @@ function AppContent() {
             <span className="font-bold text-lg tracking-tight">Cancer Prevention Passport</span>
           </div>
           <button
+            type="button"
             onClick={() => auth.signOut()}
+            aria-label="Sign out"
             className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-full transition-colors"
           >
             <LogOut className="w-5 h-5" />
@@ -253,7 +261,7 @@ function AppContent() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto p-4 pt-8">
+      <main id="main-content" tabIndex={-1} className="max-w-2xl mx-auto p-4 pt-8">
         <Suspense fallback={<TabLoadingState />}>
           <AnimatePresence mode="wait">
             {activeTab === 'dashboard' && (
@@ -310,7 +318,9 @@ function AppContent() {
       {/* Floating Plus for adding record */}
       <div className="fixed bottom-24 right-6 z-40">
         <button 
+          type="button"
           onClick={() => setIsModalOpen(true)}
+          aria-label="Add screening record"
           className="p-4 bg-blue-600 text-white rounded-full shadow-2xl shadow-blue-300 hover:scale-110 active:scale-95 transition-all"
         >
           <Plus className="w-6 h-6" />
@@ -325,7 +335,7 @@ function AppContent() {
       />
 
       {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-2 py-4">
+      <nav aria-label="Primary" className="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-2 py-4">
         <div className="max-w-2xl mx-auto flex items-center justify-around">
           <NavButton active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} icon={LayoutDashboard} label="Plan" />
           <NavButton active={activeTab === 'lifestyle'} onClick={() => setActiveTab('lifestyle')} icon={Apple} label="Healthy" />
@@ -371,7 +381,9 @@ function LegalLinks({ compact = false }: { compact?: boolean }) {
 function NavButton({ active, onClick, icon: Icon, label }: { active: boolean, onClick: () => void, icon: any, label: string }) {
   return (
     <button
+      type="button"
       onClick={onClick}
+      aria-current={active ? 'page' : undefined}
       className={cn(
         "flex flex-col items-center gap-1 transition-all",
         active ? "text-blue-600 font-bold scale-110" : "text-gray-400 font-medium"
