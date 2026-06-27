@@ -1,6 +1,6 @@
 # Staging Status
 
-Last updated: 2026-06-23
+Last updated: 2026-06-27
 
 ## Confirmed Account
 
@@ -33,6 +33,15 @@ No other Google account should be used without explicit confirmation.
 - Created GitHub Environments:
   - `staging`
   - `production`
+- Created Cloudflare Pages Free project:
+  - `cancer-screening-passport`
+  - reserved hostname `cancer-screening-passport.pages.dev`
+- Configured GitHub `staging` environment with:
+  - `CLOUDFLARE_ACCOUNT_ID` secret
+  - `CLOUDFLARE_API_TOKEN` secret
+  - `CLOUDFLARE_PAGES_PROJECT=cancer-screening-passport`
+  - `VITE_ENABLE_CLINICAL_SIMULATOR=false`
+- Created a Cloudflare account API token limited to `Pages Write`, expiring June 27, 2027.
 
 ## Cost Guardrail
 
@@ -58,11 +67,18 @@ HTTP 403 PERMISSION_DENIED: The caller does not have permission
 
 This still fails after granting `roles/firebase.admin` to `marshall@whitecloudmedical.com`, even though the account is also project Owner. The project belongs to organization `883366996416`, so this may be an organization policy, Firebase onboarding, or console-level permission restriction.
 
+The Firebase Console was also tested on June 27, 2026 while signed in as
+`marshall@whitecloudmedical.com`. Its "Add Firebase to Google Cloud project"
+dialog returned "No Google Cloud projects match your search" for
+`cancer-passport-staging`. This confirms the blocker exists in the Firebase
+Console as well as the CLI.
+
 ## Required Manual Check
 
-Open Firebase Console as `marshall@whitecloudmedical.com` and try to add Firebase to project `cancer-passport-staging` manually.
-
-If the console also blocks activation, check with the Google Workspace/Cloud organization administrator for Firebase project creation restrictions.
+Ask the Google Workspace/Cloud organization administrator for organization
+`883366996416` to allow `marshall@whitecloudmedical.com` to add Firebase to the
+existing `cancer-passport-staging` project, or move the project to a parent
+resource where Firebase project onboarding is allowed.
 
 ## Current Best Path
 
@@ -72,6 +88,10 @@ Continue with the static no-cost app architecture:
 - avoid Cloud Run,
 - avoid Artifact Registry,
 - use Firebase Auth/Firestore only after Firebase activation is resolved,
-- use Cloudflare Pages Free or Firebase Hosting Spark once the Firebase app config exists.
+- deploy the existing Cloudflare Pages Free project once the Firebase web app
+  config exists.
+
+Do not deploy the current `.env.local` build as staging. It points to the older
+`gray-cloud-medical` Firebase project rather than `cancer-passport-staging`.
 
 See `docs/STATIC_FREE_DEPLOYMENT.md`.

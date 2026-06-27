@@ -7,16 +7,16 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] Dedicated staging Firebase project exists.
 - [ ] Dedicated production Firebase project exists.
 - [ ] `.firebaserc` points to real dev/staging/production project IDs.
-- [ ] Firestore database exists in staging.
+- [x] Firestore database exists in staging.
 - [ ] Firebase Authentication Google provider is enabled.
 - [ ] Staging domain is added to Firebase Auth authorized domains.
 - [ ] Firestore rules are deployed to staging.
-- [ ] CI is green on `main`.
+- [x] CI is green on `main`.
 - [ ] GitHub `staging` environment variables are configured.
 - [ ] GitHub `staging` environment secrets for Google Workload Identity are configured.
-- [ ] Static hosting target exists.
-- [ ] Staging deploy does not require Cloud Run, Cloud Build, or Artifact Registry while the cost ceiling is near $0.
-- [ ] `npm run preflight:beta` passes.
+- [x] Static hosting target exists.
+- [x] Staging deploy does not require Cloud Run, Cloud Build, or Artifact Registry while the cost ceiling is near $0.
+- [x] `npm run preflight:beta` passes.
 - [ ] `Deploy Firestore Rules` workflow has passed for staging, or rules were deployed manually.
 - [ ] `Deploy Static Cloudflare Pages`, `Deploy Static Firebase Hosting`, or equivalent static-host deploy has passed for staging.
 
