@@ -263,7 +263,7 @@ addCheck('private intake and traceability docs are present', () => {
     'enableImprovedEmailPrivacy',
     "authorizedDomains.includes('localhost')",
     'defaultSupportedIdpConfigs/google.com',
-    'googleProvider.enabled',
+    'googleProvider?.enabled',
   ]);
 });
 
