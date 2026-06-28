@@ -20,14 +20,22 @@ Last updated: June 28, 2026
 - Production Firebase configuration stored as GitHub Environment variables.
 - Clinical simulator disabled for production.
 - Analytics measurement ID intentionally omitted.
+- Cloud Billing account `0174EF-222187-7B71AF` linked and billing enabled.
+- A recurring $0.05 monthly budget covers the production project, with alerts
+  at 50% actual spend, 100% actual spend, and 100% forecasted spend.
+- White Cloud Medical, LLC accepted the Google Cloud HIPAA Business Associate
+  Addendum on June 28, 2026.
+- The BAA effective date is recorded in the GitHub production environment.
+- Keyless GitHub workload identity is configured for
+  `mjfrieden/cancer-screening-passport`.
+- The production deployment service account is limited to Firebase Rules
+  administration and has no downloaded service-account key.
+- GitHub production environment secrets reference the workload identity
+  provider and production rules service account.
 - GitHub production gate set to `HIPAA_PRODUCTION_APPROVED=false`.
 
 ## Not Provisioned or Approved
 
-- No Cloud Billing account is accessible to the approved Google identity.
-- Billing is not enabled on the production project.
-- No budget or billing alerts can be created until a billing account exists.
-- Google Cloud BAA acceptance has not been recorded.
 - Google Identity provider OAuth client and consent screen are not configured.
 - Production Firestore rules have not been deployed.
 - No production hosting service has been approved.
@@ -36,17 +44,13 @@ Last updated: June 28, 2026
 
 ## Next Owner Actions
 
-1. Create a Business-type Google Cloud Billing account for White Cloud Medical,
-   LLC and link it to `cancer-passport-wcm-prod`.
-2. Review and accept the Google Cloud BAA as an authorized White Cloud Medical,
-   LLC representative, then retain the effective agreement.
-3. Provide the BAA effective date and assign the privacy officer, security
-   officer, and incident commander.
-4. Configure the Google OAuth consent screen and Google Identity Platform
+1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
+   White Cloud Medical, LLC compliance records.
+2. Assign the privacy officer, security officer, and incident commander.
+3. Configure the Google OAuth consent screen and Google Identity Platform
    provider without adding `localhost` to production authorized domains.
-5. Select a production web hosting service explicitly covered under the BAA.
+4. Select a production web hosting service explicitly covered under the BAA.
 
-After those actions, automation can create budget alerts, configure least
-privilege workload identity, deploy and test Firestore rules, complete
+After those actions, automation can deploy and test Firestore rules, complete
 authenticated synthetic-data testing, and prepare the final PHI activation
 review.
