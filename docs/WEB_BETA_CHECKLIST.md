@@ -32,15 +32,15 @@ Use this checklist before sending a staging link to beta testers.
 
 ## Functional Checks
 
-- [ ] Sign in with Google.
-- [ ] Save profile.
-- [ ] Add screening event.
-- [ ] View generated recommendations.
-- [ ] Download FHIR JSON.
-- [ ] Download clinician PDF.
-- [ ] Export local account data JSON from Profile.
+- [x] Sign in with Google.
+- [x] Save profile.
+- [x] Add screening event.
+- [x] View generated recommendations.
+- [x] Download FHIR JSON.
+- [x] Download clinician PDF.
+- [x] Export local account data JSON from Profile.
 - [ ] Delete app data/account with a throwaway tester account.
-- [ ] Sign out.
+- [x] Sign out.
 - [ ] Confirm a second user cannot access the first user's documents.
 
 ## Mobile Checks
@@ -58,7 +58,7 @@ Use this checklist before sending a staging link to beta testers.
 
 ## Native Shell Checks
 
-- [ ] `npm run cap:sync` completes.
+- [x] `npm run cap:sync` completes.
 - [ ] iOS project opens in Xcode.
 - [ ] Android project opens in Android Studio.
 - [ ] Bundle/application ID is approved for store use.
@@ -66,12 +66,12 @@ Use this checklist before sending a staging link to beta testers.
 
 ## Product Safety
 
-- [ ] No "HIPAA-ready" claim unless compliance review supports it.
-- [ ] No guaranteed EHR/EMR import claim.
-- [ ] Medical disclaimer is visible.
-- [ ] Recommendation output is described as guideline-inspired and clinician-reviewable.
-- [ ] Survivorship recommendations require clinician review.
-- [ ] Recommendation source URLs and clinical review status are present for generated recommendations.
+- [x] No "HIPAA-ready" claim unless compliance review supports it.
+- [x] No guaranteed EHR/EMR import claim.
+- [x] Medical disclaimer is visible.
+- [x] Recommendation output is described as guideline-inspired and clinician-reviewable.
+- [x] Survivorship recommendations require clinician review.
+- [x] Recommendation source URLs and clinical review status are present for generated recommendations.
 - [x] Baseline keyboard focus, skip navigation, named icon actions, dialog semantics, and reduced-motion support are guarded by beta preflight.
 - [x] Signed-out entry screen renders without horizontal overflow or console errors at desktop and 390x844 phone viewports.
 - [ ] Complete authenticated keyboard and screen-reader walkthrough with a throwaway account.

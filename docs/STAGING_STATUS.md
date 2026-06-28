@@ -1,6 +1,6 @@
 # Staging Status
 
-Last updated: 2026-06-27
+Last updated: 2026-06-27 23:24 CDT
 
 ## Confirmed Account
 
@@ -59,6 +59,32 @@ No other Google account should be used without explicit confirmation.
 - Passed `npm run smoke:static` against the live Pages URL.
 - Verified the live signed-out application renders without console warnings or
   errors.
+- Completed the authenticated staging beta flow with synthetic data:
+  - Google sign-in
+  - profile save and persistence after reload
+  - screening event creation
+  - source-linked recommendation generation
+  - FHIR JSON, clinician PDF, and account JSON exports
+  - sign-out
+- Corrected normal colonoscopy follow-up from an erroneous 3-year projection
+  to the expected 10-year projection and added regression coverage.
+- Corrected local date handling for screening records.
+- Moved the profile save action above the fixed navigation so pointer users can
+  submit the form.
+- Removed the initial timeline chart sizing warning and confirmed a clean
+  authenticated reload on the live staging URL.
+- Latest verified staging commit: `e85d237`.
+- Latest successful CI run: `28311197754`.
+- Latest successful Cloudflare staging deployment: `28311216146`.
+
+## Remaining Beta Checks
+
+- Delete the throwaway Firebase account and its records after explicit
+  destructive-action confirmation.
+- Verify a second user cannot read the first user's Firestore documents.
+- Complete iOS Safari and Android Chrome install/layout/download checks on real
+  devices.
+- Complete the authenticated keyboard and screen-reader walkthrough.
 
 ## Cost Guardrail
 
