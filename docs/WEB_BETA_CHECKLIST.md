@@ -41,7 +41,7 @@ Use this checklist before sending a staging link to beta testers.
 - [x] Export local account data JSON from Profile.
 - [ ] Delete app data/account with a throwaway tester account.
 - [x] Sign out.
-- [ ] Confirm a second user cannot access the first user's documents.
+- [x] Confirm a second user cannot access the first user's documents.
 
 ## Mobile Checks
 
@@ -52,9 +52,9 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] App can be installed from Android Chrome.
 - [ ] iOS Safari layout works.
 - [ ] Android Chrome layout works.
-- [ ] Bottom navigation respects safe areas.
-- [ ] PDF download behavior is acceptable.
-- [ ] JSON download/share behavior is acceptable.
+- [x] Bottom navigation respects safe areas.
+- [x] PDF download behavior is acceptable in desktop Chrome.
+- [x] JSON download/share behavior is acceptable in desktop Chrome.
 
 ## Native Shell Checks
 

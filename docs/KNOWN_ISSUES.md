@@ -1,12 +1,14 @@
 # Known Issues
 
-Last updated: 2026-06-25
+Last updated: 2026-06-28
 
 This file tracks issues that beta testers should know before using a staging build.
 
 ## Current Known Issues
 
-- Native iOS and Android shells exist, but native simulator/device QA has not been completed on this machine.
+- Native iOS and Android shells exist, but native simulator/device QA is blocked
+  on this machine because full Xcode and a Java/Android SDK toolchain are not
+  installed.
 - Native Google sign-in behavior has not been validated inside iOS or Android webviews.
 - Production privacy, terms, and medical disclaimer pages still need final legal/clinical review.
 - Production still needs a monitored support email and final incident-response owner; beta private reports use GitHub Security Advisories.
@@ -14,11 +16,15 @@ This file tracks issues that beta testers should know before using a staging bui
 - Recommendation source URLs and review status are now emitted, but the actual wording and intervals still need clinician sign-off.
 - Consent acknowledgement is implemented, but production policy text still needs legal review.
 - Account/data export and deletion controls exist in the Profile tab, but the deletion flow still needs staging QA with a throwaway Google account.
-- Firestore rules tests pass in CI, but local rules testing requires Java to be installed.
+- Firestore rules tests pass in CI and cover cross-user profile, consent, and
+  screening-event isolation; local rules testing still requires Java.
 
 ## Resolved Issues
 
 - PWA service worker, offline page, and manifest are present for web beta validation.
 - Capacitor iOS and Android shells sync production web assets.
+- Approved brand lockup, PWA icons, iOS app icon, and Android launcher assets are
+  integrated.
+- Bottom navigation and fixed actions account for mobile safe areas.
 - Deployment workflows validate required staging/production environment variables before deploy steps.
 - Public GitHub issue templates warn against sensitive data and private security/privacy intake is documented.

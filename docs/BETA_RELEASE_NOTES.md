@@ -1,10 +1,17 @@
 # Beta Release Notes
 
-Last updated: 2026-06-25
+Last updated: 2026-06-28
 
 Use this file to summarize each staging beta deploy. Keep entries brief and tester-facing.
 
 ## Unreleased
+
+- Added the Cancer Prevention Passport brand lockup and mark across web, PWA,
+  iOS, and Android icon surfaces.
+- Added mobile safe-area support for fixed navigation and actions.
+- Corrected normal colonoscopy follow-up projections and local date handling.
+- Fixed the Profile save action being covered by bottom navigation.
+- Completed the authenticated staging regression path with synthetic data.
 
 - Added a public production roadmap.
 - Added post-sign-in acknowledgement for privacy, terms, and medical disclaimer versions before health data entry.
@@ -19,6 +26,27 @@ Use this file to summarize each staging beta deploy. Keep entries brief and test
 - Added beta testing guidance, known issue tracking, and deployment feedback loop documentation.
 - Added deployment environment validation for staging and production workflows.
 - Updated build tooling to patched Vite, tsx, and esbuild versions.
+
+## 2026-06-28 - Branded Staging Beta
+
+Staging URL: `https://cancer-screening-passport.pages.dev`
+
+### Changed
+
+- Introduced the approved Cancer Prevention Passport visual identity.
+- Added safe-area spacing for edge-to-edge mobile displays.
+
+### Fixed
+
+- Normal colonoscopy findings now retain the routine 10-year projection.
+- Profile saving is no longer covered by fixed navigation.
+- Timeline charts mount without transient sizing warnings.
+
+### Known Issues
+
+- Native simulator/device builds require Xcode and Java/Android SDK tooling.
+- Account deletion still requires explicit destructive-action approval.
+- Public launch still requires support ownership plus legal and clinical review.
 
 ## Template
 

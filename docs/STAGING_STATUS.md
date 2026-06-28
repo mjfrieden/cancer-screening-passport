@@ -1,6 +1,6 @@
 # Staging Status
 
-Last updated: 2026-06-27 23:24 CDT
+Last updated: 2026-06-28 08:40 CDT
 
 ## Confirmed Account
 
@@ -73,18 +73,33 @@ No other Google account should be used without explicit confirmation.
   submit the form.
 - Removed the initial timeline chart sizing warning and confirmed a clean
   authenticated reload on the live staging URL.
-- Latest verified staging commit: `e85d237`.
-- Latest successful CI run: `28311197754`.
-- Latest successful Cloudflare staging deployment: `28311216146`.
+- Added the approved Cancer Prevention Passport lockup and mark to the signed-out
+  experience, authenticated header, PWA icons, iOS app icon, and Android
+  launcher densities.
+- Added `viewport-fit=cover` and safe-area spacing for the bottom navigation,
+  legal strip, floating screening action, profile save action, and main content.
+- Re-ran the authenticated beta path after branding:
+  - approved Google sign-in
+  - persisted profile and screening history
+  - all five navigation tabs
+  - screening dialog and local date
+  - keyboard skip navigation
+  - FHIR JSON, clinician PDF, and account JSON exports
+  - clean console and source-linked recommendations
+- Confirmed cross-user profile/event isolation in Firestore emulator rules tests.
+- Latest verified staging commit: `77d721d`.
+- Latest successful CI run: `28323979475`.
+- Latest successful Cloudflare staging deployment: `28324005167`.
 
 ## Remaining Beta Checks
 
 - Delete the throwaway Firebase account and its records after explicit
   destructive-action confirmation.
-- Verify a second user cannot read the first user's Firestore documents.
 - Complete iOS Safari and Android Chrome install/layout/download checks on real
   devices.
 - Complete the authenticated keyboard and screen-reader walkthrough.
+- Install full Xcode and a Java/Android SDK toolchain, then build the synced
+  native shells. This machine currently has neither `xcodebuild` nor Java.
 
 ## Cost Guardrail
 

@@ -1,6 +1,6 @@
 # Production Readiness Review
 
-Last reviewed: 2026-06-25
+Last reviewed: 2026-06-28
 
 ## Current Status
 
@@ -23,9 +23,8 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 - Medical/legal positioning: remove or soften unverified claims such as "HIPAA-ready" and direct EMR import until compliance, BAA coverage, audit logging, and integration testing are complete.
 - Health data governance: beta privacy policy, terms, medical disclaimer, consent acknowledgement, private GitHub Security Advisory intake, and data export/deletion controls exist; production legal review, breach response process, and monitored support contact are still required.
 - Firebase production setup: move from the AI Studio Firebase project to a clean product Firebase project with staging and production environments.
-- Firestore rules: list-query rules should be tested with the Firebase emulator; collection queries commonly require query constraints that rules can prove.
 - Mobile packaging: Capacitor iOS/Android shells exist, but native build signing and device QA are not complete.
-- Store assets: create raster app icons, splash screens, screenshots, store descriptions, privacy nutrition labels, and support URLs.
+- Store assets: branded raster app icons are complete; final splash screens, screenshots, store descriptions, privacy nutrition labels, and support URLs remain.
 - Observability: add client error monitoring, uptime monitoring, and crash reporting. Structured server logs are only needed if the optional server path is used.
 - Accessibility and QA: baseline keyboard focus, skip navigation, named icon actions, dialog semantics, reduced-motion support, and signed-out desktop/mobile viewport checks are complete. Authenticated screen-reader flows and real-device user-flow tests remain.
 
@@ -44,9 +43,8 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 - Complete clinician review using the trace metadata described in `docs/GUIDELINE_TRACEABILITY.md`.
 - Keep `npm run preflight:beta` green as the static beta safety gate evolves.
 - Hide the profile preset simulator behind a development flag.
-- Add Firebase emulator tests for Firestore security rules.
 - Code-split heavy PDF/chart/FHIR dependencies to reduce the initial bundle.
-- Add a `public/` raster icon set generated from the SVG app mark before store packaging.
+- Install full Xcode and Java/Android SDK tooling on the build machine.
 
 ## Store Notes
 

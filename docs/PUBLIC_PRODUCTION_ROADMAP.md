@@ -1,6 +1,6 @@
 # Public Production Roadmap
 
-Last updated: 2026-06-27
+Last updated: 2026-06-28
 
 This roadmap separates a controlled web beta from public production and app-store launch. Cancer Prevention Passport handles sensitive health-related information, so production means more than a passing build.
 
@@ -83,10 +83,23 @@ Exit criteria:
 
 ## Current Next Step
 
-Run the authenticated controlled-beta checklist at
-`https://cancer-screening-passport.pages.dev` using approved throwaway accounts.
-Validate consent, profile/event persistence, recommendations, exports, deletion,
-sign-out, and cross-user isolation before inviting beta testers.
+The authenticated controlled-beta path at
+`https://cancer-screening-passport.pages.dev` now passes for sign-in, persisted
+synthetic profile/event data, recommendations, navigation, exports, sign-out,
+keyboard skip navigation, and Firestore cross-user isolation. Production brand
+assets are live across the PWA and native icon sets.
+
+The next gates are:
+
+1. Explicitly approve and complete app-account deletion for the staging tester.
+2. Assign a monitored public support contact and incident-response owner.
+3. Obtain legal and clinical review of policy and recommendation language.
+4. Test PWA installation, downloads, and safe areas on physical iOS and Android
+   devices.
+5. Install full Xcode plus Java/Android SDK tooling, then build and run the
+   Capacitor shells.
+6. Create a separate production Firebase project only after another cost and
+   account review.
 
 See `docs/STATIC_FREE_DEPLOYMENT.md` and `docs/CLOUDFLARE_PAGES_DEPLOYMENT.md` for the recommended no-cost deployment path.
 
@@ -94,8 +107,9 @@ GitHub Environments named `staging` and `production` now exist. A `cancer-passpo
 
 Firebase activation, the staging web app, Google sign-in, authorized Pages
 domain, Firestore rules, GitHub staging variables, Cloudflare deployment, live
-static smoke tests, and signed-out browser verification are complete. The
-project remains on the no-cost Firebase Spark and Cloudflare Pages Free path.
+static smoke tests, authenticated browser verification, production brand
+assets, and safe-area support are complete. The project remains on the no-cost
+Firebase Spark and Cloudflare Pages Free path.
 See `docs/STAGING_STATUS.md`.
 
 Beta security/privacy intake is documented in `SECURITY.md` and `docs/SECURITY_PRIVACY_INTAKE.md`, but production still needs a monitored support address and named incident-response owner.
