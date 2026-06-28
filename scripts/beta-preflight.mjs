@@ -168,6 +168,11 @@ addCheck('authenticated shell retains keyboard and screen-reader semantics', () 
     'aria-labelledby="add-screening-title"',
     'aria-label="Close add screening dialog"',
   ]);
+  expectIncludes('src/components/ProfileForm.tsx', [
+    'sticky bottom-28 z-20',
+    'type="submit"',
+    'Update Passport Profile',
+  ]);
   expectIncludes('src/index.css', [
     ':focus-visible',
     'prefers-reduced-motion: reduce',

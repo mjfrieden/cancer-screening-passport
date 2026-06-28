@@ -375,7 +375,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
         </div>
       </section>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
+      <div className="sticky bottom-28 z-20 p-3 bg-gradient-to-t from-white via-white to-transparent">
         <button
           type="submit"
           disabled={loading}
