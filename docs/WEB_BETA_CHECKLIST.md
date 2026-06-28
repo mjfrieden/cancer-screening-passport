@@ -25,7 +25,7 @@ Use this checklist before sending a staging link to beta testers.
 - [x] `VITE_ENABLE_CLINICAL_SIMULATOR=false`.
 - [x] All `VITE_FIREBASE_*` staging values are set at build time.
 - [x] `APP_URL` points to the staging URL.
-- [ ] Legal pages include real support contact information.
+- [x] Legal pages include `support@whitecloudmedical.com`.
 - [x] Privacy/terms/disclaimer links are reachable from the app.
 - [x] Support page is reachable from the app.
 - [x] Current privacy, terms, and medical disclaimer acknowledgement is required after sign-in.

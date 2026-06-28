@@ -75,9 +75,9 @@ Official references:
 - [ ] Firebase, Cloudflare, monitoring, email, and support vendors are approved
       for the permitted data class.
 - [ ] Required BAAs or other data-processing agreements are executed.
-- [ ] A monitored White Cloud Medical support/privacy address is published.
+- [x] A monitored White Cloud Medical support/privacy address is published at
+      `support@whitecloudmedical.com`.
 - [ ] Privacy, security, and incident-response owners are named.
 - [ ] Data retention and deletion timelines are approved.
 - [ ] Store privacy disclosures match actual collection and sharing.
 - [ ] Marketing claims and screenshots remain within the approved intended use.
-

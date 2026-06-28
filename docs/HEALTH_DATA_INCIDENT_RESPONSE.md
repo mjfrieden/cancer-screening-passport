@@ -67,5 +67,4 @@ https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-not
 - [ ] Security/engineering lead
 - [ ] Legal counsel
 - [ ] User communications lead
-- [ ] Monitored support/privacy address
-
+- [x] Monitored support/privacy address: `support@whitecloudmedical.com`

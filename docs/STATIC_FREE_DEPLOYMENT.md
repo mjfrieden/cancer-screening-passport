@@ -68,6 +68,10 @@ It builds `dist/` and deploys Firebase Hosting without Docker, Cloud Run, Cloud 
 
 Cloudflare Pages can build and serve the static app directly from GitHub.
 
+Use it only for synthetic-data/no-PHI beta traffic. It is not the approved
+real-PHI production host because a Cloudflare BAA requires an Enterprise
+customer relationship.
+
 This is the best static host fallback while Firebase Hosting activation is blocked. It still needs a working Firebase web app config for sign-in and Firestore data.
 
 Suggested settings:

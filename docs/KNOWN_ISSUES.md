@@ -11,10 +11,13 @@ This file tracks issues that beta testers should know before using a staging bui
   installed.
 - Native Google sign-in behavior has not been validated inside iOS or Android webviews.
 - Production privacy, terms, and medical disclaimer pages still need final legal/clinical review.
-- Production still needs a monitored support email and final incident-response owner; beta private reports use GitHub Security Advisories.
+- Production support is published at `support@whitecloudmedical.com`; a final
+  incident-response owner still must be assigned.
 - Recommendation logic is guideline-inspired and must be clinically reviewed before public clinical use.
 - Recommendation source URLs and review status are now emitted, but the actual wording and intervals still need clinician sign-off.
-- Consent acknowledgement is implemented, but production policy text still needs legal review.
+- Consent acknowledgement is implemented and White Cloud Medical, LLC has
+  reviewed the current policies. Independent counsel confirmation remains
+  recommended for enforceability and jurisdiction-specific requirements.
 - Account/data export and deletion controls exist in the Profile tab, but the deletion flow still needs staging QA with a throwaway Google account.
 - Firestore rules tests pass in CI and cover cross-user profile, consent, and
   screening-event isolation; local rules testing still requires Java.

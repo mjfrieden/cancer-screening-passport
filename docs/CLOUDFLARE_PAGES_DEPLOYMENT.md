@@ -4,6 +4,11 @@ Last updated: 2026-06-24
 
 Cloudflare Pages Free is the recommended no-cost static host fallback while Firebase Hosting activation for `cancer-passport-staging` is blocked.
 
+This path is approved only for the no-PHI beta. Cloudflare states that it
+enters into BAAs only with Enterprise customers, so Pages Free must not be used
+as the production endpoint when real PHI is permitted. See
+`docs/HIPAA_PRODUCTION_ARCHITECTURE.md`.
+
 This path deploys the prebuilt `dist/` folder. It does not require Cloud Run, Cloud Build, Artifact Registry, billing, Workers, KV, R2, D1, or Pages Functions.
 
 ## Prerequisites

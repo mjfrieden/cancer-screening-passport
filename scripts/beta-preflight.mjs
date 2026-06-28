@@ -134,7 +134,17 @@ addCheck('legal and support pages keep beta safety warnings', () => {
     'GitHub Security Advisories',
     'protected health information',
     'Public Beta Feedback',
+    'support@whitecloudmedical.com',
   ]);
+  for (const path of [
+    'public/legal/privacy.html',
+    'public/legal/terms.html',
+  ]) {
+    expectIncludes(path, [
+      'support@whitecloudmedical.com',
+      'mailto:support@whitecloudmedical.com',
+    ]);
+  }
 });
 
 addCheck('public issue templates protect sensitive reports', () => {
@@ -179,6 +189,13 @@ addCheck('private intake and traceability docs are present', () => {
     'Incident commander',
     'Privacy lead',
     'Health Breach Notification Rule',
+  ]);
+  expectIncludes('docs/HIPAA_PRODUCTION_ARCHITECTURE.md', [
+    'Cloudflare Pages Free is not approved for production PHI',
+    'Google Cloud BAA',
+    'Identity Platform',
+    'Firestore',
+    'support@whitecloudmedical.com',
   ]);
 });
 

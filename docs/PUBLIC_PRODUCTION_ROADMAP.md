@@ -91,8 +91,12 @@ assets are live across the PWA and native icon sets.
 
 The next gates are:
 
-1. Assign a monitored White Cloud Medical, LLC public support contact and incident-response owner.
-2. Obtain licensed legal review of the policy language. Physician content review was completed June 28, 2026.
+1. Assign the final incident-response owner. Public support is now monitored at
+   `support@whitecloudmedical.com`.
+2. White Cloud Medical, LLC reviewed the current policies and physician content
+   review was completed June 28, 2026. Obtain independent counsel confirmation
+   for enforceability and jurisdiction-specific requirements before real-PHI
+   production.
 3. Test PWA installation, downloads, and safe areas on physical iOS and Android
    devices.
 4. Install full Xcode plus Java/Android SDK tooling, then build and run the
