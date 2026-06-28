@@ -628,7 +628,13 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
         <div className="p-5 sm:p-6 bg-white border border-gray-100 rounded-3xl shadow-sm space-y-4">
           <div className="text-[10px] font-extrabold uppercase tracking-widest text-gray-550">Chronological Screening Timeline and next due projections</div>
           <div className="h-[280px] w-full font-sans text-xs">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={280}>
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              minWidth={0}
+              minHeight={280}
+              initialDimension={{ width: 1, height: 280 }}
+            >
               <LineChart margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={true} stroke="#f3f4f6" />
                 <XAxis 
