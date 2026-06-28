@@ -245,8 +245,9 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
         </div>
         <div className="grid gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <label htmlFor="profile-name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
             <input
+              id="profile-name"
               type="text"
               required
               className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
@@ -256,8 +257,9 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+              <label htmlFor="profile-dob" className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
               <input
+                id="profile-dob"
                 type="date"
                 required
                 className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
@@ -266,8 +268,9 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Sex Assigned at Birth</label>
+              <label htmlFor="profile-sex" className="block text-sm font-medium text-gray-700 mb-1">Sex Assigned at Birth</label>
               <select
+                id="profile-sex"
                 className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 value={formData.sexAssignedAtBirth}
                 onChange={e => setFormData({ ...formData, sexAssignedAtBirth: e.target.value as any })}
@@ -294,6 +297,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
                 <button
                   key={s}
                   type="button"
+                  aria-pressed={formData.smokingHistory?.status === s}
                   onClick={() => updateSmoking('status', s)}
                   className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-all ${
                     formData.smokingHistory?.status === s ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-200'
@@ -308,8 +312,9 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
           {(formData.smokingHistory?.status === 'former' || formData.smokingHistory?.status === 'current') && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 bg-gray-50 rounded-xl space-y-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Pack-years</label>
+                <label htmlFor="profile-pack-years" className="block text-xs font-medium text-gray-500 mb-1">Pack-years</label>
                 <input
+                  id="profile-pack-years"
                   type="number"
                   className="w-full p-2 border border-gray-200 rounded-lg"
                   value={formData.smokingHistory?.packYears || 0}
@@ -318,8 +323,9 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
               </div>
               {formData.smokingHistory?.status === 'former' && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Quit Date</label>
+                  <label htmlFor="profile-quit-date" className="block text-xs font-medium text-gray-500 mb-1">Quit Date</label>
                   <input
+                    id="profile-quit-date"
                     type="date"
                     className="w-full p-2 border border-gray-200 rounded-lg"
                     value={formData.smokingHistory?.quitDate || ''}
@@ -336,6 +342,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
                <p className="text-[10px] text-gray-500">Includes any prior cancer treatments</p>
              </div>
              <input
+               aria-label="Personal history of cancer"
                type="checkbox"
                className="w-5 h-5 accent-blue-600"
                checked={formData.personalHistoryOfCancer}
@@ -350,6 +357,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
                  <p className="text-[10px] text-gray-500">Uncheck if you have had a total hysterectomy</p>
                </div>
                <input
+                 aria-label="Cervix present"
                  type="checkbox"
                  className="w-5 h-5 accent-blue-600"
                  checked={formData.cervixPresent}

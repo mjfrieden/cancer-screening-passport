@@ -64,9 +64,16 @@ interface AddScreeningModalProps {
   loading: boolean;
 }
 
+function getLocalDateInputValue(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: AddScreeningModalProps) {
   const [type, setType] = useState<ScreeningEvent['type']>('colonoscopy');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(getLocalDateInputValue());
   const [result, setResult] = useState('Normal (No polyps)');
   const [isAbnormal, setIsAbnormal] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,7 +81,7 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
   useEffect(() => {
     if (isOpen) {
       setType('colonoscopy');
-      setDate(new Date().toISOString().split('T')[0]);
+      setDate(getLocalDateInputValue());
       setResult('Normal (No polyps)');
       setIsAbnormal(false);
       setError(null);
@@ -148,8 +155,9 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Screening Test Type</label>
+                <label htmlFor="screening-type" className="block text-sm font-semibold text-gray-700 mb-1">Screening Test Type</label>
                 <select
+                  id="screening-type"
                   value={type}
                   onChange={(e) => handleTypeChange(e.target.value as any)}
                   className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
@@ -165,10 +173,11 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Completion Date</label>
+                <label htmlFor="screening-date" className="block text-sm font-semibold text-gray-700 mb-1">Completion Date</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-3.5 w-4 h-4 text-gray-400" />
                   <input
+                    id="screening-date"
                     type="date"
                     required
                     value={date}
@@ -183,8 +192,9 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
                 <div className="space-y-3">
                   {/* Preset Selector Dropdown */}
                   <div className="space-y-1">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 block">Common Presets Based on Test</span>
+                    <label htmlFor="screening-result-preset" className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 block">Common Presets Based on Test</label>
                     <select
+                      id="screening-result-preset"
                       value={PRESETS_BY_TYPE[type]?.some(p => p.value === result) ? result : "custom"}
                       onChange={(e) => {
                         const val = e.target.value;
@@ -212,10 +222,11 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
 
                   {/* Manual/Refined edit field */}
                   <div className="space-y-1">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 block">Detailed Findings Description</span>
+                    <label htmlFor="screening-result-detail" className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 block">Detailed Findings Description</label>
                     <div className="relative">
                       <Clipboard className="absolute left-3 top-3.5 w-4 h-4 text-gray-400" />
                       <input
+                        id="screening-result-detail"
                         type="text"
                         value={result}
                         onChange={(e) => {
@@ -250,6 +261,7 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
                   </p>
                 </div>
                 <input
+                  aria-label="Abnormal result"
                   type="checkbox"
                   checked={isAbnormal}
                   onChange={(e) => setIsAbnormal(e.target.checked)}

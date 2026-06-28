@@ -11,15 +11,28 @@ function cn(...inputs: any[]) {
   return twMerge(clsx(inputs));
 }
 
-function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean, resultText: string) {
-  const date = new Date(dateStr);
+function formatLocalDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean, resultText: string) {
+  const date = new Date(`${dateStr}T00:00:00`);
   let yearsToAdd = 1;
   let rationale = '';
 
   const cleanType = type.toLowerCase();
   
   if (cleanType.includes('colonoscopy')) {
-    if (isAbnormal || resultText.toLowerCase().includes('adenomatous') || resultText.toLowerCase().includes('polyp') || resultText.toLowerCase().includes('abnormal')) {
+    if (
+      isAbnormal ||
+      resultText.toLowerCase().includes('adenomatous') ||
+      resultText.toLowerCase().includes('abnormal') ||
+      resultText.toLowerCase().includes('suspicious') ||
+      resultText.toLowerCase().includes('malignant')
+    ) {
       yearsToAdd = 3;
       rationale = 'Accelerated 3-year surveillance for high-risk adenomas or polyps per clinical criteria.';
     } else {
@@ -81,7 +94,7 @@ function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean
     nextDate.setFullYear(nextDate.getFullYear() + Math.floor(yearsToAdd));
   }
 
-  const nextDateStr = isNaN(nextDate.getTime()) ? 'Pending Review' : nextDate.toISOString().split('T')[0];
+  const nextDateStr = isNaN(nextDate.getTime()) ? 'Pending Review' : formatLocalDate(nextDate);
 
   return {
     date: nextDateStr,
@@ -514,7 +527,13 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
         {planRecommendations.length === 0 ? (
           <div className="p-8 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
             <Info className="w-8 h-8 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500">No screenings recorded yet. Complete your profile to see recommendations.</p>
+            <p className="text-gray-500">
+              {profile
+                ? hasHistory
+                  ? 'No screening actions are currently due based on your saved profile and history.'
+                  : 'No screening actions are currently due. Add prior screenings to improve your timeline.'
+                : 'Complete your profile to see guideline-inspired screening reminders.'}
+            </p>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -609,7 +628,7 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
         <div className="p-5 sm:p-6 bg-white border border-gray-100 rounded-3xl shadow-sm space-y-4">
           <div className="text-[10px] font-extrabold uppercase tracking-widest text-gray-550">Chronological Screening Timeline and next due projections</div>
           <div className="h-[280px] w-full font-sans text-xs">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={280}>
               <LineChart margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={true} stroke="#f3f4f6" />
                 <XAxis 
