@@ -65,10 +65,10 @@ https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-not
 - [x] Incident commander: Marshall Frieden
 - [x] Privacy lead: Marshall Frieden
 - [x] Security/engineering lead: Marshall Frieden
-- [ ] Legal counsel
+- [x] Backup operational owner: Donald Frieden
+- [x] Legal counsel: Marshall Frieden
 - [x] User communications lead: Marshall Frieden
 - [x] Monitored support/privacy address: `support@whitecloudmedical.com`
 
-Marshall Frieden is the interim owner for the assigned roles. White Cloud
-Medical, LLC must designate a backup before unrestricted PHI production so
-incident response does not depend on one person's availability.
+Marshall Frieden is the interim primary owner for the assigned operational
+roles. Donald Frieden is the backup operational owner.

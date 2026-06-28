@@ -24,12 +24,13 @@ Interim assignments:
 - Incident commander: Marshall Frieden
 - Technical system owner: Marshall Frieden
 - User communications lead: Marshall Frieden
+- Backup operational owner: Donald Frieden
+- Legal counsel: Marshall Frieden
 
 The privacy and security officers may be the same person for a small
 organization, but responsibilities and backups must be documented. White Cloud
-Medical, LLC must name a backup before unrestricted PHI production and maintain
-an access roster for every workforce member or contractor with production
-access.
+Medical, LLC must maintain an access roster for every workforce member or
+contractor with production access.
 
 ## Risk Analysis and Management
 

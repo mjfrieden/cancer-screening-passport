@@ -35,6 +35,8 @@ Last updated: June 28, 2026
 - Marshall Frieden is assigned as interim HIPAA privacy officer, HIPAA security
   officer, incident commander, technical system owner, and user communications
   lead.
+- Donald Frieden is assigned as backup operational owner.
+- Marshall Frieden is designated as legal counsel.
 - GitHub production gate set to `HIPAA_PRODUCTION_APPROVED=false`.
 
 ## Not Provisioned or Approved
@@ -49,11 +51,9 @@ Last updated: June 28, 2026
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Assign a backup incident/compliance owner and obtain legal counsel where
-   required.
-3. Configure the Google OAuth consent screen and Google Identity Platform
+2. Configure the Google OAuth consent screen and Google Identity Platform
    provider without adding `localhost` to production authorized domains.
-4. Select a production web hosting service explicitly covered under the BAA.
+3. Select a production web hosting service explicitly covered under the BAA.
 
 After those actions, automation can deploy and test Firestore rules, complete
 authenticated synthetic-data testing, and prepare the final PHI activation
