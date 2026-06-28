@@ -62,9 +62,13 @@ https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-not
 
 ## Required Assignments
 
-- [ ] Incident commander
-- [ ] Privacy lead
-- [ ] Security/engineering lead
+- [x] Incident commander: Marshall Frieden
+- [x] Privacy lead: Marshall Frieden
+- [x] Security/engineering lead: Marshall Frieden
 - [ ] Legal counsel
-- [ ] User communications lead
+- [x] User communications lead: Marshall Frieden
 - [x] Monitored support/privacy address: `support@whitecloudmedical.com`
+
+Marshall Frieden is the interim owner for the assigned roles. White Cloud
+Medical, LLC must designate a backup before unrestricted PHI production so
+incident response does not depend on one person's availability.

@@ -17,16 +17,19 @@ and approved.
 
 ## Governance
 
-White Cloud Medical, LLC must name:
+Interim assignments:
 
-- HIPAA privacy officer
-- HIPAA security officer
-- Incident commander
-- Technical system owner
-- Workforce members and contractors with production access
+- HIPAA privacy officer: Marshall Frieden
+- HIPAA security officer: Marshall Frieden
+- Incident commander: Marshall Frieden
+- Technical system owner: Marshall Frieden
+- User communications lead: Marshall Frieden
 
 The privacy and security officers may be the same person for a small
-organization, but responsibilities and backups must be documented.
+organization, but responsibilities and backups must be documented. White Cloud
+Medical, LLC must name a backup before unrestricted PHI production and maintain
+an access roster for every workforce member or contractor with production
+access.
 
 ## Risk Analysis and Management
 
@@ -127,7 +130,7 @@ Before launch:
 ## Production Launch Gates
 
 - [ ] White Cloud Medical, LLC HIPAA role and scope documented.
-- [ ] Privacy officer, security officer, incident commander, and system owner named.
+- [x] Privacy officer, security officer, incident commander, and system owner named.
 - [ ] Enterprise-wide and application-specific risk analyses approved.
 - [ ] Google Cloud BAA accepted and retained.
 - [ ] Dedicated production project and billing account configured.

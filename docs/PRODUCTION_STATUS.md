@@ -32,6 +32,9 @@ Last updated: June 28, 2026
   administration and has no downloaded service-account key.
 - GitHub production environment secrets reference the workload identity
   provider and production rules service account.
+- Marshall Frieden is assigned as interim HIPAA privacy officer, HIPAA security
+  officer, incident commander, technical system owner, and user communications
+  lead.
 - GitHub production gate set to `HIPAA_PRODUCTION_APPROVED=false`.
 
 ## Not Provisioned or Approved
@@ -46,7 +49,8 @@ Last updated: June 28, 2026
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Assign the privacy officer, security officer, and incident commander.
+2. Assign a backup incident/compliance owner and obtain legal counsel where
+   required.
 3. Configure the Google OAuth consent screen and Google Identity Platform
    provider without adding `localhost` to production authorized domains.
 4. Select a production web hosting service explicitly covered under the BAA.
