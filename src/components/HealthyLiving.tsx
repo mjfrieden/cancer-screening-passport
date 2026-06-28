@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Apple, Activity, Heart, Shield, Info, ExternalLink, Check, Plus, Minus, Flame, Salad, GlassWater, Beer, Award, HeartHandshake } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Recommendation } from '../types';
@@ -76,19 +76,7 @@ export default function HealthyLiving({ recommendations = [] }: HealthyLivingPro
         clinical_review_note: "Content reviewed for medical accuracy by a physician on behalf of White Cloud Medical, LLC on 2026-06-28. Patient-specific clinician review remains required."
       }));
 
-  // Track adherence status in localStorage: 'undone' | 'improving' | 'following'
   const [adherence, setAdherence] = useState<{ [key: string]: 'undone' | 'improving' | 'following' }>({});
-
-  useEffect(() => {
-    const saved = localStorage.getItem('aicr_adherence');
-    if (saved) {
-      try {
-        setAdherence(JSON.parse(saved));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, []);
 
   const toggleAdherence = (id: string) => {
     const current = adherence[id] || 'undone';
@@ -97,9 +85,7 @@ export default function HealthyLiving({ recommendations = [] }: HealthyLivingPro
     else if (current === 'improving') next = 'following';
     else next = 'undone';
 
-    const updated = { ...adherence, [id]: next };
-    setAdherence(updated);
-    localStorage.setItem('aicr_adherence', JSON.stringify(updated));
+    setAdherence(currentAdherence => ({ ...currentAdherence, [id]: next }));
   };
 
   // Calculate score representation: following = 2 points, improving = 1 point, undone = 0 points.

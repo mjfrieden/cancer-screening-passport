@@ -37,30 +37,25 @@ export enum OperationType {
   WRITE = 'write',
 }
 
-export interface FirestoreErrorInfo {
-  error: string;
-  operationType: OperationType;
-  path: string | null;
-  authInfo: {
-    userId?: string | null;
-    email?: string | null;
-    emailVerified?: boolean | null;
-    isAnonymous?: boolean | null;
+export class FirestoreOperationError extends Error {
+  readonly code = 'firestore-operation-failed';
+
+  constructor(readonly operationType: OperationType) {
+    super('We could not save or load your information. Please try again.');
+    this.name = 'FirestoreOperationError';
   }
 }
 
-export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-    },
-    operationType,
-    path
+export function handleFirestoreError(error: unknown, operationType: OperationType, _path: string | null): never {
+  if (import.meta.env.DEV) {
+    const firebaseCode = (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      typeof error.code === 'string'
+    ) ? error.code : 'unknown';
+    console.error('Firestore operation failed.', { operationType, firebaseCode });
   }
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+
+  throw new FirestoreOperationError(operationType);
 }

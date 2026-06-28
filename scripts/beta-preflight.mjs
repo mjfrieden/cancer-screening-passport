@@ -26,6 +26,15 @@ function expectIncludes(path, expected) {
   }
 }
 
+function expectExcludes(path, unexpected) {
+  const body = readText(path);
+  for (const value of unexpected) {
+    if (body.includes(value)) {
+      throw new Error(`${path} contains prohibited text: ${value}`);
+    }
+  }
+}
+
 function expectScript(name) {
   const pkg = readJson('package.json');
   if (!pkg.scripts?.[name]) {
@@ -143,6 +152,38 @@ addCheck('legal and support pages keep beta safety warnings', () => {
     expectIncludes(path, [
       'support@whitecloudmedical.com',
       'mailto:support@whitecloudmedical.com',
+    ]);
+  }
+});
+
+addCheck('patient data is redacted from production errors', () => {
+  expectIncludes('src/lib/firebase.ts', [
+    'FirestoreOperationError',
+    'firestore-operation-failed',
+    'import.meta.env.DEV',
+  ]);
+  expectExcludes('src/lib/firebase.ts', [
+    'auth.currentUser?.uid',
+    'auth.currentUser?.email',
+    "console.error('Firestore Error: ', JSON.stringify",
+  ]);
+  expectExcludes('src/components/HealthyLiving.tsx', [
+    'localStorage',
+    'sessionStorage',
+  ]);
+});
+
+addCheck('static hosts enforce the patient security header baseline', () => {
+  for (const path of ['firebase.json', 'public/_headers']) {
+    expectIncludes(path, [
+      'Content-Security-Policy',
+      "frame-ancestors 'none'",
+      "object-src 'none'",
+      'X-Content-Type-Options',
+      'X-Frame-Options',
+      'Referrer-Policy',
+      'Permissions-Policy',
+      'Cross-Origin-Opener-Policy',
     ]);
   }
 });

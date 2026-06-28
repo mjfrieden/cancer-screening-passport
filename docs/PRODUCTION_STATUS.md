@@ -37,6 +37,14 @@ Last updated: June 28, 2026
   lead.
 - Donald Frieden is assigned as backup operational owner.
 - Marshall Frieden is designated as legal counsel.
+- Static hosting configuration now enforces CSP, clickjacking, MIME sniffing,
+  referrer, permissions, and cross-origin opener protections.
+- Production Firestore errors no longer log or rethrow patient email, UID, or
+  record paths.
+- Healthy-living adherence selections no longer persist across users in
+  unscoped browser storage.
+- Patient privacy regressions and required security headers are enforced by the
+  beta preflight gate.
 - GitHub production gate set to `HIPAA_PRODUCTION_APPROVED=false`.
 
 ## Not Provisioned or Approved
