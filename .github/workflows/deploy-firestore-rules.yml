@@ -68,10 +68,14 @@ jobs:
         run: npm run test:rules
 
       - name: Authenticate to Google Cloud
+        id: google-auth
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          token_format: access_token
 
       - name: Deploy Firestore rules
+        env:
+          FIREBASE_TOKEN: ${{ steps.google-auth.outputs.access_token }}
         run: npx -y firebase-tools@15.22.3 deploy --only firestore:rules --project "${FIREBASE_PROJECT_ID}"
