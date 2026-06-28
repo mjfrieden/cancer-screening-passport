@@ -101,8 +101,9 @@ The next gates are:
    devices.
 4. Install full Xcode plus Java/Android SDK tooling, then build and run the
    Capacitor shells.
-5. Create a separate production Firebase project only after another cost and
-   account review.
+5. The separate production Firebase project `cancer-passport-wcm-prod` was
+   created under the White Cloud Medical organization on June 28, 2026. It
+   remains unbilled, closed to PHI, and blocked by the HIPAA production gate.
 
 White Cloud Medical, LLC is the application operator and intended store
 publisher. The final bundle/application ID is

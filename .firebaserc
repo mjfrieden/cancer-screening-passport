@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "cancer-passport-staging",
+    "staging": "cancer-passport-staging",
+    "production": "cancer-passport-wcm-prod"
+  }
+}
