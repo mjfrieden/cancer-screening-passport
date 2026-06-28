@@ -87,19 +87,35 @@ No other Google account should be used without explicit confirmation.
   - FHIR JSON, clinician PDF, and account JSON exports
   - clean console and source-linked recommendations
 - Confirmed cross-user profile/event isolation in Firestore emulator rules tests.
-- Latest verified staging commit: `77d721d`.
-- Latest successful CI run: `28323979475`.
-- Latest successful Cloudflare staging deployment: `28324005167`.
+- White Cloud Medical, LLC is now identified as operator and intended publisher.
+- Native identity is now `com.whitecloudmedical.cancerpassport`.
+- Physician content review is recorded for the June 28, 2026 medical content.
+- Versioned Terms, Privacy Policy, Medical Disclaimer, and consent language now
+  define education-only use and no physician-patient relationship.
+- Account deletion now includes profile, consent, screening events, cervical
+  results, and survivorship plans.
+- Latest verified staging commit: `a8526d9`.
+- Latest successful CI run: `28324762367`.
+- Latest successful Cloudflare staging deployment: `28324801119`.
 
 ## Remaining Beta Checks
 
-- Delete the throwaway Firebase account and its records after explicit
-  destructive-action confirmation.
 - Complete iOS Safari and Android Chrome install/layout/download checks on real
   devices.
 - Complete the authenticated keyboard and screen-reader walkthrough.
 - Install full Xcode and a Java/Android SDK toolchain, then build the synced
   native shells. This machine currently has neither `xcodebuild` nor Java.
+
+## Completed Account Deletion Test
+
+On June 28, 2026, after explicit approval:
+
+- deleted the only staging Firebase Authentication identity,
+  `marshall@whitecloudmedical.com`;
+- verified a fresh Firebase Auth export reported `remainingUsers: 0`;
+- deleted staging data from `screening_events`, `cervical_results`,
+  `survivorship_plans`, `user_profiles`, and `user_consents`;
+- verified all five Firestore collections contained zero documents.
 
 ## Cost Guardrail
 

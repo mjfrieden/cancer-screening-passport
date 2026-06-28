@@ -69,6 +69,10 @@ For security and privacy reporting, see [SECURITY.md](SECURITY.md) and [docs/SEC
 
 For guideline source traceability, see [docs/GUIDELINE_TRACEABILITY.md](docs/GUIDELINE_TRACEABILITY.md).
 
+For operator legal/compliance review and health-data incident response, see
+[docs/LEGAL_COMPLIANCE_REVIEW.md](docs/LEGAL_COMPLIANCE_REVIEW.md) and
+[docs/HEALTH_DATA_INCIDENT_RESPONSE.md](docs/HEALTH_DATA_INCIDENT_RESPONSE.md).
+
 ## Beta Legal Pages
 
 - `/legal/privacy.html`

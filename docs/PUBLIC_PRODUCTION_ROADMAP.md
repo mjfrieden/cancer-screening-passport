@@ -91,19 +91,22 @@ assets are live across the PWA and native icon sets.
 
 The next gates are:
 
-1. Explicitly approve and complete app-account deletion for the staging tester.
-2. Assign a monitored White Cloud Medical, LLC public support contact and incident-response owner.
-3. Obtain licensed legal review of the policy language. Physician content review was completed June 28, 2026.
-4. Test PWA installation, downloads, and safe areas on physical iOS and Android
+1. Assign a monitored White Cloud Medical, LLC public support contact and incident-response owner.
+2. Obtain licensed legal review of the policy language. Physician content review was completed June 28, 2026.
+3. Test PWA installation, downloads, and safe areas on physical iOS and Android
    devices.
-5. Install full Xcode plus Java/Android SDK tooling, then build and run the
+4. Install full Xcode plus Java/Android SDK tooling, then build and run the
    Capacitor shells.
-6. Create a separate production Firebase project only after another cost and
+5. Create a separate production Firebase project only after another cost and
    account review.
 
 White Cloud Medical, LLC is the application operator and intended store
 publisher. The final bundle/application ID is
 `com.whitecloudmedical.cancerpassport`.
+
+Legal/compliance and incident-response working documents now live in
+`docs/LEGAL_COMPLIANCE_REVIEW.md` and
+`docs/HEALTH_DATA_INCIDENT_RESPONSE.md`.
 
 See `docs/STATIC_FREE_DEPLOYMENT.md` and `docs/CLOUDFLARE_PAGES_DEPLOYMENT.md` for the recommended no-cost deployment path.
 

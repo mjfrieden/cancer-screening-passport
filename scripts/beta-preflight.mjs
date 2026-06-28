@@ -112,15 +112,22 @@ addCheck('legal and support pages keep beta safety warnings', () => {
   expectIncludes('public/legal/privacy.html', [
     'protected health information',
     'Firebase Authentication and Firestore',
+    'White Cloud Medical, LLC',
+    'Health Breach Notification Rule',
     '/support.html',
   ]);
   expectIncludes('public/legal/terms.html', [
     'Beta Status',
     'not a medical device',
+    'No Medical Advice or Physician-Patient Relationship',
+    'Limitation of Liability',
+    'White Cloud Medical, LLC',
     '/support.html',
   ]);
   expectIncludes('public/legal/medical-disclaimer.html', [
     'not medical advice',
+    'No Physician-Patient Relationship',
+    'White Cloud Medical, LLC',
     'licensed clinician',
   ]);
   expectIncludes('public/support.html', [
@@ -159,8 +166,19 @@ addCheck('private intake and traceability docs are present', () => {
   expectIncludes('docs/GUIDELINE_TRACEABILITY.md', [
     'source_url',
     'clinical_review_status',
+    'physician_reviewed',
     'needs_clinical_review',
     'Production Gate',
+  ]);
+  expectIncludes('docs/LEGAL_COMPLIANCE_REVIEW.md', [
+    'White Cloud Medical, LLC',
+    'Health Breach Notification Rule',
+    'licensed counsel',
+  ]);
+  expectIncludes('docs/HEALTH_DATA_INCIDENT_RESPONSE.md', [
+    'Incident commander',
+    'Privacy lead',
+    'Health Breach Notification Rule',
   ]);
 });
 

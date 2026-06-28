@@ -28,7 +28,7 @@ Use this checklist before sending a staging link to beta testers.
 - [ ] Legal pages include real support contact information.
 - [x] Privacy/terms/disclaimer links are reachable from the app.
 - [x] Support page is reachable from the app.
-- [ ] Current privacy, terms, and medical disclaimer acknowledgement is required after sign-in.
+- [x] Current privacy, terms, and medical disclaimer acknowledgement is required after sign-in.
 
 ## Functional Checks
 
@@ -39,7 +39,7 @@ Use this checklist before sending a staging link to beta testers.
 - [x] Download FHIR JSON.
 - [x] Download clinician PDF.
 - [x] Export local account data JSON from Profile.
-- [ ] Delete app data/account with a throwaway tester account.
+- [x] Delete app data/account with a throwaway tester account.
 - [x] Sign out.
 - [x] Confirm a second user cannot access the first user's documents.
 
