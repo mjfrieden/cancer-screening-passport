@@ -4,7 +4,7 @@ import { db, auth, signInWithGoogle, OperationType, handleFirestoreError } from 
 import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { UserProfile, ScreeningEvent, Recommendation } from './types';
 import AddScreeningModal from './components/AddScreeningModal';
-import { Heart, LayoutDashboard, User as UserIcon, Share2, LogOut, Loader2, Plus, LogIn, Shield, Apple } from 'lucide-react';
+import { LayoutDashboard, User as UserIcon, Share2, LogOut, Loader2, Plus, LogIn, Shield, Apple } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
 import AccountDataControls from './components/AccountDataControls';
@@ -169,24 +169,23 @@ function AppContent() {
   );
 
   if (!user) return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white overflow-hidden relative">
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[40%] bg-blue-50 rounded-full blur-3xl opacity-60" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[40%] bg-teal-50 rounded-full blur-3xl opacity-60" />
-
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="z-10 text-center space-y-8 max-w-md"
+        className="text-center space-y-7 w-full max-w-lg"
       >
-        <div className="p-4 bg-blue-600 w-20 h-20 rounded-3xl mx-auto flex items-center justify-center shadow-2xl shadow-blue-200">
-          <Heart className="w-10 h-10 text-white" />
-        </div>
-        <div className="space-y-2">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Cancer Prevention Passport</h1>
-          <p className="text-gray-500 font-medium leading-relaxed">
-            Organize your screening history, prevention reminders, and clinician-ready summaries in one secure-feeling place.
-          </p>
-        </div>
+        <h1 className="sr-only">Cancer Prevention Passport</h1>
+        <img
+          src="/brand/cancer-prevention-passport-lockup.png"
+          alt=""
+          width="1100"
+          height="650"
+          className="w-full h-auto"
+        />
+        <p className="text-gray-600 font-medium leading-relaxed max-w-md mx-auto">
+          Organize your screening history, prevention reminders, and clinician-ready summaries in one private, patient-held passport.
+        </p>
 
         <button
           onClick={signInWithGoogle}
@@ -244,10 +243,14 @@ function AppContent() {
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100 p-4">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-blue-600 rounded-lg">
-              <Heart className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-lg tracking-tight">Cancer Prevention Passport</span>
+            <img
+              src="/brand/cancer-prevention-passport-mark.png"
+              alt=""
+              width="40"
+              height="40"
+              className="h-9 w-9 rounded-lg object-cover"
+            />
+            <span className="font-bold text-base sm:text-lg">Cancer Prevention Passport</span>
           </div>
           <button
             type="button"

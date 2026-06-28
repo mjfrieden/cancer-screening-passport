@@ -57,8 +57,11 @@ addCheck('PWA manifest is installable', () => {
   if (manifest.start_url !== '/' || manifest.scope !== '/') {
     throw new Error('manifest start_url and scope must be rooted at /');
   }
-  if (!Array.isArray(manifest.icons) || manifest.icons.length === 0) {
-    throw new Error('manifest must declare at least one icon');
+  const icons = Array.isArray(manifest.icons) ? manifest.icons : [];
+  for (const requiredIcon of ['/icon-192.png', '/icon-512.png', '/apple-touch-icon.png']) {
+    if (!icons.some(icon => icon.src === requiredIcon)) {
+      throw new Error(`manifest must declare ${requiredIcon}`);
+    }
   }
 });
 
@@ -66,10 +69,42 @@ addCheck('service worker caches required public routes', () => {
   expectIncludes('public/sw.js', [
     '/offline.html',
     '/site.webmanifest',
+    '/icon-192.png',
+    '/icon-512.png',
+    '/apple-touch-icon.png',
+    '/brand/cancer-prevention-passport-lockup.png',
+    '/brand/cancer-prevention-passport-mark.png',
     '/legal/privacy.html',
     '/legal/terms.html',
     '/legal/medical-disclaimer.html',
     '/support.html',
+  ]);
+});
+
+addCheck('production brand assets are wired across app surfaces', () => {
+  for (const path of [
+    'public/favicon-64.png',
+    'public/icon-192.png',
+    'public/icon-512.png',
+    'public/apple-touch-icon.png',
+    'public/brand/cancer-prevention-passport-lockup.png',
+    'public/brand/cancer-prevention-passport-mark.png',
+    'ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png',
+    'android/app/src/main/res/mipmap-mdpi/ic_launcher.png',
+    'android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png',
+  ]) {
+    if (!existsSync(path)) {
+      throw new Error(`${path} does not exist`);
+    }
+  }
+
+  expectIncludes('index.html', [
+    '/favicon-64.png',
+    '/apple-touch-icon.png',
+  ]);
+  expectIncludes('src/App.tsx', [
+    '/brand/cancer-prevention-passport-lockup.png',
+    '/brand/cancer-prevention-passport-mark.png',
   ]);
 });
 

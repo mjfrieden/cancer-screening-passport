@@ -1,10 +1,14 @@
-const CACHE_NAME = 'cancer-passport-v1';
+const CACHE_NAME = 'cancer-passport-v2';
 const CORE_ASSETS = [
   '/',
   '/offline.html',
   '/site.webmanifest',
-  '/icon.svg',
-  '/apple-touch-icon.svg',
+  '/favicon-64.png',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/apple-touch-icon.png',
+  '/brand/cancer-prevention-passport-lockup.png',
+  '/brand/cancer-prevention-passport-mark.png',
   '/legal/privacy.html',
   '/legal/terms.html',
   '/legal/medical-disclaimer.html',
