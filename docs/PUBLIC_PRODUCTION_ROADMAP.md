@@ -83,19 +83,19 @@ Exit criteria:
 
 ## Current Next Step
 
-Resolve Firebase onboarding for `cancer-passport-staging`, register its web app,
-and place the resulting `VITE_FIREBASE_*` values in the GitHub `staging`
-environment. Then run the prepared Cloudflare Pages deployment and controlled
-beta checklist.
+Run the authenticated controlled-beta checklist at
+`https://cancer-screening-passport.pages.dev` using approved throwaway accounts.
+Validate consent, profile/event persistence, recommendations, exports, deletion,
+sign-out, and cross-user isolation before inviting beta testers.
 
 See `docs/STATIC_FREE_DEPLOYMENT.md` and `docs/CLOUDFLARE_PAGES_DEPLOYMENT.md` for the recommended no-cost deployment path.
 
 GitHub Environments named `staging` and `production` now exist. A `cancer-passport-staging` Google Cloud project and default Firestore database exist under `marshall@whitecloudmedical.com`, but billing is not linked and Cloud Run should remain paused under the $0.05/month ceiling.
 
-Firebase activation is currently blocked by `PERMISSION_DENIED`, and the
-Firebase Console cannot find the existing project while signed in as the
-approved account. The Cloudflare Pages project, deployment token, account ID,
-project variable, and simulator flag are already configured in GitHub staging.
+Firebase activation, the staging web app, Google sign-in, authorized Pages
+domain, Firestore rules, GitHub staging variables, Cloudflare deployment, live
+static smoke tests, and signed-out browser verification are complete. The
+project remains on the no-cost Firebase Spark and Cloudflare Pages Free path.
 See `docs/STAGING_STATUS.md`.
 
 Beta security/privacy intake is documented in `SECURITY.md` and `docs/SECURITY_PRIVACY_INTAKE.md`, but production still needs a monitored support address and named incident-response owner.

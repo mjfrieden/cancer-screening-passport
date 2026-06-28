@@ -42,6 +42,23 @@ No other Google account should be used without explicit confirmation.
   - `CLOUDFLARE_PAGES_PROJECT=cancer-screening-passport`
   - `VITE_ENABLE_CLINICAL_SIMULATOR=false`
 - Created a Cloudflare account API token limited to `Pages Write`, expiring June 27, 2027.
+- Activated Firebase on `cancer-passport-staging` while signed in as
+  `marshall@whitecloudmedical.com`.
+- Confirmed the Firebase project remains on the Spark plan at `$0/month`.
+- Registered the `Cancer Passport Staging Web` Firebase web app without
+  Firebase Hosting or Google Analytics.
+- Enabled Google sign-in with `marshall@whitecloudmedical.com` as the support
+  email and `Cancer Prevention Passport` as the public-facing project name.
+- Added `cancer-screening-passport.pages.dev` to Firebase Authentication's
+  authorized domains.
+- Configured all staging `VITE_FIREBASE_*` values and `APP_URL` in the GitHub
+  `staging` environment.
+- Deployed `firestore.rules` to the staging Firestore database.
+- Deployed the static PWA through GitHub Actions to:
+  - `https://cancer-screening-passport.pages.dev`
+- Passed `npm run smoke:static` against the live Pages URL.
+- Verified the live signed-out application renders without console warnings or
+  errors.
 
 ## Cost Guardrail
 
@@ -49,36 +66,12 @@ Billing is not linked to `cancer-passport-staging`.
 
 Keep billing unlinked while the monthly cost ceiling is `$0.05`. Cloud Run, Cloud Build, and Artifact Registry remain paused because they require billing and can exceed the tiny budget through container image storage.
 
-## Firebase Activation Blocker
+## Firebase Activation Resolution
 
-Firebase activation is blocked.
-
-Command:
-
-```bash
-npx -y firebase-tools@13.13.3 projects:addfirebase cancer-passport-staging
-```
-
-Result:
-
-```text
-HTTP 403 PERMISSION_DENIED: The caller does not have permission
-```
-
-This still fails after granting `roles/firebase.admin` to `marshall@whitecloudmedical.com`, even though the account is also project Owner. The project belongs to organization `883366996416`, so this may be an organization policy, Firebase onboarding, or console-level permission restriction.
-
-The Firebase Console was also tested on June 27, 2026 while signed in as
-`marshall@whitecloudmedical.com`. Its "Add Firebase to Google Cloud project"
-dialog returned "No Google Cloud projects match your search" for
-`cancer-passport-staging`. This confirms the blocker exists in the Firebase
-Console as well as the CLI.
-
-## Required Manual Check
-
-Ask the Google Workspace/Cloud organization administrator for organization
-`883366996416` to allow `marshall@whitecloudmedical.com` to add Firebase to the
-existing `cancer-passport-staging` project, or move the project to a parent
-resource where Firebase project onboarding is allowed.
+The earlier CLI and Console visibility failures were caused by an expired
+Google Workspace reauthentication session. After verifying
+`marshall@whitecloudmedical.com` in Google Cloud Console, the Firebase Console
+could see `cancer-passport-staging` and activation completed successfully.
 
 ## Current Best Path
 
@@ -87,11 +80,11 @@ Continue with the static no-cost app architecture:
 - keep recommendations bundled in the browser,
 - avoid Cloud Run,
 - avoid Artifact Registry,
-- use Firebase Auth/Firestore only after Firebase activation is resolved,
-- deploy the existing Cloudflare Pages Free project once the Firebase web app
-  config exists.
+- use Firebase Auth and Firestore on the Spark plan,
+- deploy through the existing Cloudflare Pages Free workflow,
+- use only non-sensitive or throwaway data during the controlled beta.
 
-Do not deploy the current `.env.local` build as staging. It points to the older
-`gray-cloud-medical` Firebase project rather than `cancer-passport-staging`.
+The checked-in deployment path does not use the local `.env.local`; GitHub's
+`staging` environment supplies the real `cancer-passport-staging` web config.
 
 See `docs/STATIC_FREE_DEPLOYMENT.md`.
