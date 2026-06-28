@@ -1,6 +1,6 @@
 # Cancer Prevention Passport
 
-A mobile-first web application for organizing cancer screening history, survivorship context, guideline-inspired reminders, and clinician-ready exports.
+A mobile-first health education and record-organizing application from White Cloud Medical, LLC for cancer screening history, survivorship context, guideline-inspired reminders, and clinician-ready exports.
 
 ## Current Capabilities
 
@@ -77,4 +77,4 @@ For guideline source traceability, see [docs/GUIDELINE_TRACEABILITY.md](docs/GUI
 
 ## Important Medical Disclaimer
 
-This project is not a medical device and does not replace care from a licensed clinician. Recommendation logic must be clinically validated, legally reviewed, and backed by traceable guideline sources before public clinical use.
+This project is not a medical device, does not create a physician-patient relationship, and does not replace care from a user's own licensed clinician. A physician reviewed the June 28, 2026 medical content on behalf of White Cloud Medical, LLC. Future medical-content changes require versioned review, and licensed counsel must review the final policies before unrestricted production use with real health information.

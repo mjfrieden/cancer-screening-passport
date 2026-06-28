@@ -7,7 +7,7 @@ The project now includes Capacitor iOS and Android shells around the production 
 ## Current Native Configuration
 
 - App name: `Cancer Prevention Passport`
-- Bundle/application ID: `com.mjfrieden.cancerpassport`
+- Bundle/application ID: `com.whitecloudmedical.cancerpassport`
 - Web directory: `dist`
 - iOS shell: `ios/`
 - Android shell: `android/`

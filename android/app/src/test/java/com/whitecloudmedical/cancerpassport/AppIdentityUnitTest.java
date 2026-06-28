@@ -1,4 +1,4 @@
-package com.mjfrieden.cancerpassport;
+package com.whitecloudmedical.cancerpassport;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,6 @@ public class AppIdentityUnitTest {
 
     @Test
     public void appId_isProductionPackage() {
-        assertEquals("com.mjfrieden.cancerpassport", BuildConfig.APPLICATION_ID);
+        assertEquals("com.whitecloudmedical.cancerpassport", BuildConfig.APPLICATION_ID);
     }
 }

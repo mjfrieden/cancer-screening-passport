@@ -2,7 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
-const APP_ID = 'com.mjfrieden.cancerpassport';
+const APP_ID = 'com.whitecloudmedical.cancerpassport';
 const APP_NAME = 'Cancer Prevention Passport';
 
 const checks = [
@@ -27,7 +27,7 @@ const checks = [
     label: 'iOS display name and bundle placeholder',
   },
   {
-    file: 'android/app/src/androidTest/java/com/mjfrieden/cancerpassport/AppIdentityInstrumentedTest.java',
+    file: 'android/app/src/androidTest/java/com/whitecloudmedical/cancerpassport/AppIdentityInstrumentedTest.java',
     expect: contents => contents.includes(`assertEquals("${APP_ID}", appContext.getPackageName())`),
     label: 'Android instrumentation package assertion',
   },

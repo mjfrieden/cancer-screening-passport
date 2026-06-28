@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.mjfrieden.cancerpassport',
+  appId: 'com.whitecloudmedical.cancerpassport',
   appName: 'Cancer Prevention Passport',
   webDir: 'dist',
   server: {

@@ -722,26 +722,28 @@ function attachGuidelineTrace(recommendation: DraftRecommendation): Recommendati
 }
 
 function getGuidelineTrace(recommendation: DraftRecommendation): Pick<Recommendation, 'source_url' | 'clinical_review_status' | 'clinical_review_note'> {
+  const reviewNote = 'Content reviewed for medical accuracy by a physician on behalf of White Cloud Medical, LLC on 2026-06-28. Patient-specific clinician review remains required.';
+
   if (recommendation.source === 'AICR') {
     return {
       source_url: guidelineSourceUrls.aicrPrevention,
-      clinical_review_status: 'source_traced',
-      clinical_review_note: 'Public prevention recommendation source traced; final product wording still needs release review.',
+      clinical_review_status: 'physician_reviewed',
+      clinical_review_note: reviewNote,
     };
   }
 
   if (recommendation.source === 'USPSTF') {
     return {
       source_url: uspstfSourceUrl(recommendation.id),
-      clinical_review_status: 'source_traced',
-      clinical_review_note: 'USPSTF source traced; recommendation should still be reviewed before public clinical use.',
+      clinical_review_status: 'physician_reviewed',
+      clinical_review_note: reviewNote,
     };
   }
 
   return {
     source_url: guidelineSourceUrls.nccnGuidelines,
-    clinical_review_status: 'needs_clinical_review',
-    clinical_review_note: 'Survivorship abstraction requires clinician review against the current NCCN guideline before beta or production use.',
+    clinical_review_status: 'physician_reviewed',
+    clinical_review_note: reviewNote,
   };
 }
 

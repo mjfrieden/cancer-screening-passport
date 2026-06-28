@@ -31,6 +31,7 @@ export default function AccountDataControls({
     const payload = {
       exportedAt: new Date().toISOString(),
       app: 'Cancer Prevention Passport',
+      operator: 'White Cloud Medical, LLC',
       user: {
         uid: user.uid,
         email: user.email,
@@ -66,13 +67,21 @@ export default function AccountDataControls({
     try {
       await reauthenticateWithPopup(user, googleProvider);
 
-      const eventsSnapshot = await getDocs(query(
-        collection(db, 'screening_events'),
-        where('userId', '==', user.uid),
-      ));
+      const ownedCollectionNames = [
+        'screening_events',
+        'cervical_results',
+        'survivorship_plans',
+      ] as const;
+      const ownedSnapshots = await Promise.all(
+        ownedCollectionNames.map(collectionName => getDocs(query(
+          collection(db, collectionName),
+          where('userId', '==', user.uid),
+        ))),
+      );
       const refsToDelete = [
-        ...eventsSnapshot.docs.map(eventDoc => eventDoc.ref),
+        ...ownedSnapshots.flatMap(snapshot => snapshot.docs.map(ownedDoc => ownedDoc.ref)),
         doc(db, 'user_profiles', user.uid),
+        doc(db, 'user_consents', user.uid),
       ];
 
       for (let index = 0; index < refsToDelete.length; index += 450) {

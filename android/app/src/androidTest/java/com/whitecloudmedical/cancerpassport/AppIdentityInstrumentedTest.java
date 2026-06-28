@@ -1,4 +1,4 @@
-package com.mjfrieden.cancerpassport;
+package com.whitecloudmedical.cancerpassport;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +15,6 @@ public class AppIdentityInstrumentedTest {
     public void appContext_usesProductionPackage() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.mjfrieden.cancerpassport", appContext.getPackageName());
+        assertEquals("com.whitecloudmedical.cancerpassport", appContext.getPackageName());
     }
 }

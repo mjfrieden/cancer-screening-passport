@@ -2,7 +2,8 @@
   "name": "cancer-screening-passport",
   "private": true,
   "version": "0.1.0",
-  "description": "A patient-centered cancer screening and survivorship passport for web and mobile packaging.",
+  "description": "A health education and cancer-screening record organizer from White Cloud Medical, LLC.",
+  "author": "White Cloud Medical, LLC",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",

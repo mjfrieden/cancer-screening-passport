@@ -49,7 +49,7 @@ export default function ConsentGate({ user, onAccepted }: ConsentGateProps) {
 
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-950">Before You Continue</h1>
         <p className="mt-3 text-sm leading-relaxed text-gray-600">
-          Cancer Prevention Passport is a personal organizer and clinician conversation aid. It is not a diagnostic tool, treatment tool, emergency service, or replacement for licensed medical care.
+          Cancer Prevention Passport is a health education and record-organizing service operated by White Cloud Medical, LLC. It does not create a physician-patient relationship and is not individualized medical advice, diagnosis, treatment, or emergency care.
         </p>
 
         <div className="mt-6 rounded-2xl border border-amber-100 bg-amber-50 p-4">
@@ -87,7 +87,7 @@ export default function ConsentGate({ user, onAccepted }: ConsentGateProps) {
             <span className="text-sm leading-relaxed text-gray-700">
               I understand the{' '}
               <a className="font-bold text-blue-700 underline" href="/legal/medical-disclaimer.html" target="_blank" rel="noreferrer">Medical Disclaimer</a>
-              {' '}and will review screening decisions with a licensed clinician.
+              , understand that no physician-patient relationship is created, and will review screening decisions with my own licensed clinician.
             </span>
           </label>
         </div>

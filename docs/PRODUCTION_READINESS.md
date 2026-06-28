@@ -19,8 +19,8 @@ The app builds successfully, but it is not yet ready for public clinical use or 
 
 ## Launch Blockers
 
-- Clinical validation: the recommendation engine has hard-coded dates, simplified intervals, and guideline claims that need clinician review, citations, versioning, and test fixtures.
-- Medical/legal positioning: remove or soften unverified claims such as "HIPAA-ready" and direct EMR import until compliance, BAA coverage, audit logging, and integration testing are complete.
+- Clinical governance: physician content review was recorded on June 28, 2026, and source tracing/test fixtures exist. Future medical-content changes still need versioned re-review, and all outputs remain educational rather than patient-specific medical advice.
+- Medical/legal positioning: White Cloud Medical, LLC is identified as operator; education-only, no-relationship, warranty, and liability language is present. Licensed counsel still needs to review enforceability, state-specific requirements, and the final public policies.
 - Health data governance: beta privacy policy, terms, medical disclaimer, consent acknowledgement, private GitHub Security Advisory intake, and data export/deletion controls exist; production legal review, breach response process, and monitored support contact are still required.
 - Firebase production setup: move from the AI Studio Firebase project to a clean product Firebase project with staging and production environments.
 - Mobile packaging: Capacitor iOS/Android shells exist, but native build signing and device QA are not complete.

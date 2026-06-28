@@ -184,7 +184,7 @@ function AppContent() {
           className="w-full h-auto"
         />
         <p className="text-gray-600 font-medium leading-relaxed max-w-md mx-auto">
-          Organize your screening history, prevention reminders, and clinician-ready summaries in one private, patient-held passport.
+          A health education and record-organizing tool from White Cloud Medical, LLC. Review all screening decisions with your clinician.
         </p>
 
         <button
@@ -262,6 +262,9 @@ function AppContent() {
           </button>
         </div>
       </header>
+      <div className="border-b border-amber-100 bg-amber-50 px-4 py-2 text-center text-[11px] font-medium text-amber-950">
+        Health education only. Not medical advice, diagnosis, treatment, or emergency care. Verify recommendations with your clinician.
+      </div>
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="app-main max-w-2xl mx-auto p-4 pt-8">
@@ -367,9 +370,11 @@ function TabLoadingState() {
 function LegalLinks({ compact = false }: { compact?: boolean }) {
   return (
     <div className={cn(
-      "flex items-center justify-center gap-3 text-[10px] text-gray-400",
+      "flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-gray-400",
       compact ? "bg-white/80 backdrop-blur-sm rounded-full py-1.5 shadow-sm border border-gray-100" : "pt-2"
     )}>
+      <span>White Cloud Medical, LLC</span>
+      <span aria-hidden="true">|</span>
       <a className="hover:text-blue-600" href="/legal/privacy.html" target="_blank" rel="noreferrer">Privacy</a>
       <span aria-hidden="true">|</span>
       <a className="hover:text-blue-600" href="/legal/terms.html" target="_blank" rel="noreferrer">Terms</a>

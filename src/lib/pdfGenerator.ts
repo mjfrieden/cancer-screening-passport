@@ -130,7 +130,7 @@ export function generateScreeningPDF(
     pdfDoc.setFontSize(8);
     pdfDoc.setTextColor(160, 174, 192);
     pdfDoc.text(
-      'Cancer Prevention Passport | Patient Clinician Review Copy',
+      'Cancer Prevention Passport by White Cloud Medical, LLC | Patient Clinician Review Copy',
       marginX,
       pageHeight - 10
     );
@@ -272,9 +272,11 @@ export function generateScreeningPDF(
 
       const splitType = doc.splitTextToSize(cType, 50);
       const splitMod = doc.splitTextToSize(modText, 50);
-      const reviewText = rec.clinical_review_status === 'needs_clinical_review'
-        ? 'Clinical review status: clinician review needed.'
-        : 'Clinical review status: source traced; release review still required.';
+      const reviewText = rec.clinical_review_status === 'physician_reviewed'
+        ? 'Clinical content review status: physician reviewed by White Cloud Medical, LLC; patient-specific clinician review remains required.'
+        : rec.clinical_review_status === 'needs_clinical_review'
+          ? 'Clinical content review status: clinician review needed.'
+          : 'Clinical content review status: source traced.';
       const splitReason = doc.splitTextToSize(`Rationale: ${actionText} ${reviewText}`, contentWidth - 8);
 
       const cellHeight = Math.max(splitType.length * 4.5, splitMod.length * 4.5) + 6;

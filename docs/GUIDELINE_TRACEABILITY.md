@@ -1,6 +1,6 @@
 # Guideline Traceability
 
-Last updated: 2026-06-26
+Last updated: 2026-06-28
 
 Every recommendation emitted by `src/lib/guidelineEngine.ts` now carries trace metadata:
 
@@ -12,9 +12,11 @@ Every recommendation emitted by `src/lib/guidelineEngine.ts` now carries trace m
 
 ## Review Status
 
-`source_traced` means the recommendation is linked to a public source page, but the product wording still needs release review before public clinical use.
+`source_traced` means the recommendation is linked to a public source page but has not completed content review.
 
 `needs_clinical_review` means the recommendation is an abstraction that must be checked by a qualified clinician against the current guideline before beta or production use.
+
+`physician_reviewed` means a physician reviewed the application content for medical accuracy on behalf of White Cloud Medical, LLC on June 28, 2026. This is a content-review status, not individualized medical advice or patient-specific clearance.
 
 ## Current Source Families
 
@@ -24,7 +26,9 @@ Every recommendation emitted by `src/lib/guidelineEngine.ts` now carries trace m
 
 ## Production Gate
 
-Before a public production launch, clinical reviewers should verify:
+Clinical content review is complete for the June 28, 2026 beta release. Before
+each later public release that changes guideline logic, source versions, or
+medical wording, a qualified clinical reviewer should verify:
 
 - the source page is current,
 - the app wording matches the source,

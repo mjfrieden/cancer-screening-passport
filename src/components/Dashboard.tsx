@@ -595,7 +595,11 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
                     >
                       {rec.source} v{rec.source_version}
                     </a>
-                    {rec.clinical_review_status === 'needs_clinical_review' ? ' • Clinician review needed' : ' • Source traced'}
+                    {rec.clinical_review_status === 'physician_reviewed'
+                      ? ' • Physician reviewed'
+                      : rec.clinical_review_status === 'needs_clinical_review'
+                        ? ' • Clinician review needed'
+                        : ' • Source traced'}
                   </span>
                   <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors" />
                 </div>

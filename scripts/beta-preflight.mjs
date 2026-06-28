@@ -218,6 +218,16 @@ addCheck('authenticated shell retains keyboard and screen-reader semantics', () 
   ]);
 });
 
+addCheck('account deletion covers every user-owned data collection', () => {
+  expectIncludes('src/components/AccountDataControls.tsx', [
+    "'screening_events'",
+    "'cervical_results'",
+    "'survivorship_plans'",
+    "doc(db, 'user_profiles', user.uid)",
+    "doc(db, 'user_consents', user.uid)",
+  ]);
+});
+
 let failures = 0;
 for (const check of checks) {
   try {

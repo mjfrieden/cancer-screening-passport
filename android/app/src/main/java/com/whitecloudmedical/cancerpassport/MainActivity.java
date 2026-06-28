@@ -1,4 +1,4 @@
-package com.mjfrieden.cancerpassport;
+package com.whitecloudmedical.cancerpassport;
 
 import com.getcapacitor.BridgeActivity;
 

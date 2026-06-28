@@ -72,8 +72,8 @@ export default function HealthyLiving({ recommendations = [] }: HealthyLivingPro
         recommendation_grade: "N/A",
         confidence: "high" as const,
         requires_clinician_review: false,
-        clinical_review_status: "source_traced" as const,
-        clinical_review_note: "Public prevention recommendation source traced; final product wording still needs release review."
+        clinical_review_status: "physician_reviewed" as const,
+        clinical_review_note: "Content reviewed for medical accuracy by a physician on behalf of White Cloud Medical, LLC on 2026-06-28. Patient-specific clinician review remains required."
       }));
 
   // Track adherence status in localStorage: 'undone' | 'improving' | 'following'

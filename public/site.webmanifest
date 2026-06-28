@@ -1,7 +1,7 @@
 {
   "name": "Cancer Prevention Passport",
   "short_name": "Cancer Passport",
-  "description": "Organize cancer screening history, survivorship context, and clinician-ready exports.",
+  "description": "A health education and cancer-screening record organizer from White Cloud Medical, LLC.",
   "start_url": "/",
   "scope": "/",
   "id": "/",

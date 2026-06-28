@@ -1,12 +1,13 @@
 # Store Submission Prep
 
-Last updated: 2026-06-11
+Last updated: 2026-06-28
 
 This project has a Capacitor iOS/Android shell, but it is not ready for App Store or Google Play submission until the items below are completed and reviewed.
 
 ## Current Native Status
 
-- Capacitor app ID: `com.mjfrieden.cancerpassport`
+- Capacitor app ID: `com.whitecloudmedical.cancerpassport`
+- Publisher/operator: `White Cloud Medical, LLC`
 - App name: `Cancer Prevention Passport`
 - iOS wrapper exists in `ios/`
 - Android wrapper exists in `android/`
@@ -35,7 +36,7 @@ This project has a Capacitor iOS/Android shell, but it is not ready for App Stor
 
 ## Compliance Work
 
-- Confirm the app is positioned as a personal organizer and clinician conversation aid unless clinical decision-support validation is completed.
+- Keep the app positioned as a White Cloud Medical, LLC health education and record-organizing service, not individualized medical advice.
 - Replace beta legal pages with counsel-reviewed production policies before public release.
 - Complete Apple privacy nutrition labels.
 - Complete Google Play Data Safety form.

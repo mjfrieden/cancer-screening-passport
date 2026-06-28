@@ -109,11 +109,12 @@ describe('guideline recommendation engine', () => {
     for (const rec of recommendations) {
       expect(rec.source_url).toMatch(/^https:\/\//);
       expect(rec.clinical_review_note.length).toBeGreaterThan(20);
-      expect(['source_traced', 'needs_clinical_review']).toContain(rec.clinical_review_status);
+      expect(rec.clinical_review_status).toBe('physician_reviewed');
+      expect(rec.clinical_review_note).toContain('White Cloud Medical, LLC');
     }
   });
 
-  it('keeps survivorship abstractions behind clinician review status', () => {
+  it('keeps survivorship abstractions behind patient-specific clinician review', () => {
     const recommendations = getRecommendations(baseProfile({
       personalHistoryOfCancer: true,
       survivorshipPlan: {
@@ -128,7 +129,7 @@ describe('guideline recommendation engine', () => {
     expect(survivorship.length).toBeGreaterThan(0);
     for (const rec of survivorship) {
       expect(rec.requires_clinician_review).toBe(true);
-      expect(rec.clinical_review_status).toBe('needs_clinical_review');
+      expect(rec.clinical_review_status).toBe('physician_reviewed');
       expect(rec.source_url).toBe('https://www.nccn.org/guidelines/category_1');
     }
   });

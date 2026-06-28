@@ -47,6 +47,6 @@ export interface Recommendation {
   recommendation_grade: string;
   confidence: "high" | "medium" | "low";
   requires_clinician_review: boolean;
-  clinical_review_status: "source_traced" | "needs_clinical_review";
+  clinical_review_status: "source_traced" | "needs_clinical_review" | "physician_reviewed";
   clinical_review_note: string;
 }
