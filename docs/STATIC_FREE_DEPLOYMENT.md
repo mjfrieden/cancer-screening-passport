@@ -53,7 +53,7 @@ Deploy shape:
 
 ```bash
 npm run build:static
-npx -y firebase-tools@13.13.3 deploy --only hosting --project cancer-passport-staging
+npx -y firebase-tools@15.22.3 deploy --only hosting --project cancer-passport-staging
 ```
 
 A manual GitHub Actions workflow is also available:

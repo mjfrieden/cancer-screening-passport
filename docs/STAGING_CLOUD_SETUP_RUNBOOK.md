@@ -54,8 +54,8 @@ gcloud services enable \
   sts.googleapis.com \
   --project "$STAGING_PROJECT_ID"
 
-npx -y firebase-tools@13.13.3 projects:addfirebase "$STAGING_PROJECT_ID"
-npx -y firebase-tools@13.13.3 firestore:databases:create --project "$STAGING_PROJECT_ID" --location nam5
+npx -y firebase-tools@15.22.3 projects:addfirebase "$STAGING_PROJECT_ID"
+npx -y firebase-tools@15.22.3 firestore:databases:create --project "$STAGING_PROJECT_ID" --location nam5
 ```
 
 Enable Google sign-in in the Firebase Console:
