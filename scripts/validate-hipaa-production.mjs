@@ -18,6 +18,7 @@ const required = {
   HIPAA_INCIDENT_COMMANDER: process.env.HIPAA_INCIDENT_COMMANDER,
   HIPAA_BACKUP_OPERATIONAL_OWNER: process.env.HIPAA_BACKUP_OPERATIONAL_OWNER,
   HIPAA_LEGAL_COUNSEL: process.env.HIPAA_LEGAL_COUNSEL,
+  PRODUCTION_AUTH_VERIFIED: process.env.PRODUCTION_AUTH_VERIFIED,
   FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
   VITE_FIREBASE_PROJECT_ID: process.env.VITE_FIREBASE_PROJECT_ID,
 };
@@ -33,6 +34,11 @@ if (missing.length > 0) {
 
 if (required.HIPAA_PRODUCTION_APPROVED !== 'true') {
   console.error('HIPAA_PRODUCTION_APPROVED must be exactly true.');
+  process.exit(1);
+}
+
+if (required.PRODUCTION_AUTH_VERIFIED !== 'true') {
+  console.error('PRODUCTION_AUTH_VERIFIED must be exactly true.');
   process.exit(1);
 }
 

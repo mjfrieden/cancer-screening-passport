@@ -20,6 +20,12 @@ Last updated: June 28, 2026
 - Identity Platform initialized on June 28, 2026.
 - Improved email privacy is enabled.
 - Production authorized domains exclude `localhost`.
+- Google Auth Platform is configured for an external patient audience with
+  White Cloud Medical support contact information.
+- A production-only OAuth web client is configured for the production Firebase
+  origins and auth callback.
+- The Google Identity Platform provider is enabled and independently verified
+  by `npm run verify:production-auth`.
 - Production Firebase configuration stored as GitHub Environment variables.
 - Clinical simulator disabled for production.
 - Analytics measurement ID intentionally omitted.
@@ -52,7 +58,6 @@ Last updated: June 28, 2026
 
 ## Not Provisioned or Approved
 
-- Google Identity provider OAuth client and consent screen are not configured.
 - Production Firestore rules have not been deployed.
 - No production hosting service has been approved.
 - No production deployment has occurred.
@@ -62,9 +67,7 @@ Last updated: June 28, 2026
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Configure the Google OAuth consent screen and enable the Google Identity
-   Platform provider. Run `npm run verify:production-auth` afterward.
-3. Select a production web hosting service explicitly covered under the BAA.
+2. Select a production web hosting service explicitly covered under the BAA.
 
 After those actions, automation can deploy and test Firestore rules, complete
 authenticated synthetic-data testing, and prepare the final PHI activation
