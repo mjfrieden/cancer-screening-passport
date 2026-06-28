@@ -128,6 +128,7 @@ complete:
 
 ```bash
 HIPAA_PRODUCTION_APPROVED=false
+HIPAA_SYNTHETIC_TESTING_APPROVED=false
 GOOGLE_CLOUD_BAA_EFFECTIVE_DATE=
 HIPAA_SECURITY_OFFICER=
 HIPAA_PRIVACY_OFFICER=
@@ -144,3 +145,7 @@ The Firebase Hosting workflow also fails closed for production because Firebase
 Hosting is not currently named on Google's HIPAA Covered Products list. Use it
 only for synthetic-data staging until a covered production hosting service is
 selected and reviewed.
+
+`HIPAA_SYNTHETIC_TESTING_APPROVED=true` permits only the production Firestore
+rules workflow to run before final PHI approval. It does not permit hosting,
+public production deployment, or real-PHI collection.

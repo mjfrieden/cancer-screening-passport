@@ -256,6 +256,8 @@ addCheck('private intake and traceability docs are present', () => {
   ]);
   expectIncludes('scripts/validate-hipaa-production.mjs', [
     'HIPAA_PRODUCTION_APPROVED',
+    'HIPAA_SYNTHETIC_TESTING_APPROVED',
+    "DEPLOY_SERVICE === 'firestore-rules'",
     'GOOGLE_CLOUD_BAA_EFFECTIVE_DATE',
     'Firebase Hosting is not approved for PHI production',
   ]);

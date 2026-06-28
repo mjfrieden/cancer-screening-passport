@@ -11,7 +11,6 @@ if (environment !== 'production') {
 }
 
 const required = {
-  HIPAA_PRODUCTION_APPROVED: process.env.HIPAA_PRODUCTION_APPROVED,
   GOOGLE_CLOUD_BAA_EFFECTIVE_DATE: process.env.GOOGLE_CLOUD_BAA_EFFECTIVE_DATE,
   HIPAA_SECURITY_OFFICER: process.env.HIPAA_SECURITY_OFFICER,
   HIPAA_PRIVACY_OFFICER: process.env.HIPAA_PRIVACY_OFFICER,
@@ -32,7 +31,12 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-if (required.HIPAA_PRODUCTION_APPROVED !== 'true') {
+const syntheticRulesDeployment = (
+  process.env.DEPLOY_SERVICE === 'firestore-rules' &&
+  process.env.HIPAA_SYNTHETIC_TESTING_APPROVED === 'true'
+);
+
+if (!syntheticRulesDeployment && process.env.HIPAA_PRODUCTION_APPROVED !== 'true') {
   console.error('HIPAA_PRODUCTION_APPROVED must be exactly true.');
   process.exit(1);
 }

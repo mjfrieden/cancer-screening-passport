@@ -55,6 +55,8 @@ Last updated: June 28, 2026
 - Patient privacy regressions and required security headers are enforced by the
   beta preflight gate.
 - GitHub production gate set to `HIPAA_PRODUCTION_APPROVED=false`.
+- A separate synthetic-testing gate may permit owner-isolated Firestore rules
+  deployment without authorizing hosting or real PHI.
 
 ## Not Provisioned or Approved
 
