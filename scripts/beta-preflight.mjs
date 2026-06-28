@@ -259,6 +259,12 @@ addCheck('private intake and traceability docs are present', () => {
     'GOOGLE_CLOUD_BAA_EFFECTIVE_DATE',
     'Firebase Hosting is not approved for PHI production',
   ]);
+  expectIncludes('scripts/verify-production-auth.mjs', [
+    'enableImprovedEmailPrivacy',
+    "authorizedDomains.includes('localhost')",
+    'defaultSupportedIdpConfigs/google.com',
+    'googleProvider.enabled',
+  ]);
 });
 
 addCheck('Cloudflare static deployment path remains wired', () => {

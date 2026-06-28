@@ -17,6 +17,9 @@ Last updated: June 28, 2026
   `1:410791537492:web:e4ad8bde07268e7a1976c1`.
 - Firebase, Firestore, Identity Toolkit, IAM Credentials, and Security Token
   Service APIs enabled.
+- Identity Platform initialized on June 28, 2026.
+- Improved email privacy is enabled.
+- Production authorized domains exclude `localhost`.
 - Production Firebase configuration stored as GitHub Environment variables.
 - Clinical simulator disabled for production.
 - Analytics measurement ID intentionally omitted.
@@ -59,8 +62,8 @@ Last updated: June 28, 2026
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Configure the Google OAuth consent screen and Google Identity Platform
-   provider without adding `localhost` to production authorized domains.
+2. Configure the Google OAuth consent screen and enable the Google Identity
+   Platform provider. Run `npm run verify:production-auth` afterward.
 3. Select a production web hosting service explicitly covered under the BAA.
 
 After those actions, automation can deploy and test Firestore rules, complete
