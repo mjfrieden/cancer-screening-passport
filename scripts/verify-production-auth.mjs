@@ -9,7 +9,7 @@ function accessToken() {
   }).trim();
 }
 
-async function getJson(path, token) {
+async function getJson(path, token, { allowNotFound = false } = {}) {
   const response = await fetch(`https://identitytoolkit.googleapis.com${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -17,6 +17,9 @@ async function getJson(path, token) {
     },
   });
 
+  if (allowNotFound && response.status === 404) {
+    return null;
+  }
   if (!response.ok) {
     throw new Error(`Identity Platform check failed with HTTP ${response.status}.`);
   }
@@ -29,6 +32,7 @@ const config = await getJson(`/admin/v2/projects/${projectId}/config`, token);
 const googleProvider = await getJson(
   `/admin/v2/projects/${projectId}/defaultSupportedIdpConfigs/google.com`,
   token,
+  { allowNotFound: true },
 );
 
 const failures = [];
@@ -46,7 +50,7 @@ if (authorizedDomains.includes('localhost')) {
 if (!authorizedDomains.includes(`${projectId}.firebaseapp.com`)) {
   failures.push('the production Firebase auth domain is not authorized');
 }
-if (googleProvider.enabled !== true) {
+if (googleProvider?.enabled !== true) {
   failures.push('the Google identity provider is not enabled');
 }
 
