@@ -197,6 +197,18 @@ addCheck('private intake and traceability docs are present', () => {
     'Firestore',
     'support@whitecloudmedical.com',
   ]);
+  expectIncludes('docs/HIPAA_COMPLIANCE_PLAN.md', [
+    'White Cloud Medical, LLC',
+    'Google Cloud BAA',
+    'Risk Analysis and Management',
+    'Production Launch Gates',
+    'support@whitecloudmedical.com',
+  ]);
+  expectIncludes('scripts/validate-hipaa-production.mjs', [
+    'HIPAA_PRODUCTION_APPROVED',
+    'GOOGLE_CLOUD_BAA_EFFECTIVE_DATE',
+    'Firebase Hosting is not approved for PHI production',
+  ]);
 });
 
 addCheck('Cloudflare static deployment path remains wired', () => {

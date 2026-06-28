@@ -27,6 +27,13 @@ jobs:
 
     env:
       FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+      VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+      DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+      HIPAA_PRODUCTION_APPROVED: ${{ vars.HIPAA_PRODUCTION_APPROVED }}
+      GOOGLE_CLOUD_BAA_EFFECTIVE_DATE: ${{ vars.GOOGLE_CLOUD_BAA_EFFECTIVE_DATE }}
+      HIPAA_SECURITY_OFFICER: ${{ vars.HIPAA_SECURITY_OFFICER }}
+      HIPAA_PRIVACY_OFFICER: ${{ vars.HIPAA_PRIVACY_OFFICER }}
+      HIPAA_INCIDENT_COMMANDER: ${{ vars.HIPAA_INCIDENT_COMMANDER }}
 
     steps:
       - name: Checkout
@@ -48,7 +55,9 @@ jobs:
         run: npm ci
 
       - name: Validate rules deployment environment
-        run: npm run validate:rules-deploy-env
+        run: |
+          npm run validate:rules-deploy-env
+          npm run validate:hipaa-production
 
       - name: Test Firestore rules
         run: npm run test:rules

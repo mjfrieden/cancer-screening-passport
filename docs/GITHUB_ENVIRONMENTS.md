@@ -121,3 +121,23 @@ Before setting production variables, confirm:
 - clinical guidance content is reviewed or clearly positioned as non-diagnostic,
 - account/data deletion support is documented,
 - production has GitHub Environment approvals enabled.
+
+The `production` environment must also define these non-secret attestation
+variables. Do not set `HIPAA_PRODUCTION_APPROVED=true` until the evidence is
+complete:
+
+```bash
+HIPAA_PRODUCTION_APPROVED=false
+GOOGLE_CLOUD_BAA_EFFECTIVE_DATE=
+HIPAA_SECURITY_OFFICER=
+HIPAA_PRIVACY_OFFICER=
+HIPAA_INCIDENT_COMMANDER=
+```
+
+Production Firebase Hosting and Firestore rules workflows run
+`npm run validate:hipaa-production` and fail closed when the attestation is
+missing, the BAA date is malformed, or staging is selected as production.
+The Firebase Hosting workflow also fails closed for production because Firebase
+Hosting is not currently named on Google's HIPAA Covered Products list. Use it
+only for synthetic-data staging until a covered production hosting service is
+selected and reviewed.
