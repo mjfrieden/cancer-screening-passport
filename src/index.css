@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+.app-main {
+  padding-bottom: calc(9rem + env(safe-area-inset-bottom, 0px));
+}
+
+.safe-bottom-nav {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
+.safe-bottom-links {
+  bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+}
+
+.safe-bottom-fab {
+  bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+}
+
+.safe-bottom-action {
+  bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+}
+
 :where(a, button, input, select, textarea):focus-visible {
   outline: 3px solid #2563eb;
   outline-offset: 3px;

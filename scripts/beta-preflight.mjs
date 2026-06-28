@@ -204,13 +204,17 @@ addCheck('authenticated shell retains keyboard and screen-reader semantics', () 
     'aria-label="Close add screening dialog"',
   ]);
   expectIncludes('src/components/ProfileForm.tsx', [
-    'sticky bottom-28 z-20',
+    'safe-bottom-action sticky z-20',
     'type="submit"',
     'Update Passport Profile',
   ]);
   expectIncludes('src/index.css', [
+    'env(safe-area-inset-bottom, 0px)',
     ':focus-visible',
     'prefers-reduced-motion: reduce',
+  ]);
+  expectIncludes('index.html', [
+    'viewport-fit=cover',
   ]);
 });
 

@@ -264,7 +264,7 @@ function AppContent() {
       </header>
 
       {/* Main Content */}
-      <main id="main-content" tabIndex={-1} className="max-w-2xl mx-auto p-4 pt-8">
+      <main id="main-content" tabIndex={-1} className="app-main max-w-2xl mx-auto p-4 pt-8">
         <Suspense fallback={<TabLoadingState />}>
           <AnimatePresence mode="wait">
             {activeTab === 'dashboard' && (
@@ -319,7 +319,7 @@ function AppContent() {
       </main>
 
       {/* Floating Plus for adding record */}
-      <div className="fixed bottom-24 right-6 z-40">
+      <div className="safe-bottom-fab fixed right-6 z-40">
         <button 
           type="button"
           onClick={() => setIsModalOpen(true)}
@@ -338,7 +338,7 @@ function AppContent() {
       />
 
       {/* Bottom Nav */}
-      <nav aria-label="Primary" className="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-2 py-4">
+      <nav aria-label="Primary" className="safe-bottom-nav fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-2 pt-4">
         <div className="max-w-2xl mx-auto flex items-center justify-around">
           <NavButton active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} icon={LayoutDashboard} label="Plan" />
           <NavButton active={activeTab === 'lifestyle'} onClick={() => setActiveTab('lifestyle')} icon={Apple} label="Healthy" />
@@ -347,7 +347,7 @@ function AppContent() {
           <NavButton active={activeTab === 'share'} onClick={() => setActiveTab('share')} icon={Share2} label="Share" />
         </div>
       </nav>
-      <div className="fixed bottom-[82px] left-0 right-0 z-20 pointer-events-none">
+      <div className="safe-bottom-links fixed left-0 right-0 z-20 pointer-events-none">
         <div className="max-w-2xl mx-auto px-4 pointer-events-auto">
           <LegalLinks compact />
         </div>
