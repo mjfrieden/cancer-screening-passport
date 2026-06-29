@@ -1,6 +1,6 @@
 # Data Retention and Recovery
 
-Status: Draft for White Cloud Medical, LLC approval
+Status: Policy approved; technical restoration test pending
 
 Last updated: June 29, 2026
 
@@ -35,6 +35,10 @@ configuration, audit evidence, and patient-directed exports.
 - Point-in-time recovery remains disabled to respect the current cost ceiling.
 
 These objectives require approval before real-PHI activation.
+
+White Cloud Medical approved the retention policy and draft recovery objectives
+on June 29, 2026. The objectives remain subject to validation by the first
+restoration test.
 
 ## Restore Procedure
 

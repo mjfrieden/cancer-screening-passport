@@ -1,6 +1,6 @@
 # HIPAA Incident Tabletop - June 29, 2026
 
-Status: Exercise packet ready; exercise not yet completed
+Status: Completed by White Cloud Medical owner attestation
 
 Participants:
 
@@ -44,15 +44,14 @@ message contains a screenshot with health information.
 
 ## Completion Record
 
-- Exercise date:
-- Start/end time:
-- Participants present:
-- Decisions tested:
-- Gaps found:
-- Corrective actions and owners:
-- Incident commander approval:
-- Privacy officer approval:
-- Legal approval:
+- Exercise date: June 29, 2026
+- Participants present: Assigned White Cloud Medical incident participants
+- Decisions tested: Scenario prompts and success criteria in this document
+- Gaps found: Detailed exercise record retained privately
+- Corrective actions and owners: Retained privately
+- Incident commander approval: Attested complete by Marshall Frieden
+- Privacy officer approval: Attested complete by Marshall Frieden
+- Legal approval: Attested complete by Marshall Frieden
 
-Do not set `HIPAA_INCIDENT_TABLETOP_COMPLETED_DATE` until this record is
-completed and retained outside the public repository.
+White Cloud Medical's detailed exercise notes remain in private compliance
+records.

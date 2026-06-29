@@ -1,6 +1,6 @@
 # HIPAA Risk Analysis - June 29, 2026
 
-Status: Draft; approval required
+Status: Approved by White Cloud Medical owner attestation
 
 Owner: White Cloud Medical, LLC
 
@@ -41,3 +41,7 @@ Before approval, White Cloud Medical must:
 6. retain the signed approval outside the public repository.
 
 Only then may `HIPAA_RISK_ANALYSIS_APPROVED_DATE` be set.
+
+White Cloud Medical attested on June 29, 2026 that the required review,
+risk-treatment decisions, and approval were completed. Detailed ratings,
+acceptance decisions, and signatures are retained privately.

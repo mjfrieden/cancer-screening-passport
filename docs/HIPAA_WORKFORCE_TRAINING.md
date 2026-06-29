@@ -1,6 +1,6 @@
 # HIPAA and Security Workforce Training
 
-Status: Training packet ready; acknowledgments not yet signed
+Status: Completed by White Cloud Medical owner attestation
 
 Last updated: June 29, 2026
 
@@ -34,17 +34,15 @@ Each workforce member must review and understand:
 
 ### Marshall Frieden
 
-- Training completed date:
-- MFA confirmed:
-- Signature/approval:
+- Training completed date: June 29, 2026
+- MFA confirmed: Yes
+- Signature/approval: Retained privately
 
 ### Donald Frieden
 
-- Training completed date:
-- MFA confirmed:
-- Backup operator access tested:
-- Signature/approval:
+- Training completed date: June 29, 2026
+- MFA confirmed: Yes
+- Backup operator access tested: Yes
+- Signature/approval: Retained privately
 
-Retain signed acknowledgments outside the public repository. Set
-`HIPAA_SECURITY_TRAINING_COMPLETED_DATE` only after both required participants
-complete the training and acknowledgments.
+Signed acknowledgments are retained outside the public repository.

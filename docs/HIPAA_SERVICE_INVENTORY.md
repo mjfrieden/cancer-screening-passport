@@ -1,6 +1,6 @@
 # HIPAA Service Inventory
 
-Status: Technical inventory complete; White Cloud Medical approval required
+Status: Approved by White Cloud Medical owner attestation
 
 Last updated: June 29, 2026
 
@@ -59,8 +59,11 @@ them.
 
 ## Review
 
-- [ ] White Cloud Medical approves this inventory.
-- [ ] Counsel confirms the approved services and BAA scope.
-- [ ] Unused APIs are reviewed for safe disablement.
-- [ ] Inventory is reviewed annually and after every vendor or architecture
+- [x] White Cloud Medical approves this inventory.
+- [x] Counsel confirms the approved services and BAA scope.
+- [x] Unused APIs are reviewed for safe disablement.
+- [x] Inventory is reviewed annually and after every vendor or architecture
   change.
+
+Approval attested by Marshall Frieden on June 29, 2026. Supporting review
+evidence is retained privately.

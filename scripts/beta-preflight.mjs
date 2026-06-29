@@ -182,6 +182,7 @@ addCheck('real-PHI operational evidence remains wired', () => {
   for (const path of [
     'docs/DATA_RETENTION_AND_RECOVERY.md',
     'docs/HIPAA_ACCESS_REVIEW_2026-06-29.md',
+    'docs/HUMAN_GATE_ATTESTATION_2026-06-29.md',
     'docs/HIPAA_RISK_ANALYSIS_2026-06-29.md',
     'docs/HIPAA_SERVICE_INVENTORY.md',
     'docs/HIPAA_TABLETOP_2026-06-29.md',

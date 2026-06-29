@@ -115,6 +115,12 @@ Last updated: June 29, 2026
 - All production service accounts have zero user-managed keys.
 - `npm run verify:phi-operations` verifies 12 live IAM, audit, recovery,
   location, and cost controls.
+- White Cloud Medical, LLC attested on June 29, 2026 that all human-controlled
+  PHI activation gates are complete. The public attestation is recorded in
+  `docs/HUMAN_GATE_ATTESTATION_2026-06-29.md`; sensitive supporting evidence is
+  retained privately.
+- Real PHI remains disabled pending the first scheduled-backup restoration
+  test and final technical activation.
 
 ## Next Owner Actions
 

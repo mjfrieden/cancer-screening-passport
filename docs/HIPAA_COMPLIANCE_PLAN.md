@@ -130,22 +130,22 @@ Before launch:
 
 ## Production Launch Gates
 
-- [ ] White Cloud Medical, LLC HIPAA role and scope documented.
+- [x] White Cloud Medical, LLC HIPAA role and scope documented.
 - [x] Privacy officer, security officer, incident commander, and system owner named.
-- [ ] Enterprise-wide and application-specific risk analyses approved.
-- [x] Google Cloud BAA accepted; retention of the downloaded or printed copy
-  remains an owner action.
+- [x] Enterprise-wide and application-specific risk analyses approved.
+- [x] Google Cloud BAA accepted and retained in private company records.
 - [x] Dedicated production project and billing account configured.
-- [ ] Covered-service inventory approved.
+- [x] Covered-service inventory approved.
 - [x] Production web hosting uses App Engine Standard under the Google Cloud BAA.
 - [x] Identity Platform and Firestore configured with production-only credentials.
-- [ ] IAM, MFA, workload identity, audit logs, and alerts verified.
+- [x] IAM, MFA, workload identity, audit logs, and alerts verified.
 - [x] Firestore rules and single-account production deletion tests pass.
-- [ ] Retention, backup, restoration, and secure-disposal procedures approved.
-- [ ] Incident-response tabletop completed.
-- [ ] Workforce training and acknowledgements complete.
-- [ ] Authenticated security and privacy beta completed using synthetic data.
-- [ ] Final legal, privacy, store, and vendor review completed.
+- [x] Retention, backup, restoration, and secure-disposal procedures approved;
+  first technical restoration test remains open.
+- [x] Incident-response tabletop completed.
+- [x] Workforce training and acknowledgements complete.
+- [x] Authenticated security and privacy beta completed using synthetic data.
+- [x] Final legal, privacy, and vendor review completed for the web release.
 - [ ] `HIPAA_PRODUCTION_APPROVED=true` approved and recorded in GitHub.
 
 ## Ongoing Cadence

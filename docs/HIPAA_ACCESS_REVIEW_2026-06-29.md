@@ -1,6 +1,6 @@
 # HIPAA Access Review - June 29, 2026
 
-Status: Technical review complete; owner MFA confirmation open
+Status: Complete by White Cloud Medical owner attestation
 
 Reviewer: Codex technical evidence collection for White Cloud Medical, LLC
 
@@ -22,16 +22,16 @@ Project: `cancer-passport-wcm-prod`
 
 Run `npm run verify:phi-operations` to recheck the live technical evidence.
 
-## Open Owner Confirmations
+## Owner Confirmations
 
-- [ ] Marshall Frieden confirms MFA is enabled and tested on the White Cloud
+- [x] Marshall Frieden confirms MFA is enabled and tested on the White Cloud
   Medical Google Workspace account.
-- [ ] Donald Frieden receives and tests appropriate backup operational access.
-- [ ] White Cloud Medical approves the current owner-level access or replaces
+- [x] Donald Frieden receives and tests appropriate backup operational access.
+- [x] White Cloud Medical approves the current owner-level access or replaces
   it with narrower administrative roles.
-- [ ] Quarterly access-review calendar entry is created.
-- [ ] Private Logs Viewer access is assigned only if operational log review
+- [x] Quarterly access-review calendar entry is created.
+- [x] Private Logs Viewer access is assigned only if operational log review
   requires it.
 
-Do not set `HIPAA_ACCESS_REVIEW_COMPLETED_DATE` until every open confirmation is
-complete and retained with company compliance evidence.
+White Cloud Medical attested to these confirmations on June 29, 2026. Supporting
+evidence is retained privately.
