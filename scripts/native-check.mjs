@@ -13,7 +13,11 @@ const checks = [
   },
   {
     file: 'android/app/build.gradle',
-    expect: contents => contents.includes(`namespace = "${APP_ID}"`) && contents.includes(`applicationId "${APP_ID}"`),
+    expect: contents => (
+      contents.includes(`namespace = "${APP_ID}"`) &&
+      contents.includes(`applicationId "${APP_ID}"`) &&
+      contents.includes('buildConfig = true')
+    ),
     label: 'Android application ID',
   },
   {

@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 android {
     namespace = "com.whitecloudmedical.cancerpassport"
     compileSdk = rootProject.ext.compileSdkVersion
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId "com.whitecloudmedical.cancerpassport"
         minSdkVersion rootProject.ext.minSdkVersion
