@@ -57,7 +57,7 @@ if (!backup) {
     {
       backupCount: backups.length,
       requiredAfter: MARKER_CREATED_AT.toISOString(),
-      nextAction: 'Run this command after the first scheduled Sunday backup completes.',
+      nextAction: 'Run this command after the first scheduled backup containing the marker completes.',
     },
     2,
   );
