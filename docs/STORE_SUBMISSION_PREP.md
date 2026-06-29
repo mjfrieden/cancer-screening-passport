@@ -1,6 +1,6 @@
 # Store Submission Prep
 
-Last updated: 2026-06-28
+Last updated: 2026-06-29
 
 This project has a Capacitor iOS/Android shell, but it is not ready for App Store or Google Play submission until the items below are completed and reviewed.
 
@@ -13,6 +13,10 @@ This project has a Capacitor iOS/Android shell, but it is not ready for App Stor
 - Android wrapper exists in `android/`
 - Web assets sync with `npm run cap:sync`
 - CI validates Capacitor sync and native identity with `npm run native:check`
+- CI run `28389768588` compiled Android unit tests and a debug APK successfully
+  with target SDK 36.
+- A public account-deletion page is live at
+  `https://cancer-passport-wcm-prod.uc.r.appspot.com/account-deletion.html`.
 
 ## Required Store Assets
 
@@ -68,7 +72,8 @@ Run this matrix after Firebase staging is configured and before TestFlight or cl
 
 For iOS:
 
-- Install full Xcode.
+- Install Xcode 26 or later and build with the iOS 26 SDK or later, as required
+  for App Store uploads after April 28, 2026.
 - Select Xcode with `xcode-select`.
 - Configure Apple Developer Team signing.
 - Build and archive from Xcode.
@@ -84,10 +89,12 @@ For Android:
 
 ## Submission Blockers
 
-- No production Firebase project has been confirmed.
+- Full Xcode is not installed or selected on the current Mac.
+- Java and the Android SDK are not installed locally; Android compilation is
+  currently verified in GitHub Actions.
 - Native auth behavior has not been tested in webviews.
-- Production legal and medical review are not complete.
+- Final production legal review is not complete.
 - Store screenshots and metadata are not complete.
 - Release signing is not configured.
-- Native release builds have not been compiled on this machine.
+- A signed iOS archive and signed Android App Bundle have not been compiled.
 - TestFlight and Play closed testing have not been run.

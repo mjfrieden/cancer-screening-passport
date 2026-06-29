@@ -58,6 +58,48 @@ if (
   process.exit(1);
 }
 
+if (process.env.VITE_REAL_PHI_ENABLED === 'true') {
+  const requiredPhiDates = {
+    HIPAA_RISK_ANALYSIS_APPROVED_DATE: process.env.HIPAA_RISK_ANALYSIS_APPROVED_DATE,
+    HIPAA_SECURITY_TRAINING_COMPLETED_DATE: process.env.HIPAA_SECURITY_TRAINING_COMPLETED_DATE,
+    HIPAA_INCIDENT_TABLETOP_COMPLETED_DATE: process.env.HIPAA_INCIDENT_TABLETOP_COMPLETED_DATE,
+    HIPAA_RETENTION_POLICY_APPROVED_DATE: process.env.HIPAA_RETENTION_POLICY_APPROVED_DATE,
+    HIPAA_ACCESS_REVIEW_COMPLETED_DATE: process.env.HIPAA_ACCESS_REVIEW_COMPLETED_DATE,
+    HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE: process.env.HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE,
+    HIPAA_FINAL_LEGAL_REVIEW_APPROVED_DATE: process.env.HIPAA_FINAL_LEGAL_REVIEW_APPROVED_DATE,
+  };
+  const missingPhiDates = Object.entries(requiredPhiDates)
+    .filter(([, value]) => !value?.trim())
+    .map(([name]) => name);
+
+  if (missingPhiDates.length > 0) {
+    console.error(`Missing real-PHI activation dates: ${missingPhiDates.join(', ')}`);
+    process.exit(1);
+  }
+
+  const invalidPhiDates = Object.entries(requiredPhiDates)
+    .filter(([, value]) => !/^\d{4}-\d{2}-\d{2}$/.test(value))
+    .map(([name]) => name);
+
+  if (invalidPhiDates.length > 0) {
+    console.error(`Real-PHI activation dates must use YYYY-MM-DD: ${invalidPhiDates.join(', ')}`);
+    process.exit(1);
+  }
+
+  const requiredPhiApprovals = {
+    HIPAA_BAA_RETAINED: process.env.HIPAA_BAA_RETAINED,
+    HIPAA_SECOND_ACCOUNT_ISOLATION_VERIFIED: process.env.HIPAA_SECOND_ACCOUNT_ISOLATION_VERIFIED,
+  };
+  const missingPhiApprovals = Object.entries(requiredPhiApprovals)
+    .filter(([, value]) => value !== 'true')
+    .map(([name]) => name);
+
+  if (missingPhiApprovals.length > 0) {
+    console.error(`Real-PHI activation approvals must be exactly true: ${missingPhiApprovals.join(', ')}`);
+    process.exit(1);
+  }
+}
+
 if (required.PRODUCTION_AUTH_VERIFIED !== 'true') {
   console.error('PRODUCTION_AUTH_VERIFIED must be exactly true.');
   process.exit(1);

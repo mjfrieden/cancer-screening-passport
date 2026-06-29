@@ -96,6 +96,10 @@ Last updated: June 29, 2026
   production test Google account was unavailable. Firestore emulator tests
   continue to enforce owner isolation.
 - Real PHI remains prohibited.
+- Real-PHI activation now fails closed unless the dated risk analysis,
+  training, tabletop, retention, access-review, recovery-test, and legal-review
+  evidence is present along with BAA retention and two-account isolation
+  approvals. See `docs/PHI_ACTIVATION_RUNBOOK.md`.
 
 ## Next Owner Actions
 

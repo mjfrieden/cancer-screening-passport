@@ -179,6 +179,8 @@ addCheck('production beta keeps the real-PHI runtime lock', () => {
   expectIncludes('scripts/validate-hipaa-production.mjs', [
     'Synthetic App Engine deployments require VITE_REAL_PHI_ENABLED=false.',
     'Real-PHI mode requires HIPAA_PRODUCTION_APPROVED=true.',
+    'Missing real-PHI activation dates:',
+    'Real-PHI activation approvals must be exactly true:',
   ]);
   expectIncludes('.github/workflows/deploy-app-engine.yml', [
     "VITE_REAL_PHI_ENABLED: ${{ vars.VITE_REAL_PHI_ENABLED || 'false' }}",
