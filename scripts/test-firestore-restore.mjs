@@ -98,6 +98,7 @@ if (process.env.PHI_RECOVERY_TEST_APPROVED !== 'true') {
 
 let destinationCreated = false;
 let validationPassed = false;
+let temporaryDailySchedulesRemoved = 0;
 
 try {
   runGcloud([
@@ -169,6 +170,37 @@ try {
   }
 }
 
+if (validationPassed) {
+  const schedules = readJson([
+    'firestore',
+    'backups',
+    'schedules',
+    'list',
+    `--database=${SOURCE_DATABASE}`,
+    '--project',
+    PROJECT_ID,
+  ]);
+  const temporaryDailySchedules = schedules.filter(schedule => (
+    schedule.dailyRecurrence &&
+    schedule.retention === '86400s'
+  ));
+  for (const schedule of temporaryDailySchedules) {
+    const scheduleId = schedule.name.split('/').at(-1);
+    runGcloud([
+      'firestore',
+      'backups',
+      'schedules',
+      'delete',
+      `--backup-schedule=${scheduleId}`,
+      `--database=${SOURCE_DATABASE}`,
+      '--project',
+      PROJECT_ID,
+      '--quiet',
+    ], { inherit: true });
+    temporaryDailySchedulesRemoved += 1;
+  }
+}
+
 console.log(JSON.stringify({
   status: validationPassed ? 'passed' : 'failed',
   completedAt: new Date().toISOString(),
@@ -177,4 +209,5 @@ console.log(JSON.stringify({
   destinationDatabase,
   markerValidated: validationPassed,
   temporaryDatabaseDeleted: destinationCreated,
+  temporaryDailySchedulesRemoved,
 }, null, 2));

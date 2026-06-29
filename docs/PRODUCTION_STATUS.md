@@ -126,6 +126,9 @@ Last updated: June 29, 2026
   `VITE_REAL_PHI_ENABLED=false` remain unchanged.
 - A default-denied synthetic recovery marker is present for the first backup.
   `npm run test:phi-recovery` is the guarded restoration-test entry point.
+- A temporary daily backup with one-day retention is active to accelerate the
+  first recovery test. Successful recovery automatically removes that
+  temporary schedule and preserves the weekly schedule.
 
 ## Next Owner Actions
 

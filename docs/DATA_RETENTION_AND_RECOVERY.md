@@ -81,6 +81,11 @@ only to a `recovery-test-YYYYMMDD` named database, validates the marker, and
 deletes the temporary database. Any existing destination blocks execution for
 manual review.
 
+A temporary daily backup schedule with one-day retention was added on June 29,
+2026 to obtain the first testable backup sooner. The restore runner deletes
+daily one-day schedules after successful validation. The permanent Sunday
+seven-day schedule remains the approved steady-state policy.
+
 ## Cost Boundary
 
 Scheduled backup storage and restore operations are not part of Firestore's

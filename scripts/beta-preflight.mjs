@@ -185,6 +185,7 @@ addCheck('real-PHI operational evidence remains wired', () => {
     "const MARKER_COLLECTION = '_recovery_validation'",
     "process.env.PHI_RECOVERY_TEST_APPROVED !== 'true'",
     'temporaryDatabaseDeleted',
+    'temporaryDailySchedulesRemoved',
   ]);
   for (const path of [
     'docs/DATA_RETENTION_AND_RECOVERY.md',
