@@ -23,6 +23,8 @@ Use this checklist before sending a staging link to beta testers.
   `min_instances=0`, and `max_instances=1`.
 - [x] Production App Engine deployment and live smoke workflow passed.
 - [x] Production hostname is authorized in Identity Platform.
+- [x] Production Google sign-in completed with the approved White Cloud
+  Medical account using synthetic data only.
 
 ## App Configuration
 
@@ -46,6 +48,9 @@ Use this checklist before sending a staging link to beta testers.
 - [x] Delete app data/account with a throwaway tester account.
 - [x] Sign out.
 - [x] Confirm a second user cannot access the first user's documents.
+- [x] Production synthetic profile, screening record, recommendation refresh,
+  JSON export, and permanent app-account deletion completed.
+- [ ] Repeat production isolation check with a second Google test account.
 
 ## Mobile Checks
 

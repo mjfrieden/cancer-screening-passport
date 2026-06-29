@@ -81,18 +81,22 @@ Last updated: June 28, 2026
 
 ## Not Provisioned or Approved
 
-- Authenticated synthetic testing on the production host is not complete.
-- Cross-user isolation, export, sign-out, and account deletion still require
-  clean throwaway Google account sessions on the production host.
+- Single-account authenticated synthetic testing passed on June 29, 2026 using
+  `marshall@whitecloudmedical.com`: Google sign-in, profile save, screening
+  record save, recommendation refresh, account-data JSON export, deletion
+  reauthentication, permanent app-account deletion, and return to the
+  signed-out screen.
+- Live second-account isolation testing is not complete because a second
+  production test Google account was unavailable. Firestore emulator tests
+  continue to enforce owner isolation.
 - Real PHI remains prohibited.
 
 ## Next Owner Actions
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Sign in to the production beta with two throwaway Google accounts and use
-   only synthetic information.
+2. Create a second production test Google account and use only synthetic
+   information for the remaining live isolation test.
 
-After sign-in, automation can complete consent, record isolation, export,
-sign-out, and permanent account-deletion checks and prepare the final PHI
+After the second-account isolation test, automation can prepare the final PHI
 activation review.
