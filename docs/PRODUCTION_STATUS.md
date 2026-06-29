@@ -57,10 +57,12 @@ Last updated: June 28, 2026
 - GitHub production gate set to `HIPAA_PRODUCTION_APPROVED=false`.
 - A separate synthetic-testing gate may permit owner-isolated Firestore rules
   deployment without authorizing hosting or real PHI.
+- Production Firestore rules were deployed through keyless GitHub workload
+  identity after passing emulator tests. Deployment run `28345367781`
+  completed successfully on June 28, 2026.
 
 ## Not Provisioned or Approved
 
-- Production Firestore rules have not been deployed.
 - No production hosting service has been approved.
 - No production deployment has occurred.
 - Real PHI remains prohibited.
@@ -71,6 +73,6 @@ Last updated: June 28, 2026
    White Cloud Medical, LLC compliance records.
 2. Select a production web hosting service explicitly covered under the BAA.
 
-After those actions, automation can deploy and test Firestore rules, complete
+After those actions, automation can deploy the web application, complete
 authenticated synthetic-data testing, and prepare the final PHI activation
 review.

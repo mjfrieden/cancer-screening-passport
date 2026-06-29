@@ -78,4 +78,4 @@ jobs:
       - name: Deploy Firestore rules
         env:
           FIREBASE_TOKEN: ${{ steps.google-auth.outputs.access_token }}
-        run: npx -y firebase-tools@15.22.3 deploy --debug --only firestore:rules --project "${FIREBASE_PROJECT_ID}"
+        run: npx -y firebase-tools@15.22.3 deploy --only firestore:rules --project "${FIREBASE_PROJECT_ID}"

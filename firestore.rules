@@ -15,10 +15,6 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
-    }
-
     // User Profile
     match /user_profiles/{userId} {
       allow get, write: if isOwner(userId);
