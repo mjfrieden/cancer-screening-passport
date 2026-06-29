@@ -15,6 +15,10 @@ This project has a Capacitor iOS/Android shell, but it is not ready for App Stor
 - CI validates Capacitor sync and native identity with `npm run native:check`
 - CI run `28389768588` compiled Android unit tests and a debug APK successfully
   with target SDK 36.
+- Production Firebase now has dedicated iOS and Android app registrations for
+  `com.whitecloudmedical.cancerpassport`.
+- Capacitor uses native Google Sign-In and exchanges the native ID token into
+  the Firebase JavaScript session used by Firestore.
 - A public account-deletion page is live at
   `https://cancer-passport-wcm-prod.uc.r.appspot.com/account-deletion.html`.
 
@@ -93,6 +97,10 @@ For Android:
 - Java and the Android SDK are not installed locally; Android compilation is
   currently verified in GitHub Actions.
 - Native auth behavior has not been tested in webviews.
+- Android release signing credentials do not exist yet; their SHA-1 and
+  SHA-256 fingerprints must be added to the production Firebase Android app.
+- Sign in with Apple is not configured. Confirm the applicable App Review
+  requirement and implement it before submission unless an exception applies.
 - Final production legal review is not complete.
 - Store screenshots and metadata are not complete.
 - Release signing is not configured.

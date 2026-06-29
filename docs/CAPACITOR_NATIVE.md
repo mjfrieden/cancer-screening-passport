@@ -87,5 +87,10 @@ later.
 - Android file sharing is restricted to the app's export cache directory.
 - CI compiles the Android application so manifest and resource errors block
   merges.
+- Production Firebase iOS and Android registrations are checked into the
+  native shells using the shared app identifier.
+- Google authentication uses the native provider and then signs into the
+  Firebase JavaScript session so existing Firestore access rules remain in
+  force.
 
 See `docs/STORE_SUBMISSION_PREP.md` for the fuller store asset, compliance, and native QA checklist.

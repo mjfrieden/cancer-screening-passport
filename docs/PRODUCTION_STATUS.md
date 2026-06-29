@@ -100,6 +100,12 @@ Last updated: June 29, 2026
   training, tabletop, retention, access-review, recovery-test, and legal-review
   evidence is present along with BAA retention and two-account isolation
   approvals. See `docs/PHI_ACTIVATION_RUNBOOK.md`.
+- Production Firebase iOS app
+  `1:410791537492:ios:d3e1ad03e2821ce21976c1` and Android app
+  `1:410791537492:android:f1aa4a2b83c1d4da1976c1` are active for
+  `com.whitecloudmedical.cancerpassport`.
+- Native Google authentication is integrated and Android compilation passed in
+  CI run `28394890190`; real-device authentication remains open.
 
 ## Next Owner Actions
 
