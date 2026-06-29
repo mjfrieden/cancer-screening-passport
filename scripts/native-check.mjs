@@ -22,6 +22,28 @@ const checks = [
     label: 'Android app name',
   },
   {
+    file: 'android/app/src/main/AndroidManifest.xml',
+    expect: contents => (
+      contents.includes('android:allowBackup="false"') &&
+      contents.includes('android:fullBackupContent="false"') &&
+      contents.includes('android:networkSecurityConfig="@xml/network_security_config"')
+    ),
+    label: 'Android health-data backup and network protections',
+  },
+  {
+    file: 'android/app/src/main/res/xml/network_security_config.xml',
+    expect: contents => contents.includes('cleartextTrafficPermitted="false"'),
+    label: 'Android cleartext traffic disabled',
+  },
+  {
+    file: 'android/app/src/main/res/xml/file_paths.xml',
+    expect: contents => (
+      contents.includes('<cache-path name="secure_exports" path="exports/" />') &&
+      !contents.includes('<external-path')
+    ),
+    label: 'Android export sharing is cache-scoped',
+  },
+  {
     file: 'ios/App/App/Info.plist',
     expect: contents => contents.includes(`<string>${APP_NAME}</string>`) && contents.includes('<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>'),
     label: 'iOS display name and bundle placeholder',

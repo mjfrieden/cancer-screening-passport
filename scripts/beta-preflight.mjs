@@ -120,7 +120,9 @@ addCheck('production brand assets are wired across app surfaces', () => {
 addCheck('legal and support pages keep beta safety warnings', () => {
   expectIncludes('public/legal/privacy.html', [
     'protected health information',
-    'Firebase Authentication and Firestore',
+    'Google Identity Platform and Firebase Authentication',
+    'Firestore for app-record storage',
+    'Google App Engine Standard',
     'White Cloud Medical, LLC',
     'Health Breach Notification Rule',
     '/support.html',
@@ -154,6 +156,18 @@ addCheck('legal and support pages keep beta safety warnings', () => {
       'mailto:support@whitecloudmedical.com',
     ]);
   }
+});
+
+addCheck('public account deletion path is store-ready', () => {
+  expectIncludes('public/account-deletion.html', [
+    'Delete Your Account',
+    'support@whitecloudmedical.com',
+    'Do not include health information',
+    'does not delete the underlying Google account',
+  ]);
+  expectIncludes('public/legal/privacy.html', ['/account-deletion.html']);
+  expectIncludes('public/support.html', ['/account-deletion.html']);
+  expectIncludes('public/sw.js', ['/account-deletion.html']);
 });
 
 addCheck('production beta keeps the real-PHI runtime lock', () => {

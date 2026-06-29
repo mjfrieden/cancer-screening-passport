@@ -57,6 +57,10 @@ jobs:
       - name: Native identity checks
         run: npm run native:check
 
+      - name: Compile Android debug application
+        working-directory: android
+        run: ./gradlew testDebugUnitTest assembleDebug
+
       - name: Audit dependencies
         run: npm run audit
 
