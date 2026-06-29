@@ -36,8 +36,25 @@ const syntheticDeployment = (
   process.env.HIPAA_SYNTHETIC_TESTING_APPROVED === 'true'
 );
 
+if (
+  process.env.DEPLOY_SERVICE === 'app-engine' &&
+  syntheticDeployment &&
+  process.env.VITE_REAL_PHI_ENABLED !== 'false'
+) {
+  console.error('Synthetic App Engine deployments require VITE_REAL_PHI_ENABLED=false.');
+  process.exit(1);
+}
+
 if (!syntheticDeployment && process.env.HIPAA_PRODUCTION_APPROVED !== 'true') {
   console.error('HIPAA_PRODUCTION_APPROVED must be exactly true.');
+  process.exit(1);
+}
+
+if (
+  process.env.VITE_REAL_PHI_ENABLED === 'true' &&
+  process.env.HIPAA_PRODUCTION_APPROVED !== 'true'
+) {
+  console.error('Real-PHI mode requires HIPAA_PRODUCTION_APPROVED=true.');
   process.exit(1);
 }
 

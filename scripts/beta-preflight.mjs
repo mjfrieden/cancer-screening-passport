@@ -156,6 +156,21 @@ addCheck('legal and support pages keep beta safety warnings', () => {
   }
 });
 
+addCheck('production beta keeps the real-PHI runtime lock', () => {
+  expectIncludes('src/App.tsx', [
+    "VITE_REAL_PHI_ENABLED === 'true'",
+    'Production beta: use synthetic test data only.',
+    'Do not enter real patient or health information.',
+  ]);
+  expectIncludes('scripts/validate-hipaa-production.mjs', [
+    'Synthetic App Engine deployments require VITE_REAL_PHI_ENABLED=false.',
+    'Real-PHI mode requires HIPAA_PRODUCTION_APPROVED=true.',
+  ]);
+  expectIncludes('.github/workflows/deploy-app-engine.yml', [
+    "VITE_REAL_PHI_ENABLED: ${{ vars.VITE_REAL_PHI_ENABLED || 'false' }}",
+  ]);
+});
+
 addCheck('patient data is redacted from production errors', () => {
   expectIncludes('src/lib/firebase.ts', [
     'FirestoreOperationError',

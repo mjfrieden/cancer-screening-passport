@@ -17,6 +17,7 @@ const ProfileForm = lazy(() => import('./components/ProfileForm'));
 const SurvivorshipForm = lazy(() => import('./components/SurvivorshipForm'));
 const HealthyLiving = lazy(() => import('./components/HealthyLiving'));
 const FHIRSharing = lazy(() => import('./components/FHIRSharing'));
+const realPhiEnabled = import.meta.env.VITE_REAL_PHI_ENABLED === 'true';
 
 function AppContent() {
   const { user, loading: authLoading } = useAuth();
@@ -186,6 +187,7 @@ function AppContent() {
         <p className="text-gray-600 font-medium leading-relaxed max-w-md mx-auto">
           A health education and record-organizing tool from White Cloud Medical, LLC. Review all screening decisions with your clinician.
         </p>
+        {!realPhiEnabled && <SyntheticDataBanner />}
 
         <button
           onClick={signInWithGoogle}
@@ -221,14 +223,17 @@ function AppContent() {
   );
 
   if (!hasCurrentConsent) return (
-    <ConsentGate
-      user={user}
-      onAccepted={() => {
-        setHasCurrentConsent(true);
-        setConsentChecked(true);
-        void fetchData();
-      }}
-    />
+    <>
+      {!realPhiEnabled && <SyntheticDataBanner />}
+      <ConsentGate
+        user={user}
+        onAccepted={() => {
+          setHasCurrentConsent(true);
+          setConsentChecked(true);
+          void fetchData();
+        }}
+      />
+    </>
   );
 
   return (
@@ -265,6 +270,7 @@ function AppContent() {
       <div className="border-b border-amber-100 bg-amber-50 px-4 py-2 text-center text-[11px] font-medium text-amber-950">
         Health education only. Not medical advice, diagnosis, treatment, or emergency care. Verify recommendations with your clinician.
       </div>
+      {!realPhiEnabled && <SyntheticDataBanner />}
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="app-main max-w-2xl mx-auto p-4 pt-8">
@@ -355,6 +361,17 @@ function AppContent() {
           <LegalLinks compact />
         </div>
       </div>
+    </div>
+  );
+}
+
+function SyntheticDataBanner() {
+  return (
+    <div
+      role="status"
+      className="w-full border-y border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-bold text-red-900"
+    >
+      Production beta: use synthetic test data only. Do not enter real patient or health information.
     </div>
   );
 }

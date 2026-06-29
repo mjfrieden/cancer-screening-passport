@@ -18,6 +18,7 @@ const requiredBuildVars = [
 
 const optionalBuildVars = [
   'VITE_ENABLE_CLINICAL_SIMULATOR',
+  'VITE_REAL_PHI_ENABLED',
   'VITE_FIREBASE_MEASUREMENT_ID',
   'VITE_FIREBASE_FIRESTORE_DATABASE_ID',
 ];
