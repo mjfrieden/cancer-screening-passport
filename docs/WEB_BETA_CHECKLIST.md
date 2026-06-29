@@ -5,8 +5,8 @@ Use this checklist before sending a staging link to beta testers.
 ## Infrastructure
 
 - [x] Dedicated staging Firebase project exists.
-- [ ] Dedicated production Firebase project exists.
-- [ ] `.firebaserc` points to real dev/staging/production project IDs.
+- [x] Dedicated production Firebase project exists.
+- [x] `.firebaserc` points to real dev/staging/production project IDs.
 - [x] Firestore database exists in staging.
 - [x] Firebase Authentication Google provider is enabled.
 - [x] Staging domain is added to Firebase Auth authorized domains.
@@ -19,6 +19,10 @@ Use this checklist before sending a staging link to beta testers.
 - [x] `npm run preflight:beta` passes.
 - [x] `Deploy Firestore Rules` workflow has passed for staging, or rules were deployed manually.
 - [x] `Deploy Static Cloudflare Pages`, `Deploy Static Firebase Hosting`, or equivalent static-host deploy has passed for staging.
+- [x] BAA-covered App Engine Standard production host is live with F1,
+  `min_instances=0`, and `max_instances=1`.
+- [x] Production App Engine deployment and live smoke workflow passed.
+- [x] Production hostname is authorized in Identity Platform.
 
 ## App Configuration
 
@@ -84,5 +88,5 @@ Use this checklist before sending a staging link to beta testers.
 - [x] GitHub bug report issue template exists.
 - [x] GitHub beta feedback issue template exists.
 - [x] Private GitHub Security Advisory intake path exists for security, privacy, or health-data concerns.
-- [ ] Support owner is assigned.
+- [x] Support owner is assigned to Marshall Frieden.
 - [ ] Beta cohort list is documented outside the app.

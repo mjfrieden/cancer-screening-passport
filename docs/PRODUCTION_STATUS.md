@@ -60,19 +60,39 @@ Last updated: June 28, 2026
 - Production Firestore rules were deployed through keyless GitHub workload
   identity after passing emulator tests. Deployment run `28345367781`
   completed successfully on June 28, 2026.
+- App Engine Standard was selected as the BAA-covered production web host and
+  created in `us-central`, aligned with the existing `nam5` Firestore database.
+- The production host is live at
+  `https://cancer-passport-wcm-prod.uc.r.appspot.com/`.
+- App Engine automatic scaling uses an F1 instance with zero minimum instances
+  and a hard maximum of one instance.
+- A dedicated keyless App Engine deployment service account is separate from
+  the Firebase Rules deployment account.
+- The App Engine hostname is authorized in Identity Platform.
+- Production deployment run `28346851110` passed its environment validation,
+  HIPAA synthetic-deployment gate, beta preflight, build, deploy, and live
+  smoke checks.
+- Desktop and 390-by-844 mobile signed-out layouts were verified without
+  horizontal overflow, and the live host returned the required security
+  headers.
+- Google popup authentication reached the production Google account chooser
+  after the required Firebase authentication runtime origins were added to the
+  Content Security Policy.
 
 ## Not Provisioned or Approved
 
-- No production hosting service has been approved.
-- No production deployment has occurred.
+- Authenticated synthetic testing on the production host is not complete.
+- Cross-user isolation, export, sign-out, and account deletion still require
+  clean throwaway Google account sessions on the production host.
 - Real PHI remains prohibited.
 
 ## Next Owner Actions
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Select a production web hosting service explicitly covered under the BAA.
+2. Sign in to the production beta with two throwaway Google accounts and use
+   only synthetic information.
 
-After those actions, automation can deploy the web application, complete
-authenticated synthetic-data testing, and prepare the final PHI activation
-review.
+After sign-in, automation can complete consent, record isolation, export,
+sign-out, and permanent account-deletion checks and prepare the final PHI
+activation review.

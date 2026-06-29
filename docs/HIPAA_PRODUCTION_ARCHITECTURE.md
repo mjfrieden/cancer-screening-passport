@@ -22,6 +22,10 @@ account. Before the first real record is accepted:
 5. Staging data must remain synthetic until the production controls and beta
    checklist are approved.
 
+The selected production web host is App Engine Standard in `us-central`.
+The application uses an F1 instance, zero minimum instances, and one maximum
+instance. The current public deployment is a synthetic-data beta only.
+
 ## Cost Position
 
 The target is no fixed monthly infrastructure subscription, not a guarantee of
@@ -53,10 +57,11 @@ White Cloud Medical, LLC later approves an Enterprise contract and BAA.
 ## Activation Sequence
 
 1. Confirm White Cloud Medical, LLC's HIPAA role and approve the risk analysis.
-2. Create the dedicated production Google Cloud project only after cost review.
-3. Attach the approved billing account and accept the Google Cloud BAA.
-4. Enable only covered services required by the application.
-5. Configure Identity Platform, Firestore, hosting, IAM, logs, alerts, backups,
+2. Maintain the dedicated production Google Cloud project under the approved
+   White Cloud Medical organization.
+3. Maintain the approved billing account and retained Google Cloud BAA.
+4. Keep only covered services required by the application enabled.
+5. Verify Identity Platform, Firestore, App Engine, IAM, logs, alerts, backups,
    retention, and deletion controls.
 6. Deploy with PHI collection disabled and complete authenticated testing using
    synthetic accounts.
