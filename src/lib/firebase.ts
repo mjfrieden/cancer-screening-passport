@@ -1,6 +1,17 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  indexedDBLocalPersistence,
+  initializeAuth,
+  reauthenticateWithCredential,
+  signInWithCredential,
+  signInWithPopup,
+  User,
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { Capacitor } from '@capacitor/core';
+import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -23,10 +34,40 @@ if (missingFirebaseKeys.length > 0) {
 
 const app = initializeApp(firebaseConfig);
 export const db = firestoreDatabaseId ? getFirestore(app, firestoreDatabaseId) : getFirestore(app);
-export const auth = getAuth(app);
+export const auth = Capacitor.isNativePlatform()
+  ? initializeAuth(app, { persistence: indexedDBLocalPersistence })
+  : getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
+async function getNativeGoogleCredential() {
+  const result = await FirebaseAuthentication.signInWithGoogle({
+    skipNativeAuth: true,
+  });
+  const idToken = result.credential?.idToken;
+
+  if (!idToken) {
+    throw new Error('Google did not return a valid sign-in credential.');
+  }
+
+  return GoogleAuthProvider.credential(idToken);
+}
+
+export const signInWithGoogle = async () => {
+  if (!Capacitor.isNativePlatform()) {
+    return signInWithPopup(auth, googleProvider);
+  }
+
+  return signInWithCredential(auth, await getNativeGoogleCredential());
+};
+
+export const reauthenticateWithGoogle = async (user: User) => {
+  if (!Capacitor.isNativePlatform()) {
+    const { reauthenticateWithPopup } = await import('firebase/auth');
+    return reauthenticateWithPopup(user, googleProvider);
+  }
+
+  return reauthenticateWithCredential(user, await getNativeGoogleCredential());
+};
 
 export enum OperationType {
   CREATE = 'create',

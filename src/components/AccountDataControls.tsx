@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { User, deleteUser, reauthenticateWithPopup } from 'firebase/auth';
+import { User, deleteUser } from 'firebase/auth';
 import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore';
 import { AlertTriangle, Download, Loader2, Trash2 } from 'lucide-react';
-import { db, googleProvider } from '../lib/firebase';
+import { db, reauthenticateWithGoogle } from '../lib/firebase';
 import { Recommendation, ScreeningEvent, UserProfile } from '../types';
 
 interface AccountDataControlsProps {
@@ -65,7 +65,7 @@ export default function AccountDataControls({
 
     setBusy(true);
     try {
-      await reauthenticateWithPopup(user, googleProvider);
+      await reauthenticateWithGoogle(user);
 
       const ownedCollectionNames = [
         'screening_events',

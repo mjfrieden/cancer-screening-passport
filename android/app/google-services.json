@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "410791537492",
+    "project_id": "cancer-passport-wcm-prod",
+    "storage_bucket": "cancer-passport-wcm-prod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410791537492:android:f1aa4a2b83c1d4da1976c1",
+        "android_client_info": {
+          "package_name": "com.whitecloudmedical.cancerpassport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410791537492-gck7aeuehv4a05sfaf94m6esag1fmfd6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFNQQAjr9Ht1ZxzIdV-_Hx5Clv8Q96w5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410791537492-gck7aeuehv4a05sfaf94m6esag1fmfd6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "410791537492-tuol8ldokqbndu0thpfeesag91u432i5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.whitecloudmedical.cancerpassport"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

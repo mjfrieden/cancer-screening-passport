@@ -49,8 +49,37 @@ const checks = [
   },
   {
     file: 'ios/App/App/Info.plist',
-    expect: contents => contents.includes(`<string>${APP_NAME}</string>`) && contents.includes('<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>'),
+    expect: contents => (
+      contents.includes(`<string>${APP_NAME}</string>`) &&
+      contents.includes('<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>') &&
+      contents.includes('com.googleusercontent.apps.410791537492-')
+    ),
     label: 'iOS display name and bundle placeholder',
+  },
+  {
+    file: 'ios/App/App/GoogleService-Info.plist',
+    expect: contents => (
+      contents.includes(`<string>${APP_ID}</string>`) &&
+      contents.includes('<string>cancer-passport-wcm-prod</string>')
+    ),
+    label: 'iOS production Firebase registration',
+  },
+  {
+    file: 'android/app/google-services.json',
+    expect: contents => (
+      contents.includes(`"package_name": "${APP_ID}"`) &&
+      contents.includes('"project_id": "cancer-passport-wcm-prod"')
+    ),
+    label: 'Android production Firebase registration',
+  },
+  {
+    file: 'capacitor.config.ts',
+    expect: contents => (
+      contents.includes('FirebaseAuthentication') &&
+      contents.includes("providers: ['google.com']") &&
+      contents.includes('skipNativeAuth: true')
+    ),
+    label: 'Native Google authentication bridge',
   },
   {
     file: 'android/app/src/androidTest/java/com/whitecloudmedical/cancerpassport/AppIdentityInstrumentedTest.java',
