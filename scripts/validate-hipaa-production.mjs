@@ -31,12 +31,12 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-const syntheticRulesDeployment = (
-  process.env.DEPLOY_SERVICE === 'firestore-rules' &&
+const syntheticDeployment = (
+  ['app-engine', 'firestore-rules'].includes(process.env.DEPLOY_SERVICE) &&
   process.env.HIPAA_SYNTHETIC_TESTING_APPROVED === 'true'
 );
 
-if (!syntheticRulesDeployment && process.env.HIPAA_PRODUCTION_APPROVED !== 'true') {
+if (!syntheticDeployment && process.env.HIPAA_PRODUCTION_APPROVED !== 'true') {
   console.error('HIPAA_PRODUCTION_APPROVED must be exactly true.');
   process.exit(1);
 }

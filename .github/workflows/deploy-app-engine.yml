@@ -1,0 +1,80 @@
+name: Deploy App Engine Beta
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  deploy:
+    name: Deploy production synthetic beta
+    runs-on: ubuntu-latest
+    environment: production
+
+    env:
+      DEPLOY_ENVIRONMENT: production
+      DEPLOY_SERVICE: app-engine
+      FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+      HIPAA_SYNTHETIC_TESTING_APPROVED: ${{ vars.HIPAA_SYNTHETIC_TESTING_APPROVED }}
+      HIPAA_PRODUCTION_APPROVED: ${{ vars.HIPAA_PRODUCTION_APPROVED }}
+      GOOGLE_CLOUD_BAA_EFFECTIVE_DATE: ${{ vars.GOOGLE_CLOUD_BAA_EFFECTIVE_DATE }}
+      HIPAA_SECURITY_OFFICER: ${{ vars.HIPAA_SECURITY_OFFICER }}
+      HIPAA_PRIVACY_OFFICER: ${{ vars.HIPAA_PRIVACY_OFFICER }}
+      HIPAA_INCIDENT_COMMANDER: ${{ vars.HIPAA_INCIDENT_COMMANDER }}
+      HIPAA_BACKUP_OPERATIONAL_OWNER: ${{ vars.HIPAA_BACKUP_OPERATIONAL_OWNER }}
+      HIPAA_LEGAL_COUNSEL: ${{ vars.HIPAA_LEGAL_COUNSEL }}
+      PRODUCTION_AUTH_VERIFIED: ${{ vars.PRODUCTION_AUTH_VERIFIED }}
+      VITE_ENABLE_CLINICAL_SIMULATOR: ${{ vars.VITE_ENABLE_CLINICAL_SIMULATOR || 'false' }}
+      VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+      VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+      VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+      VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
+      VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+      VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+      VITE_FIREBASE_MEASUREMENT_ID: ${{ vars.VITE_FIREBASE_MEASUREMENT_ID }}
+      VITE_FIREBASE_FIRESTORE_DATABASE_ID: ${{ vars.VITE_FIREBASE_FIRESTORE_DATABASE_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate synthetic production deployment
+        run: |
+          npm run validate:env
+          npm run validate:rules-deploy-env
+          npm run validate:hipaa-production
+          npm run preflight:beta
+
+      - name: Build application
+        run: npm run build
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_APP_ENGINE_SERVICE_ACCOUNT }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Deploy App Engine
+        run: gcloud app deploy app.yaml --project "${FIREBASE_PROJECT_ID}" --quiet
+
+      - name: Smoke deployed application
+        env:
+          SMOKE_BASE_URL: https://${{ vars.FIREBASE_PROJECT_ID }}.uc.r.appspot.com
+        run: npm run smoke

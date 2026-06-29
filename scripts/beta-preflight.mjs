@@ -173,7 +173,7 @@ addCheck('patient data is redacted from production errors', () => {
   ]);
 });
 
-addCheck('static hosts enforce the patient security header baseline', () => {
+addCheck('production hosts enforce the patient security header baseline', () => {
   for (const path of ['firebase.json', 'public/_headers']) {
     expectIncludes(path, [
       'Content-Security-Policy',
@@ -186,6 +186,23 @@ addCheck('static hosts enforce the patient security header baseline', () => {
       'Cross-Origin-Opener-Policy',
     ]);
   }
+  expectIncludes('server.ts', [
+    'Content-Security-Policy',
+    "frame-ancestors 'none'",
+    "object-src 'none'",
+    'X-Content-Type-Options',
+    'X-Frame-Options',
+    'Referrer-Policy',
+    'Permissions-Policy',
+    'Cross-Origin-Opener-Policy',
+  ]);
+  expectIncludes('app.yaml', [
+    'runtime: nodejs22',
+    'instance_class: F1',
+    'max_instances: 1',
+    'min_instances: 0',
+    'secure: always',
+  ]);
 });
 
 addCheck('public issue templates protect sensitive reports', () => {
@@ -257,7 +274,7 @@ addCheck('private intake and traceability docs are present', () => {
   expectIncludes('scripts/validate-hipaa-production.mjs', [
     'HIPAA_PRODUCTION_APPROVED',
     'HIPAA_SYNTHETIC_TESTING_APPROVED',
-    "DEPLOY_SERVICE === 'firestore-rules'",
+    "'app-engine', 'firestore-rules'",
     'GOOGLE_CLOUD_BAA_EFFECTIVE_DATE',
     'Firebase Hosting is not approved for PHI production',
   ]);
