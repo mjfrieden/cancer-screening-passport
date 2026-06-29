@@ -1,6 +1,6 @@
 # Production Status
 
-Last updated: June 28, 2026
+Last updated: June 29, 2026
 
 ## Provisioned
 
@@ -72,6 +72,12 @@ Last updated: June 28, 2026
 - Production deployment run `28346851110` passed its environment validation,
   HIPAA synthetic-deployment gate, beta preflight, build, deploy, and live
   smoke checks.
+- Production commit `6647181` added a fail-closed real-PHI runtime lock and a
+  visible synthetic-data-only warning on signed-out, consent, and authenticated
+  screens.
+- GitHub production variable `VITE_REAL_PHI_ENABLED=false` keeps the runtime
+  lock active. Deployment run `28388925709` passed validation, build, App
+  Engine deployment, and live smoke checks on June 29, 2026.
 - Desktop and 390-by-844 mobile signed-out layouts were verified without
   horizontal overflow, and the live host returned the required security
   headers.

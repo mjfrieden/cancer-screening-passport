@@ -133,13 +133,14 @@ Before launch:
 - [ ] White Cloud Medical, LLC HIPAA role and scope documented.
 - [x] Privacy officer, security officer, incident commander, and system owner named.
 - [ ] Enterprise-wide and application-specific risk analyses approved.
-- [ ] Google Cloud BAA accepted and retained.
-- [ ] Dedicated production project and billing account configured.
+- [x] Google Cloud BAA accepted; retention of the downloaded or printed copy
+  remains an owner action.
+- [x] Dedicated production project and billing account configured.
 - [ ] Covered-service inventory approved.
-- [ ] Production web hosting uses a service explicitly approved under the BAA.
-- [ ] Identity Platform and Firestore configured with production-only credentials.
+- [x] Production web hosting uses App Engine Standard under the Google Cloud BAA.
+- [x] Identity Platform and Firestore configured with production-only credentials.
 - [ ] IAM, MFA, workload identity, audit logs, and alerts verified.
-- [ ] Firestore rules and account deletion tests pass.
+- [x] Firestore rules and single-account production deletion tests pass.
 - [ ] Retention, backup, restoration, and secure-disposal procedures approved.
 - [ ] Incident-response tabletop completed.
 - [ ] Workforce training and acknowledgements complete.

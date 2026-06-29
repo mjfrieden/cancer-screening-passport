@@ -29,6 +29,10 @@ Use this checklist before sending a staging link to beta testers.
 ## App Configuration
 
 - [x] `VITE_ENABLE_CLINICAL_SIMULATOR=false`.
+- [x] `VITE_REAL_PHI_ENABLED=false` is enforced for the synthetic production
+  beta.
+- [x] Synthetic-data-only warning is visible before sign-in, during consent,
+  and in the authenticated application.
 - [x] All `VITE_FIREBASE_*` staging values are set at build time.
 - [x] `APP_URL` points to the staging URL.
 - [x] Legal pages include `support@whitecloudmedical.com`.
