@@ -121,6 +121,11 @@ Last updated: June 29, 2026
   retained privately.
 - Real PHI remains disabled pending the first scheduled-backup restoration
   test and final technical activation.
+- Completed human-gate dates and approvals are synchronized to the protected
+  GitHub `production` environment. `HIPAA_PRODUCTION_APPROVED=false` and
+  `VITE_REAL_PHI_ENABLED=false` remain unchanged.
+- A default-denied synthetic recovery marker is present for the first backup.
+  `npm run test:phi-recovery` is the guarded restoration-test entry point.
 
 ## Next Owner Actions
 

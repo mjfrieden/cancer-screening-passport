@@ -67,6 +67,20 @@ The test must:
 - include the one-time restore and temporary database cost;
 - set `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE` only after successful cleanup.
 
+The protected synthetic marker
+`_recovery_validation/synthetic-20260629` was created on June 29, 2026. Client
+rules deny access to this collection. After a ready backup contains the marker:
+
+```bash
+npm run test:phi-recovery
+PHI_RECOVERY_TEST_APPROVED=true npm run test:phi-recovery -- --execute
+```
+
+The first command is a dry-run readiness check. The execution command restores
+only to a `recovery-test-YYYYMMDD` named database, validates the marker, and
+deletes the temporary database. Any existing destination blocks execution for
+manual review.
+
 ## Cost Boundary
 
 Scheduled backup storage and restore operations are not part of Firestore's

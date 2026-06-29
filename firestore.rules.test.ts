@@ -126,4 +126,21 @@ describe('Firestore security rules', () => {
       where('userId', '==', 'bob'),
     )));
   });
+
+  it('denies all client access to synthetic recovery validation records', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), '_recovery_validation/synthetic-marker'), {
+        synthetic: true,
+      });
+    });
+
+    const alice = testEnv.authenticatedContext('alice').firestore();
+    const anonymous = testEnv.unauthenticatedContext().firestore();
+
+    await assertFails(getDoc(doc(alice, '_recovery_validation/synthetic-marker')));
+    await assertFails(setDoc(doc(alice, '_recovery_validation/other-marker'), {
+      synthetic: true,
+    }));
+    await assertFails(getDoc(doc(anonymous, '_recovery_validation/synthetic-marker')));
+  });
 });

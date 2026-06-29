@@ -172,12 +172,19 @@ addCheck('public account deletion path is store-ready', () => {
 
 addCheck('real-PHI operational evidence remains wired', () => {
   expectIncludes('package.json', ['verify:phi-operations']);
+  expectIncludes('package.json', ['test:phi-recovery']);
   expectIncludes('scripts/verify-phi-operations.mjs', [
     'Firestore Data Access audit logging is enabled',
     'service accounts have no user-managed keys',
     'Firestore delete protection is enabled',
     'weekly Firestore backup with seven-day retention exists',
     'project-specific $0.05 monthly budget alert exists',
+  ]);
+  expectIncludes('scripts/test-firestore-restore.mjs', [
+    "const DESTINATION_PREFIX = 'recovery-test-'",
+    "const MARKER_COLLECTION = '_recovery_validation'",
+    "process.env.PHI_RECOVERY_TEST_APPROVED !== 'true'",
+    'temporaryDatabaseDeleted',
   ]);
   for (const path of [
     'docs/DATA_RETENTION_AND_RECOVERY.md',
