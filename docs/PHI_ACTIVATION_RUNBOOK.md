@@ -18,12 +18,12 @@ and retain its administrative, physical, and technical safeguard evidence.
 
 | Gate | Required GitHub variable | Current status |
 | --- | --- | --- |
-| Enterprise and application risk analysis approved | `HIPAA_RISK_ANALYSIS_APPROVED_DATE` | Open |
-| Workforce security and privacy training completed | `HIPAA_SECURITY_TRAINING_COMPLETED_DATE` | Open |
-| Incident-response tabletop completed | `HIPAA_INCIDENT_TABLETOP_COMPLETED_DATE` | Open |
-| Retention and secure-disposal policy approved | `HIPAA_RETENTION_POLICY_APPROVED_DATE` | Open |
-| Production IAM and user-access review completed | `HIPAA_ACCESS_REVIEW_COMPLETED_DATE` | Open |
-| Backup and restoration procedure tested | `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE` | Open |
+| Enterprise and application risk analysis approved | `HIPAA_RISK_ANALYSIS_APPROVED_DATE` | Draft prepared; approval open |
+| Workforce security and privacy training completed | `HIPAA_SECURITY_TRAINING_COMPLETED_DATE` | Training packet ready; acknowledgments open |
+| Incident-response tabletop completed | `HIPAA_INCIDENT_TABLETOP_COMPLETED_DATE` | Exercise packet ready; exercise open |
+| Retention and secure-disposal policy approved | `HIPAA_RETENTION_POLICY_APPROVED_DATE` | Draft prepared; approval open |
+| Production IAM and user-access review completed | `HIPAA_ACCESS_REVIEW_COMPLETED_DATE` | Technical review passed; MFA and backup-owner confirmations open |
+| Backup and restoration procedure tested | `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE` | Weekly backup active; first restore test open |
 | Final legal and privacy review approved | `HIPAA_FINAL_LEGAL_REVIEW_APPROVED_DATE` | Open |
 | Executed Google Cloud BAA retained in company records | `HIPAA_BAA_RETAINED=true` | Owner confirmation open |
 | Live two-account owner-isolation test passed | `HIPAA_SECOND_ACCOUNT_ISOLATION_VERIFIED=true` | Open |

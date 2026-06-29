@@ -170,6 +170,29 @@ addCheck('public account deletion path is store-ready', () => {
   expectIncludes('public/sw.js', ['/account-deletion.html']);
 });
 
+addCheck('real-PHI operational evidence remains wired', () => {
+  expectIncludes('package.json', ['verify:phi-operations']);
+  expectIncludes('scripts/verify-phi-operations.mjs', [
+    'Firestore Data Access audit logging is enabled',
+    'service accounts have no user-managed keys',
+    'Firestore delete protection is enabled',
+    'weekly Firestore backup with seven-day retention exists',
+    'project-specific $0.05 monthly budget alert exists',
+  ]);
+  for (const path of [
+    'docs/DATA_RETENTION_AND_RECOVERY.md',
+    'docs/HIPAA_ACCESS_REVIEW_2026-06-29.md',
+    'docs/HIPAA_RISK_ANALYSIS_2026-06-29.md',
+    'docs/HIPAA_SERVICE_INVENTORY.md',
+    'docs/HIPAA_TABLETOP_2026-06-29.md',
+    'docs/HIPAA_WORKFORCE_TRAINING.md',
+  ]) {
+    if (!existsSync(path)) {
+      throw new Error(`${path} does not exist`);
+    }
+  }
+});
+
 addCheck('production beta keeps the real-PHI runtime lock', () => {
   expectIncludes('src/App.tsx', [
     "VITE_REAL_PHI_ENABLED === 'true'",

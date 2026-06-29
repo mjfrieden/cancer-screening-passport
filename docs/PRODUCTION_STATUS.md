@@ -106,6 +106,15 @@ Last updated: June 29, 2026
   `com.whitecloudmedical.cancerpassport`.
 - Native Google authentication is integrated and Android compilation passed in
   CI run `28394890190`; real-device authentication remains open.
+- Firestore delete protection was enabled on June 29, 2026.
+- Weekly Sunday Firestore backups with seven-day retention are active. PITR
+  remains disabled to avoid its larger recurring storage charge.
+- Firestore Data Access audit logging is enabled for admin reads, data reads,
+  and data writes with no principal exemptions. Live `data_access` entries were
+  verified in Cloud Logging.
+- All production service accounts have zero user-managed keys.
+- `npm run verify:phi-operations` verifies 12 live IAM, audit, recovery,
+  location, and cost controls.
 
 ## Next Owner Actions
 

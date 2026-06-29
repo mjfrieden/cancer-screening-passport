@@ -26,6 +26,7 @@
     "validate:rules-deploy-env": "node scripts/validate-rules-deploy-env.mjs",
     "validate:hipaa-production": "node scripts/validate-hipaa-production.mjs",
     "verify:production-auth": "node scripts/verify-production-auth.mjs",
+    "verify:phi-operations": "node scripts/verify-phi-operations.mjs",
     "cap:sync": "npm run build:static && cap sync",
     "cap:copy": "npm run build:static && cap copy",
     "cap:open:ios": "cap open ios",
