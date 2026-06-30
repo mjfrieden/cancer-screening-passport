@@ -1,6 +1,6 @@
 # Production Status
 
-Last updated: June 29, 2026
+Last updated: June 30, 2026
 
 ## Provisioned
 
@@ -92,10 +92,9 @@ Last updated: June 29, 2026
   record save, recommendation refresh, account-data JSON export, deletion
   reauthentication, permanent app-account deletion, and return to the
   signed-out screen.
-- Live second-account isolation testing is not complete because a second
-  production test Google account was unavailable. Firestore emulator tests
-  continue to enforce owner isolation.
-- Real PHI remains prohibited.
+- Live second-account isolation was subsequently attested complete and is
+  recorded in the protected production environment.
+- Real PHI remains disabled until the activation deployment completes.
 - Real-PHI activation now fails closed unless the dated risk analysis,
   training, tabletop, retention, access-review, recovery-test, and legal-review
   evidence is present along with BAA retention and two-account isolation
@@ -119,23 +118,24 @@ Last updated: June 29, 2026
   PHI activation gates are complete. The public attestation is recorded in
   `docs/HUMAN_GATE_ATTESTATION_2026-06-29.md`; sensitive supporting evidence is
   retained privately.
-- Real PHI remains disabled pending the first scheduled-backup restoration
-  test and final technical activation.
+- Firestore managed export/import recovery testing completed successfully on
+  June 30, 2026 using only the default-denied synthetic recovery marker.
+- The marker was restored into isolated database `recovery-test-20260630`,
+  verified exactly, and the temporary database and export objects were deleted.
+- `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE=2026-06-30` is recorded in the
+  protected production environment.
+- Real PHI remains disabled pending the final activation deployment.
 - Completed human-gate dates and approvals are synchronized to the protected
   GitHub `production` environment. `HIPAA_PRODUCTION_APPROVED=false` and
   `VITE_REAL_PHI_ENABLED=false` remain unchanged.
 - A default-denied synthetic recovery marker is present for the first backup.
   `npm run test:phi-recovery` is the guarded restoration-test entry point.
-- A temporary daily backup with one-day retention is active to accelerate the
-  first recovery test. Successful recovery automatically removes that
-  temporary schedule and preserves the weekly schedule.
+- The temporary daily backup schedule was removed after recovery validation.
+  The permanent Sunday schedule with seven-day retention remains active.
 
 ## Next Owner Actions
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Create a second production test Google account and use only synthetic
-   information for the remaining live isolation test.
-
-After the second-account isolation test, automation can prepare the final PHI
-activation review.
+2. Complete the approved real-PHI activation deployment and retain its workflow
+   and smoke-test evidence.

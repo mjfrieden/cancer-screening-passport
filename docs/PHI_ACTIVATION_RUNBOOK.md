@@ -1,6 +1,6 @@
 # Real-PHI Activation Runbook
 
-Last updated: June 29, 2026
+Last updated: June 30, 2026
 
 Owner: White Cloud Medical, LLC
 
@@ -23,7 +23,7 @@ and retain its administrative, physical, and technical safeguard evidence.
 | Incident-response tabletop completed | `HIPAA_INCIDENT_TABLETOP_COMPLETED_DATE` | Complete; owner attested June 29, 2026 |
 | Retention and secure-disposal policy approved | `HIPAA_RETENTION_POLICY_APPROVED_DATE` | Complete; owner attested June 29, 2026 |
 | Production IAM and user-access review completed | `HIPAA_ACCESS_REVIEW_COMPLETED_DATE` | Complete; owner attested June 29, 2026 |
-| Backup and restoration procedure tested | `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE` | Weekly backup active; first restore test open |
+| Backup and restoration procedure tested | `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE` | Complete; managed export/import restore passed June 30, 2026 |
 | Final legal and privacy review approved | `HIPAA_FINAL_LEGAL_REVIEW_APPROVED_DATE` | Complete; owner attested June 29, 2026 |
 | Executed Google Cloud BAA retained in company records | `HIPAA_BAA_RETAINED=true` | Complete; owner attested June 29, 2026 |
 | Live two-account owner-isolation test passed | `HIPAA_SECOND_ACCOUNT_ISOLATION_VERIFIED=true` | Complete; owner attested June 29, 2026 |

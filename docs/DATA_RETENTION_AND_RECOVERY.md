@@ -1,8 +1,8 @@
 # Data Retention and Recovery
 
-Status: Policy approved; technical restoration test pending
+Status: Policy approved; technical restoration test completed
 
-Last updated: June 29, 2026
+Last updated: June 30, 2026
 
 ## Scope
 
@@ -34,11 +34,9 @@ configuration, audit evidence, and patient-directed exports.
 - Firestore delete protection must remain enabled.
 - Point-in-time recovery remains disabled to respect the current cost ceiling.
 
-These objectives require approval before real-PHI activation.
-
 White Cloud Medical approved the retention policy and draft recovery objectives
-on June 29, 2026. The objectives remain subject to validation by the first
-restoration test.
+on June 29, 2026. The first restoration test validated the recovery procedure
+on June 30, 2026.
 
 ## Restore Procedure
 
@@ -55,36 +53,31 @@ restoration test.
 7. Delete temporary recovery resources after the approved evidence-retention
    period.
 
-## Required Recovery Test
+## Completed Recovery Test
 
-The first scheduled backup must complete before a restoration test can occur.
-The test must:
+The first recovery test:
 
 - restore into a temporary named database;
 - use synthetic records only;
-- prove owner isolation and expected document availability;
-- record backup timestamp, restore start/end, validation result, and cleanup;
+- prove expected document availability;
+- record export timestamp, restore start/end, validation result, and cleanup;
 - include the one-time restore and temporary database cost;
 - set `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE` only after successful cleanup.
 
-The protected synthetic marker
-`_recovery_validation/synthetic-20260629` was created on June 29, 2026. Client
-rules deny access to this collection. After a ready backup contains the marker:
+On June 30, 2026, the protected synthetic marker
+`_recovery_validation/synthetic-20260629` was exported using Firestore's
+managed export service and imported into the isolated
+`recovery-test-20260630` database in `nam5`. The export completed successfully
+at `2026-06-30T01:53:36.766146Z`; the import completed successfully at
+`2026-06-30T01:54:04.940032Z`. The restored marker matched its expected
+synthetic boolean, marker version, and creation timestamp.
 
-```bash
-npm run test:phi-recovery
-PHI_RECOVERY_TEST_APPROVED=true npm run test:phi-recovery -- --execute
-```
-
-The first command is a dry-run readiness check. The execution command restores
-only to a `recovery-test-YYYYMMDD` named database, validates the marker, and
-deletes the temporary database. Any existing destination blocks execution for
-manual review.
-
-A temporary daily backup schedule with one-day retention was added on June 29,
-2026 to obtain the first testable backup sooner. The restore runner deletes
-daily one-day schedules after successful validation. The permanent Sunday
-seven-day schedule remains the approved steady-state policy.
+The temporary database was deleted at `2026-06-30T01:54:40.697841Z`, the
+temporary export objects were deleted, and the temporary daily backup schedule
+was removed. The permanent Sunday seven-day schedule
+`99fce6b4-6d91-402d-9817-c71b3202e759` remains active. The protected GitHub
+production variable `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE=2026-06-30`
+records completion.
 
 ## Cost Boundary
 
