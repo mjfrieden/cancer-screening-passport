@@ -6,9 +6,12 @@ Owner: White Cloud Medical, LLC
 
 ## Current Decision
 
-Real PHI is disabled. `VITE_REAL_PHI_ENABLED=false` and
-`HIPAA_PRODUCTION_APPROVED=false` must remain set in the GitHub `production`
-environment until every gate below has dated evidence.
+Real PHI was explicitly activated on June 30, 2026 after every gate below
+received dated evidence. The GitHub `production` environment is set to
+`HIPAA_SYNTHETIC_TESTING_APPROVED=false`,
+`HIPAA_PRODUCTION_APPROVED=true`, and `VITE_REAL_PHI_ENABLED=true`.
+App Engine workflow `28415079271` passed production validation, deployment,
+and live smoke testing.
 
 The Google Cloud BAA and covered infrastructure are necessary but do not, by
 themselves, establish HIPAA compliance. White Cloud Medical, LLC must complete

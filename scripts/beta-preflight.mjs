@@ -336,7 +336,7 @@ addCheck('private intake and traceability docs are present', () => {
   expectIncludes('docs/PRODUCTION_STATUS.md', [
     'cancer-passport-wcm-prod',
     'HIPAA_PRODUCTION_APPROVED=false',
-    'Real PHI remains disabled until the activation deployment completes.',
+    'Real PHI is enabled under the approved production controls.',
   ]);
   expectIncludes('.firebaserc', [
     'cancer-passport-staging',

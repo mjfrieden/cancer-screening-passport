@@ -85,7 +85,7 @@ Last updated: June 30, 2026
   after the required Firebase authentication runtime origins were added to the
   Content Security Policy.
 
-## Not Provisioned or Approved
+## Operational Controls and Remaining Work
 
 - Single-account authenticated synthetic testing passed on June 29, 2026 using
   `marshall@whitecloudmedical.com`: Google sign-in, profile save, screening
@@ -94,7 +94,7 @@ Last updated: June 30, 2026
   signed-out screen.
 - Live second-account isolation was subsequently attested complete and is
   recorded in the protected production environment.
-- Real PHI remains disabled until the activation deployment completes.
+- Real PHI is enabled under the approved production controls.
 - Real-PHI activation now fails closed unless the dated risk analysis,
   training, tabletop, retention, access-review, recovery-test, and legal-review
   evidence is present along with BAA retention and two-account isolation
@@ -124,18 +124,25 @@ Last updated: June 30, 2026
   verified exactly, and the temporary database and export objects were deleted.
 - `HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE=2026-06-30` is recorded in the
   protected production environment.
-- Real PHI remains disabled pending the final activation deployment.
 - Completed human-gate dates and approvals are synchronized to the protected
-  GitHub `production` environment. `HIPAA_PRODUCTION_APPROVED=false` and
-  `VITE_REAL_PHI_ENABLED=false` remain unchanged.
+  GitHub `production` environment. `HIPAA_PRODUCTION_APPROVED=true` and
+  `VITE_REAL_PHI_ENABLED=true` authorize the deployed production mode.
 - A default-denied synthetic recovery marker is present for the first backup.
   `npm run test:phi-recovery` is the guarded restoration-test entry point.
 - The temporary daily backup schedule was removed after recovery validation.
   The permanent Sunday schedule with seven-day retention remains active.
+- Explicit real-PHI activation completed on June 30, 2026. GitHub production
+  variables are `HIPAA_SYNTHETIC_TESTING_APPROVED=false`,
+  `HIPAA_PRODUCTION_APPROVED=true`, and `VITE_REAL_PHI_ENABLED=true`.
+- App Engine production workflow `28415079271` passed attestation validation,
+  build, deployment, and live smoke checks.
+- App Engine version `20260630t015833` receives 100% of production traffic.
+- The deployed production bundle does not contain the synthetic-only or
+  real-PHI-prohibition warning copy.
 
 ## Next Owner Actions
 
 1. Retain a downloaded or printed copy of the accepted Google Cloud BAA with
    White Cloud Medical, LLC compliance records.
-2. Complete the approved real-PHI activation deployment and retain its workflow
-   and smoke-test evidence.
+2. Retain workflow `28415079271`, the recovery-test evidence, and monthly
+   operational review records with White Cloud Medical compliance records.
