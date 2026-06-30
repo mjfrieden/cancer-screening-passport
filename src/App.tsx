@@ -243,16 +243,16 @@ function AppContent() {
                 Easy to use
               </div>
               <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 shadow-sm backdrop-blur">
-                <LockKeyhole className="h-4 w-4 text-sky-600" />
-                You stay in control
+                <Shield className="h-4 w-4 text-sky-600" />
+                Survivorship support
               </div>
               <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 shadow-sm backdrop-blur">
-                <HeartHandshake className="h-4 w-4 text-amber-600" />
-                Built for sharing
+                <Apple className="h-4 w-4 text-amber-600" />
+                Healthy living ideas
               </div>
             </div>
 
-            <div className="mt-10 grid max-w-2xl gap-4 sm:grid-cols-3">
+            <div className="mt-10 grid max-w-2xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <FeatureCard
                 icon={CheckCircle2}
                 title="Easy to use"
@@ -268,9 +268,16 @@ function AppContent() {
                 iconClassName="text-sky-700"
               />
               <FeatureCard
-                icon={HeartHandshake}
-                title="Built for sharing"
-                description="Create a summary you can bring to appointments or send later."
+                icon={Shield}
+                title="Survivorship support"
+                description="Keep follow-up plans, treatment history, and next steps organized together."
+                accent="from-violet-100 to-violet-50"
+                iconClassName="text-violet-700"
+              />
+              <FeatureCard
+                icon={Apple}
+                title="Healthy living ideas"
+                description="Find practical tips for everyday habits that support your care plan."
                 accent="from-amber-100 to-amber-50"
                 iconClassName="text-amber-700"
               />
