@@ -4,7 +4,26 @@ import { db, auth, signInWithGoogle, OperationType, handleFirestoreError } from 
 import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { UserProfile, ScreeningEvent, Recommendation } from './types';
 import AddScreeningModal from './components/AddScreeningModal';
-import { LayoutDashboard, User as UserIcon, Share2, LogOut, Loader2, Plus, LogIn, Shield, Apple } from 'lucide-react';
+import {
+  LayoutDashboard,
+  User as UserIcon,
+  Share2,
+  LogOut,
+  Loader2,
+  Plus,
+  LogIn,
+  Shield,
+  Apple,
+  ArrowRight,
+  Bell,
+  CalendarDays,
+  CheckCircle2,
+  FileText,
+  HeartHandshake,
+  LockKeyhole,
+  Menu,
+  Sparkles,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
 import AccountDataControls from './components/AccountDataControls';
@@ -164,55 +183,237 @@ function AppContent() {
   };
 
   if (authLoading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-[#f7f4ef]">
       <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
     </div>
   );
 
   if (!user) return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white">
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="text-center space-y-7 w-full max-w-lg"
-      >
-        <h1 className="sr-only">Cancer Prevention Passport</h1>
-        <img
-          src="/brand/cancer-prevention-passport-lockup.png"
-          alt=""
-          width="1100"
-          height="650"
-          className="w-full h-auto"
-        />
-        <p className="text-gray-600 font-medium leading-relaxed max-w-md mx-auto">
-          A health education and record-organizing tool from White Cloud Medical, LLC. Review all screening decisions with your clinician.
-        </p>
-        {!realPhiEnabled && <SyntheticDataBanner />}
+    <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,248,237,0.95),_rgba(247,248,252,1)_45%,_rgba(236,246,248,1)_100%)] text-slate-900">
+      <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_80%_20%,rgba(197,242,228,0.45),transparent_45%),radial-gradient(circle_at_15%_20%,rgba(213,232,255,0.35),transparent_40%)]" />
+      <div className="absolute left-[-8rem] top-20 h-64 w-64 rounded-full bg-[#dbeafe]/45 blur-3xl" />
+      <div className="absolute right-[-8rem] top-40 h-72 w-72 rounded-full bg-[#d9f99d]/25 blur-3xl" />
 
-        <button
-          onClick={signInWithGoogle}
-          className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 p-4 rounded-2xl font-bold border-2 border-gray-100 hover:border-blue-500 hover:shadow-xl transition-all group"
-        >
-          <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-             <LogIn className="w-3 h-3 text-white" />
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 pb-10 pt-6 lg:px-10">
+        <header className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <img
+              src="/brand/cancer-prevention-passport-mark.png"
+              alt=""
+              width="44"
+              height="44"
+              className="h-11 w-11 rounded-2xl object-cover shadow-sm ring-1 ring-black/5"
+            />
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+                Cancer Prevention Passport
+              </div>
+              <div className="text-sm text-slate-500">Simple screening reminders and notes</div>
+            </div>
           </div>
-          Continue as Patient
-        </button>
+          <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+            <a href="#how-it-works" className="transition-colors hover:text-slate-900">How it works</a>
+            <a href="/legal/privacy.html" target="_blank" rel="noreferrer" className="transition-colors hover:text-slate-900">Privacy</a>
+            <a href="/support.html" target="_blank" rel="noreferrer" className="transition-colors hover:text-slate-900">Help</a>
+          </nav>
+        </header>
 
-        <div className="pt-8 grid grid-cols-2 gap-4">
-          <div className="p-4 bg-gray-50 rounded-2xl text-left">
-            <ShieldCheckIcon className="w-6 h-6 text-blue-600 mb-2" />
-            <div className="font-bold text-sm">Private by Design</div>
-            <div className="text-[10px] text-gray-500">Built around signed-in patient access.</div>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-2xl text-left">
-            <WorkflowIcon className="w-6 h-6 text-teal-600 mb-2" />
-            <div className="font-bold text-sm">Structured Export</div>
-            <div className="text-[10px] text-gray-500">Share a patient-held FHIR-style summary.</div>
-          </div>
-        </div>
+        <main className="grid flex-1 items-center gap-12 py-10 lg:grid-cols-[1.02fr_0.98fr] lg:py-14">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className="max-w-2xl"
+          >
+            <h1 className="max-w-xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">
+              Keep your screening reminders in one place
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 sm:text-xl">
+              Track screenings, save notes, and share a simple summary with your clinician when you want to.
+              It is designed to feel familiar, private, and easy to understand.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <button
+                onClick={signInWithGoogle}
+                className="inline-flex items-center justify-center gap-3 rounded-full bg-slate-900 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 hover:bg-slate-800"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-900">
+                  <LogIn className="h-4 w-4" />
+                </div>
+                Continue with Google
+              </button>
+              <a
+                href="#how-it-works"
+                className="inline-flex items-center gap-2 text-base font-semibold text-slate-700 transition-colors hover:text-slate-950"
+              >
+                See how it works
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-600">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 shadow-sm backdrop-blur">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                Easy to use
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 shadow-sm backdrop-blur">
+                <LockKeyhole className="h-4 w-4 text-sky-600" />
+                You stay in control
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 shadow-sm backdrop-blur">
+                <HeartHandshake className="h-4 w-4 text-amber-600" />
+                Built for sharing
+              </div>
+            </div>
+
+            <div className="mt-10 grid max-w-2xl gap-4 sm:grid-cols-3" id="how-it-works">
+              <FeatureCard
+                icon={CheckCircle2}
+                title="Easy to use"
+                description="Put your screenings and notes in one place without extra clutter."
+                accent="from-emerald-100 to-emerald-50"
+                iconClassName="text-emerald-700"
+              />
+              <FeatureCard
+                icon={LockKeyhole}
+                title="You stay in control"
+                description="Your information stays signed in and you decide what to share."
+                accent="from-sky-100 to-sky-50"
+                iconClassName="text-sky-700"
+              />
+              <FeatureCard
+                icon={HeartHandshake}
+                title="Built for sharing"
+                description="Create a summary you can bring to appointments or send later."
+                accent="from-amber-100 to-amber-50"
+                iconClassName="text-amber-700"
+              />
+            </div>
+
+            {!realPhiEnabled && (
+              <div className="mt-8 max-w-2xl rounded-3xl border border-amber-200 bg-amber-50/80 px-5 py-4 text-sm leading-6 text-amber-950 shadow-sm">
+                Production beta: use synthetic test data only. Do not enter real patient or health information.
+              </div>
+            )}
+
+            <div className="mt-6 text-sm leading-6 text-slate-500">
+              Cancer Prevention Passport is a health education and record-organizing tool from White Cloud Medical, LLC.
+              Review screening decisions with your clinician.
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.55, ease: 'easeOut', delay: 0.06 }}
+            className="relative mx-auto w-full max-w-[560px]"
+          >
+            <div className="absolute inset-x-8 top-14 h-80 rounded-[3rem] bg-sky-200/35 blur-3xl" />
+            <div className="absolute -right-2 top-28 h-24 w-24 rounded-full bg-emerald-200/45 blur-2xl" />
+            <div className="relative">
+              <div className="absolute right-0 top-10 hidden rotate-[-8deg] rounded-[2rem] border border-slate-200/80 bg-white/90 p-4 shadow-2xl shadow-slate-900/10 backdrop-blur md:block md:w-[260px]">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/brand/cancer-prevention-passport-mark.png"
+                    alt=""
+                    width="28"
+                    height="28"
+                    className="h-7 w-7 rounded-xl"
+                  />
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                    Cancer Prevention Passport
+                  </div>
+                </div>
+                <div className="mt-4 text-2xl font-semibold tracking-tight text-slate-950">
+                  Your summary
+                </div>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Share a clear overview of your screenings and notes when you are ready.
+                </p>
+              </div>
+
+              <div className="mx-auto w-full rounded-[2.5rem] border border-white/80 bg-white/85 p-4 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl sm:p-5">
+                <div className="overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                  <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+                    <button type="button" aria-label="Menu" className="text-slate-500 transition-colors hover:text-slate-900">
+                      <Menu className="h-5 w-5" />
+                    </button>
+                    <div className="text-sm font-semibold text-slate-900">My Passport</div>
+                    <button type="button" aria-label="Notifications" className="text-slate-500 transition-colors hover:text-slate-900">
+                      <Bell className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  <div className="px-5 pb-5 pt-4">
+                    <div className="rounded-[1.5rem] border border-slate-200 bg-gradient-to-br from-emerald-50 to-white p-4 shadow-sm">
+                      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Next up</div>
+                      <div className="mt-2 text-xl font-semibold tracking-tight text-slate-950">Colorectal screening</div>
+                      <div className="mt-1 text-sm text-slate-600">Recommended every 10 years</div>
+                      <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-medium text-emerald-800 shadow-sm ring-1 ring-emerald-100">
+                        <CalendarDays className="h-4 w-4" />
+                        Due May 2026
+                      </div>
+                    </div>
+
+                    <div className="mt-5">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className="text-sm font-semibold text-slate-900">My screenings</div>
+                        <div className="text-sm font-medium text-sky-600">See all</div>
+                      </div>
+                      <div className="space-y-3">
+                        <MiniRow
+                          icon={CheckCircle2}
+                          iconClassName="text-emerald-600"
+                          title="Mammogram"
+                          subtitle="Completed May 2024"
+                          right="›"
+                        />
+                        <MiniRow
+                          icon={CalendarDays}
+                          iconClassName="text-sky-600"
+                          title="Cervical screening"
+                          subtitle="Due Nov 2025"
+                          right="›"
+                        />
+                        <MiniRow
+                          icon={Sparkles}
+                          iconClassName="text-violet-600"
+                          title="Skin check"
+                          subtitle="Recommended yearly"
+                          right="›"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-4 gap-2 rounded-[1.4rem] border border-slate-100 bg-slate-50 px-3 py-3">
+                      <MiniNav icon={CheckCircle2} label="Home" active />
+                      <MiniNav icon={CalendarDays} label="Screenings" />
+                      <MiniNav icon={FileText} label="Notes" />
+                      <MiniNav icon={HeartHandshake} label="Share" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 rounded-[2rem] border border-slate-200 bg-white/80 px-5 py-4 shadow-lg shadow-slate-900/5 backdrop-blur-sm md:max-w-[360px]">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-sky-700">
+                    <Shield className="h-5 w-5" />
+                  </div>
+                  <div className="text-sm leading-6 text-slate-600">
+                    Health information only. It is not a substitute for professional medical advice, diagnosis, or treatment.
+                    In an emergency, call 911.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </main>
+      </div>
+      <div className="relative mx-auto max-w-7xl px-6 pb-10 lg:px-10">
         <LegalLinks />
-      </motion.div>
+      </div>
     </div>
   );
 
@@ -403,6 +604,77 @@ function LegalLinks({ compact = false }: { compact?: boolean }) {
   );
 }
 
+function FeatureCard({
+  icon: Icon,
+  title,
+  description,
+  accent,
+  iconClassName,
+}: {
+  icon: any;
+  title: string;
+  description: string;
+  accent: string;
+  iconClassName: string;
+}) {
+  return (
+    <div className="rounded-[1.8rem] border border-white/70 bg-white/85 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur">
+      <div className={cn("flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br", accent)}>
+        <Icon className={cn("h-6 w-6", iconClassName)} />
+      </div>
+      <div className="mt-4 text-lg font-semibold tracking-tight text-slate-950">{title}</div>
+      <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+    </div>
+  );
+}
+
+function MiniRow({
+  icon: Icon,
+  iconClassName,
+  title,
+  subtitle,
+  right,
+}: {
+  icon: any;
+  iconClassName: string;
+  title: string;
+  subtitle: string;
+  right: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-[1.2rem] border border-slate-100 bg-white px-3 py-3 shadow-sm">
+      <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-50", iconClassName)}>
+        <Icon className="h-5 w-5" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium text-slate-900">{title}</div>
+        <div className="truncate text-xs text-slate-500">{subtitle}</div>
+      </div>
+      <div className="text-xl leading-none text-slate-300">{right}</div>
+    </div>
+  );
+}
+
+function MiniNav({
+  icon: Icon,
+  label,
+  active = false,
+}: {
+  icon: any;
+  label: string;
+  active?: boolean;
+}) {
+  return (
+    <div className={cn(
+      "flex flex-col items-center gap-1 rounded-[1rem] px-2 py-2 text-[10px] font-medium",
+      active ? "bg-white text-sky-700 shadow-sm" : "text-slate-400"
+    )}>
+      <Icon className="h-4 w-4" />
+      <span>{label}</span>
+    </div>
+  );
+}
+
 function NavButton({ active, onClick, icon: Icon, label }: { active: boolean, onClick: () => void, icon: any, label: string }) {
   return (
     <button
@@ -417,22 +689,6 @@ function NavButton({ active, onClick, icon: Icon, label }: { active: boolean, on
       <Icon className="w-5 h-5" />
       <span className="text-[10px] uppercase tracking-widest">{label}</span>
     </button>
-  );
-}
-
-function ShieldCheckIcon(props: any) {
-  return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-    </svg>
-  );
-}
-
-function WorkflowIcon(props: any) {
-  return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-    </svg>
   );
 }
 
