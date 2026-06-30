@@ -50,11 +50,12 @@ not activate PHI.
    not receive PHI unless separately reviewed and contracted as required.
 4. Enter the dated evidence and boolean approvals in the GitHub `production`
    environment.
-5. Set `HIPAA_PRODUCTION_APPROVED=true`.
-6. Set `VITE_REAL_PHI_ENABLED=true`.
-7. Run the App Engine deployment workflow. The validator must fail if any
+5. Set `HIPAA_SYNTHETIC_TESTING_APPROVED=false`.
+6. Set `HIPAA_PRODUCTION_APPROVED=true`.
+7. Set `VITE_REAL_PHI_ENABLED=true`.
+8. Run the App Engine deployment workflow. The validator must fail if any
    required evidence is absent or malformed.
-8. Run authenticated production verification with two controlled accounts,
+9. Run authenticated production verification with two controlled accounts,
    then document the release and begin the monthly review cadence.
 
 ## Rollback
@@ -62,7 +63,9 @@ not activate PHI.
 If a safeguard, vendor approval, or production control becomes invalid:
 
 1. Set `VITE_REAL_PHI_ENABLED=false`.
-2. Redeploy immediately to restore the synthetic-data warning.
-3. Contain affected access and follow
+2. Set `HIPAA_PRODUCTION_APPROVED=false`.
+3. Set `HIPAA_SYNTHETIC_TESTING_APPROVED=true`.
+4. Redeploy immediately to restore the synthetic-data warning.
+5. Contain affected access and follow
    `docs/HEALTH_DATA_INCIDENT_RESPONSE.md`.
-4. Do not restore real-PHI mode until the risk is documented and approved.
+6. Do not restore real-PHI mode until the risk is documented and approved.

@@ -216,6 +216,7 @@ addCheck('production beta keeps the real-PHI runtime lock', () => {
     'Do not enter real patient or health information.',
   ]);
   expectIncludes('scripts/validate-hipaa-production.mjs', [
+    'Real-PHI App Engine deployments require HIPAA_SYNTHETIC_TESTING_APPROVED=false.',
     'Synthetic App Engine deployments require VITE_REAL_PHI_ENABLED=false.',
     'Real-PHI mode requires HIPAA_PRODUCTION_APPROVED=true.',
     'Missing real-PHI activation dates:',

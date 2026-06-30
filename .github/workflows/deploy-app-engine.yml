@@ -1,4 +1,4 @@
-name: Deploy App Engine Beta
+name: Deploy App Engine Production
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy production synthetic beta
+    name: Deploy production application
     runs-on: ubuntu-latest
     environment: production
 
@@ -62,7 +62,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate synthetic production deployment
+      - name: Validate production deployment
         run: |
           npm run validate:env
           npm run validate:rules-deploy-env

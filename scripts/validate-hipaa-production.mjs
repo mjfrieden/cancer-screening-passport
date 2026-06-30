@@ -38,6 +38,15 @@ const syntheticDeployment = (
 
 if (
   process.env.DEPLOY_SERVICE === 'app-engine' &&
+  process.env.VITE_REAL_PHI_ENABLED === 'true' &&
+  process.env.HIPAA_SYNTHETIC_TESTING_APPROVED !== 'false'
+) {
+  console.error('Real-PHI App Engine deployments require HIPAA_SYNTHETIC_TESTING_APPROVED=false.');
+  process.exit(1);
+}
+
+if (
+  process.env.DEPLOY_SERVICE === 'app-engine' &&
   syntheticDeployment &&
   process.env.VITE_REAL_PHI_ENABLED !== 'false'
 ) {
