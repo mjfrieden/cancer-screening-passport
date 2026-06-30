@@ -14,7 +14,6 @@ import {
   LogIn,
   Shield,
   Apple,
-  ArrowRight,
   Bell,
   CalendarDays,
   CheckCircle2,
@@ -206,7 +205,6 @@ function AppContent() {
             />
           </div>
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-            <a href="#how-it-works" className="transition-colors hover:text-slate-900">How it works</a>
             <a href="/legal/privacy.html" target="_blank" rel="noreferrer" className="transition-colors hover:text-slate-900">Privacy</a>
             <a href="/support.html" target="_blank" rel="noreferrer" className="transition-colors hover:text-slate-900">Help</a>
           </nav>
@@ -237,13 +235,6 @@ function AppContent() {
                 </div>
                 Continue with Google
               </button>
-              <a
-                href="#how-it-works"
-                className="inline-flex items-center gap-2 text-base font-semibold text-slate-700 transition-colors hover:text-slate-950"
-              >
-                See how it works
-                <ArrowRight className="h-4 w-4" />
-              </a>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-600">
@@ -261,7 +252,7 @@ function AppContent() {
               </div>
             </div>
 
-            <div className="mt-10 grid max-w-2xl gap-4 sm:grid-cols-3" id="how-it-works">
+            <div className="mt-10 grid max-w-2xl gap-4 sm:grid-cols-3">
               <FeatureCard
                 icon={CheckCircle2}
                 title="Easy to use"
