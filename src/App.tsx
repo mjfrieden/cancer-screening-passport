@@ -196,22 +196,14 @@ function AppContent() {
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 pb-10 pt-6 lg:px-10">
         <header className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center">
             <img
-              src="/brand/cancer-prevention-passport-mark.png"
-              alt=""
-              width="72"
-              height="72"
-              className="h-16 w-16 rounded-[1.35rem] object-cover shadow-sm ring-1 ring-black/5 sm:h-[4.75rem] sm:w-[4.75rem]"
+              src="/brand/cancer-prevention-passport-lockup.png"
+              alt="Cancer Prevention Passport"
+              width="1100"
+              height="650"
+              className="h-auto w-[240px] sm:w-[320px] lg:w-[360px]"
             />
-            <div>
-              <div className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-600 sm:text-[0.95rem]">
-                Cancer Prevention Passport
-              </div>
-              <div className="mt-1 text-sm leading-6 text-slate-500 sm:text-base">
-                Simple screening reminders and notes
-              </div>
-            </div>
           </div>
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
             <a href="#how-it-works" className="transition-colors hover:text-slate-900">How it works</a>
