@@ -173,6 +173,7 @@ addCheck('public account deletion path is store-ready', () => {
 addCheck('real-PHI operational evidence remains wired', () => {
   expectIncludes('package.json', ['verify:phi-operations']);
   expectIncludes('package.json', ['test:phi-recovery']);
+  expectIncludes('package.json', ['verify:phi-activation']);
   expectIncludes('scripts/verify-phi-operations.mjs', [
     'Firestore Data Access audit logging is enabled',
     'service accounts have no user-managed keys',
@@ -186,6 +187,12 @@ addCheck('real-PHI operational evidence remains wired', () => {
     "process.env.PHI_RECOVERY_TEST_APPROVED !== 'true'",
     'temporaryDatabaseDeleted',
     'temporaryDailySchedulesRemoved',
+  ]);
+  expectIncludes('scripts/verify-phi-activation.mjs', [
+    'HIPAA_BACKUP_RESTORE_TEST_COMPLETED_DATE',
+    'readyForActivationApproval',
+    'safetyLocksRemainOff',
+    'VITE_REAL_PHI_ENABLED',
   ]);
   for (const path of [
     'docs/DATA_RETENTION_AND_RECOVERY.md',

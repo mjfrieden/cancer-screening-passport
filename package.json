@@ -28,6 +28,7 @@
     "verify:production-auth": "node scripts/verify-production-auth.mjs",
     "verify:phi-operations": "node scripts/verify-phi-operations.mjs",
     "test:phi-recovery": "node scripts/test-firestore-restore.mjs",
+    "verify:phi-activation": "node scripts/verify-phi-activation.mjs",
     "cap:sync": "npm run build:static && cap sync",
     "cap:copy": "npm run build:static && cap copy",
     "cap:open:ios": "cap open ios",

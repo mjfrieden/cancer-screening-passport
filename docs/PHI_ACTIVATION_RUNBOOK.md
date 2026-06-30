@@ -30,6 +30,17 @@ and retain its administrative, physical, and technical safeguard evidence.
 
 All date values must use `YYYY-MM-DD`.
 
+Run the final evidence check with:
+
+```bash
+npm run verify:phi-activation
+```
+
+The check requires every evidence value while also requiring
+`HIPAA_PRODUCTION_APPROVED=false` and `VITE_REAL_PHI_ENABLED=false`. A passing
+result means the system is ready for a separate activation decision; it does
+not activate PHI.
+
 ## Activation Procedure
 
 1. Complete each gate and retain its evidence outside the public repository.
