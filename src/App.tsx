@@ -196,19 +196,21 @@ function AppContent() {
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 pb-10 pt-6 lg:px-10">
         <header className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <img
               src="/brand/cancer-prevention-passport-mark.png"
               alt=""
-              width="44"
-              height="44"
-              className="h-11 w-11 rounded-2xl object-cover shadow-sm ring-1 ring-black/5"
+              width="72"
+              height="72"
+              className="h-16 w-16 rounded-[1.35rem] object-cover shadow-sm ring-1 ring-black/5 sm:h-[4.75rem] sm:w-[4.75rem]"
             />
             <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+              <div className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-600 sm:text-[0.95rem]">
                 Cancer Prevention Passport
               </div>
-              <div className="text-sm text-slate-500">Simple screening reminders and notes</div>
+              <div className="mt-1 text-sm leading-6 text-slate-500 sm:text-base">
+                Simple screening reminders and notes
+              </div>
             </div>
           </div>
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
@@ -225,7 +227,7 @@ function AppContent() {
             transition={{ duration: 0.45, ease: 'easeOut' }}
             className="max-w-2xl"
           >
-            <h1 className="max-w-xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
               Keep your screening reminders in one place
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 sm:text-xl">
@@ -290,12 +292,6 @@ function AppContent() {
                 iconClassName="text-amber-700"
               />
             </div>
-
-            {!realPhiEnabled && (
-              <div className="mt-8 max-w-2xl rounded-3xl border border-amber-200 bg-amber-50/80 px-5 py-4 text-sm leading-6 text-amber-950 shadow-sm">
-                Production beta: use synthetic test data only. Do not enter real patient or health information.
-              </div>
-            )}
 
             <div className="mt-6 text-sm leading-6 text-slate-500">
               Cancer Prevention Passport is a health education and record-organizing tool from White Cloud Medical, LLC.
