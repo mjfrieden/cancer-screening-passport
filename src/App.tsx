@@ -39,6 +39,7 @@ const FHIRSharing = lazy(() => import('./components/FHIRSharing'));
 
 function AppContent() {
   const { user, loading: authLoading } = useAuth();
+  const realPhiEnabled = import.meta.env.VITE_REAL_PHI_ENABLED === 'true';
   const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'share' | 'survivorship' | 'lifestyle'>('dashboard');
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [events, setEvents] = useState<ScreeningEvent[]>([]);
@@ -49,6 +50,14 @@ function AppContent() {
   const [hasCurrentConsent, setHasCurrentConsent] = useState(false);
   const hasTrackedAppOpen = useRef(false);
   const previousUserId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!realPhiEnabled) {
+      return;
+    }
+
+    // Production service: only enter information you are authorized to store here.
+  }, [realPhiEnabled]);
 
   // Initial Fetch
   useEffect(() => {
