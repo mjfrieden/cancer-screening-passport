@@ -378,6 +378,7 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
       <div className="safe-bottom-action sticky z-20 p-3 bg-gradient-to-t from-white via-white to-transparent">
         <button
           type="submit"
+          data-smoke="save-profile"
           disabled={loading}
           className="w-full max-w-xl mx-auto flex items-center justify-center gap-2 bg-blue-600 text-white p-4 rounded-2xl font-bold shadow-xl hover:bg-blue-700 transition-all disabled:opacity-50"
         >

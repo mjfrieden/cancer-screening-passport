@@ -3,6 +3,7 @@ import { User, deleteUser } from 'firebase/auth';
 import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore';
 import { AlertTriangle, Download, Loader2, Trash2 } from 'lucide-react';
 import { db, reauthenticateWithGoogle } from '../lib/firebase';
+import { trackTelemetry } from '../lib/telemetry';
 import { Recommendation, ScreeningEvent, UserProfile } from '../types';
 
 interface AccountDataControlsProps {
@@ -27,6 +28,10 @@ export default function AccountDataControls({
   const exportData = () => {
     setError(null);
     setMessage(null);
+    trackTelemetry('export_account_data', {
+      method: 'json',
+      source: 'account_controls',
+    });
 
     const payload = {
       exportedAt: new Date().toISOString(),
@@ -56,10 +61,16 @@ export default function AccountDataControls({
   const deleteAccountAndData = async () => {
     setError(null);
     setMessage(null);
+    trackTelemetry('account_deletion_started', {
+      source: 'account_controls',
+    });
 
     const confirmation = window.prompt('Type DELETE to permanently remove your app data and Firebase sign-in account.');
     if (confirmation !== 'DELETE') {
       setMessage('Deletion canceled.');
+      trackTelemetry('account_deletion_canceled', {
+        source: 'account_controls',
+      });
       return;
     }
 
@@ -94,6 +105,9 @@ export default function AccountDataControls({
 
       await deleteUser(user);
 
+      trackTelemetry('account_deletion_completed', {
+        source: 'account_controls',
+      });
       onDeleted();
     } catch (deleteError) {
       const message = deleteError instanceof Error ? deleteError.message : String(deleteError);
@@ -116,6 +130,7 @@ export default function AccountDataControls({
         <button
           type="button"
           onClick={exportData}
+          data-smoke="export-account-data"
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-100"
         >
           <Download className="h-4 w-4" />
@@ -136,6 +151,7 @@ export default function AccountDataControls({
           <button
             type="button"
             onClick={deleteAccountAndData}
+            data-smoke="delete-account"
             disabled={busy}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 p-3 text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
           >

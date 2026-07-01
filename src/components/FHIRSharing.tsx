@@ -3,6 +3,7 @@ import { UserProfile, ScreeningEvent, Recommendation } from '../types';
 import { QRCodeSVG } from 'qrcode.react';
 import { FileJson, Share2, ShieldCheck, Zap, FileText, FileDown, Loader2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { trackTelemetry } from '../lib/telemetry';
 
 interface FHIRSharingProps {
   profile: UserProfile;
@@ -70,6 +71,10 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
   });
 
   const downloadJson = () => {
+    trackTelemetry('export_fhir_json', {
+      method: 'json',
+      source: 'fhir_sharing',
+    });
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(fhirString);
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
@@ -82,6 +87,10 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
   const downloadPdf = async () => {
     setIsGeneratingPdf(true);
     try {
+      trackTelemetry('export_pdf_summary', {
+        method: 'pdf',
+        source: 'fhir_sharing',
+      });
       const { generateScreeningPDF } = await import('../lib/pdfGenerator');
       generateScreeningPDF(profile, recommendations, events);
     } finally {
@@ -121,6 +130,7 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
       <div className="grid grid-cols-2 gap-4">
         <button
           onClick={downloadJson}
+          data-smoke="export-fhir-json"
           className="flex flex-col items-center gap-3 p-6 bg-blue-50 text-blue-700 rounded-2xl hover:bg-blue-100 transition-all border border-blue-100"
         >
           <FileJson className="w-6 h-6" />
@@ -154,6 +164,7 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
         <button
           id="btn-generate-pdf-summary"
           onClick={downloadPdf}
+          data-smoke="export-pdf-summary"
           disabled={isGeneratingPdf}
           className="w-full sm:w-auto px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm shadow-blue-600/10 hover:shadow-md flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:cursor-wait disabled:opacity-75"
         >
