@@ -20,6 +20,10 @@ const PRESETS_BY_TYPE: Record<ScreeningEvent['type'], ResultPreset[]> = {
     { label: "Negative (Normal)", value: "Negative / Normal", isAbnormal: false },
     { label: "Positive (Blood detected - Abnormal)", value: "Positive", isAbnormal: true }
   ],
+  cologuard: [
+    { label: "Negative (Normal)", value: "Negative / Normal", isAbnormal: false },
+    { label: "Positive (Abnormal - Follow up colonoscopy needed)", value: "Positive", isAbnormal: true }
+  ],
   mammogram: [
     { label: "BI-RADS 1 (Negative - Normal)", value: "BI-RADS 1 - Negative", isAbnormal: false },
     { label: "BI-RADS 2 (Benign findings - Normal)", value: "BI-RADS 2 - Benign", isAbnormal: false },
@@ -169,6 +173,7 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
                 >
                   <option value="colonoscopy">Colonoscopy (Colorectal)</option>
                   <option value="fit">FIT Stool Test (Colorectal)</option>
+                  <option value="cologuard">Stool DNA Test (Cologuard)</option>
                   <option value="mammogram">Mammography (Breast)</option>
                   <option value="pap">Cervical Pap Smear (Cervical)</option>
                   <option value="hpv">HPV Co-testing (Cervical)</option>

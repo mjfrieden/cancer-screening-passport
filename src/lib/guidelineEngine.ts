@@ -802,8 +802,15 @@ function uspstfSourceUrl(id: string): string {
 
 function getLastCompleted(history: ScreeningEvent[], type: ScreeningEvent['type']): ScreeningEvent | undefined {
   return history
-    .filter(event => event.type === type && event.status === 'completed' && isValidDate(event.date))
+    .filter(event => matchesScreeningType(event.type, type) && event.status === 'completed' && isValidDate(event.date))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+}
+
+function matchesScreeningType(actual: ScreeningEvent['type'], requested: ScreeningEvent['type']): boolean {
+  if (requested === 'fit') {
+    return actual === 'fit' || actual === 'cologuard';
+  }
+  return actual === requested;
 }
 
 function getColorectalFollowUp(lastColonoscopy?: ScreeningEvent, lastFit?: ScreeningEvent): {
@@ -818,23 +825,31 @@ function getColorectalFollowUp(lastColonoscopy?: ScreeningEvent, lastFit?: Scree
   if (!latest) return null;
 
   const resultText = (latest.result || '').toLowerCase();
-  if (latest.type === 'fit') {
+  if (latest.type === 'fit' || latest.type === 'cologuard') {
     if (latest.isAbnormal || resultText.includes('positive') || resultText.includes('blood detected') || resultText.includes('abnormal')) {
-      return {
-        followUpDate: latest.date,
-        status: 'due_now',
-        reason: 'Positive FIT requires physician review and diagnostic colonoscopy follow-up.',
-        recommendedAction: 'Diagnostic colonoscopy after abnormal FIT',
-        requiresClinicianReview: true,
-        source: 'USPSTF',
+        return {
+          followUpDate: latest.date,
+          status: 'due_now',
+          reason: latest.type === 'cologuard'
+            ? 'Positive stool DNA screening requires physician review and diagnostic colonoscopy follow-up.'
+            : 'Positive FIT requires physician review and diagnostic colonoscopy follow-up.',
+          recommendedAction: latest.type === 'cologuard'
+            ? 'Diagnostic colonoscopy after abnormal stool DNA screening'
+            : 'Diagnostic colonoscopy after abnormal FIT',
+          requiresClinicianReview: true,
+        source: 'USMSTF',
       };
     }
 
     return {
-      followUpDate: addYears(latest.date, 1),
-      status: getDueStatus(addYears(latest.date, 1), startOfToday()),
-      reason: 'Prior FIT recorded. Annual stool-based screening is commonly repeated yearly unless diagnostic follow-up is needed.',
-      recommendedAction: 'Annual FIT screening or diagnostic colonoscopy if symptoms or abnormal findings develop',
+      followUpDate: latest.type === 'cologuard' ? addYears(latest.date, 3) : addYears(latest.date, 1),
+      status: getDueStatus(latest.type === 'cologuard' ? addYears(latest.date, 3) : addYears(latest.date, 1), startOfToday()),
+      reason: latest.type === 'cologuard'
+        ? 'Prior stool DNA screening recorded. Negative stool DNA-FIT is commonly repeated every 3 years unless diagnostic follow-up is needed.'
+        : 'Prior FIT recorded. Annual stool-based screening is commonly repeated yearly unless diagnostic follow-up is needed.',
+      recommendedAction: latest.type === 'cologuard'
+        ? 'Stool DNA-FIT screening every 3 years or diagnostic colonoscopy if symptoms or abnormal findings develop'
+        : 'Annual FIT screening or diagnostic colonoscopy if symptoms or abnormal findings develop',
       requiresClinicianReview: false,
       source: 'USPSTF',
     };

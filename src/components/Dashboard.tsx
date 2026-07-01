@@ -18,6 +18,11 @@ function formatLocalDate(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
+function isColorectalStoolTest(type: string) {
+  const cleanType = type.toLowerCase();
+  return cleanType.includes('fit') || cleanType.includes('cologuard') || cleanType.includes('stool') || cleanType.includes('fecal');
+}
+
 export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean, resultText: string) {
   const date = new Date(`${dateStr}T00:00:00`);
   let yearsToAdd = 1;
@@ -33,34 +38,39 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
 
     if (immediateReview) {
       yearsToAdd = 0;
-      rationale = 'Concerning colonoscopy findings or incomplete resection should prompt immediate physician review and diagnostic follow-up.';
+      rationale = 'Concerning colonoscopy findings or incomplete resection should prompt immediate physician review and diagnostic follow-up per USMSTF guidance.';
     } else if (!explicitlyNormal && (isAbnormal || cleanResult.includes('adenomatous') || cleanResult.includes('polyp') || cleanResult.includes('abnormal'))) {
       yearsToAdd = highRisk ? 3 : 7;
       rationale = highRisk
-        ? 'High-risk adenoma findings generally shorten colonoscopy surveillance to about 3 years.'
-        : 'Low-risk adenoma findings generally shorten colonoscopy surveillance to about 7 years.';
+        ? 'High-risk adenoma findings generally shorten colonoscopy surveillance to about 3 years under USMSTF post-polypectomy guidance.'
+        : 'Low-risk adenoma findings generally shorten colonoscopy surveillance to about 7 years under USMSTF post-polypectomy guidance.';
     } else {
       yearsToAdd = 10;
-      rationale = 'Routine 10-year surveillance cycle for average-risk patient.';
+      rationale = 'Routine 10-year surveillance cycle for average-risk patient under USPSTF/USMSTF colorectal screening guidance.';
     }
-  } else if (cleanType.includes('fit')) {
-    if (isAbnormal || cleanResult.includes('positive') || cleanResult.includes('blood detected') || cleanResult.includes('abnormal')) {
-      yearsToAdd = 0; // Immediate
-      rationale = 'Positive FIT requires physician review and diagnostic colonoscopy follow-up.';
+  } else if (isColorectalStoolTest(cleanType)) {
+    const abnormalStool = isAbnormal || cleanResult.includes('positive') || cleanResult.includes('blood detected') || cleanResult.includes('abnormal');
+
+    if (abnormalStool) {
+      yearsToAdd = 0;
+      rationale = 'Positive FIT or stool DNA screening requires prompt physician review and diagnostic colonoscopy follow-up per USPSTF and USMSTF guidance.';
+    } else if (cleanType.includes('cologuard') || cleanResult.includes('stool dna')) {
+      yearsToAdd = 3;
+      rationale = 'Negative stool DNA-FIT screening supports a 3-year interval for average-risk colorectal screening.';
     } else {
       yearsToAdd = 1;
-      rationale = 'Standard 1-year annual cycle for non-invasive FIT screening.';
+      rationale = 'Annual FIT screening is the usual interval for average-risk stool-based colorectal screening.';
     }
   } else if (cleanType.includes('mammogram') || cleanType.includes('mammography') || cleanType.includes('breast')) {
     if (cleanResult.includes('birads 4') || cleanResult.includes('birads 5') || cleanResult.includes('suspicious') || cleanResult.includes('incomplete')) {
       yearsToAdd = 0;
-      rationale = 'Suspicious mammography findings should trigger diagnostic imaging and physician review.';
+      rationale = 'Suspicious mammography findings should trigger diagnostic imaging and physician review per ACR BI-RADS guidance.';
     } else if (isAbnormal || cleanResult.includes('bi-rads 3') || cleanResult.includes('birads 3')) {
       yearsToAdd = 0.5; // 6 months
-      rationale = 'Short-interval diagnostic evaluation (6 months) requested due to abnormal findings.';
+      rationale = 'Short-interval diagnostic evaluation (6 months) is commonly used for probably benign or abnormal mammography findings under ACR BI-RADS guidance.';
     } else {
       yearsToAdd = 2;
-      rationale = 'Standard 2-year screening mammography interval for average-risk profile.';
+      rationale = 'Standard 2-year screening mammography interval for average-risk profile under USPSTF guidance.';
     }
   } else if (cleanType.includes('pap') || cleanType.includes('cervical') || cleanType.includes('hpv')) {
     const highGrade = cleanResult.includes('hsil') || cleanResult.includes('asc-h') || cleanResult.includes('agc') || cleanResult.includes('cin 2') || cleanResult.includes('cin 3') || cleanResult.includes('high grade') || cleanResult.includes('carcinoma') || cleanResult.includes('cancer');
@@ -68,24 +78,24 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
 
     if (highGrade) {
       yearsToAdd = 0.5;
-      rationale = 'Higher-grade cervical abnormality logged. ASCCP-style follow-up should be clinician-reviewed and short interval.';
+      rationale = 'Higher-grade cervical abnormality logged. ASCCP risk-based follow-up should be clinician-reviewed and short interval.';
     } else if (cleanType.includes('hpv') && cleanResult.includes('negative')) {
       yearsToAdd = 5;
-      rationale = 'Negative hrHPV result supports a standard 5-year interval when used for primary HPV or cotesting.';
+      rationale = 'Negative hrHPV result supports a standard 5-year interval when used for primary HPV or cotesting under USPSTF and ASCCP guidance.';
     } else if (cleanType.includes('hpv')) {
       yearsToAdd = 1;
-      rationale = 'HPV positivity shortens follow-up under ASCCP-style risk-based management.';
+      rationale = 'HPV positivity shortens follow-up under ASCCP risk-based management.';
     } else if (lowGrade) {
       yearsToAdd = 1;
-      rationale = 'Low-grade cervical abnormality logged. ASCCP-style follow-up commonly shortens to 1 year.';
+      rationale = 'Low-grade cervical abnormality logged. ASCCP risk-based follow-up commonly shortens to 1 year.';
     } else {
       yearsToAdd = 3;
-      rationale = 'Routine 3-year interval for cervical cytology screening.';
+      rationale = 'Routine 3-year interval for cervical cytology screening under USPSTF guidance.';
     }
   } else if (cleanType.includes('ldct') || cleanType.includes('lung')) {
     if (cleanResult.includes('lung-rads 4b') || cleanResult.includes('lung-rads 4x') || cleanResult.includes('suspicious') || cleanResult.includes('high suspicion')) {
       yearsToAdd = 0;
-      rationale = 'Suspicious lung screening findings should prompt physician review and diagnostic work-up.';
+      rationale = 'Suspicious lung screening findings should prompt physician review and diagnostic work-up per ACR Lung-RADS guidance.';
     } else if (cleanResult.includes('lung-rads 4a')) {
       yearsToAdd = 0.25;
       rationale = 'Lung-RADS 4A commonly uses 3-month LDCT follow-up.';
@@ -102,10 +112,10 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
   } else if (cleanType.includes('psa') || cleanType.includes('prostate')) {
     if (cleanResult.includes('elevated') || cleanResult.includes('high') || cleanResult.includes('abnormal')) {
       yearsToAdd = 0;
-      rationale = 'Elevated PSA should prompt physician review and individualized follow-up.';
+      rationale = 'Elevated PSA should prompt physician review and individualized follow-up per USPSTF/NCCN-informed management.';
     } else {
       yearsToAdd = 2;
-      rationale = 'Standard 2-year follow-up for prostate specific antigen tracking.';
+      rationale = 'Standard 2-year follow-up for prostate specific antigen tracking under shared decision-making guidance.';
     }
   } else {
     // defaults
@@ -146,15 +156,15 @@ function getClinicalMetrics(type: string, isAbnormal: boolean) {
       clinicalNotes: 'Endoscopic visualization of the entire large bowel. Direct excision of precancerous polyps.',
       targetTarget: 'Ages 45-75 years, every 10 years standard'
     };
-  } else if (cleanType.includes('fit') || cleanType.includes('fecal')) {
+  } else if (cleanType.includes('fit') || cleanType.includes('fecal') || cleanType.includes('cologuard') || cleanType.includes('stool')) {
     return {
-      sensitivity: '79% (high-grade detection rate)',
-      specificity: '94% (low false-positive rate)',
-      riskReduction: '22-30% mortality reduction with annual screening cohort compliance',
+      sensitivity: '74-79% (FIT) / 92%+ (stool DNA-FIT sensitivity for CRC)',
+      specificity: '90-94% (varies by stool-based modality)',
+      riskReduction: 'Substantial colorectal cancer mortality reduction when repeated on schedule and followed by colonoscopy after positives',
       standard: 'USPSTF Grade A',
-      priority: isAbnormal ? 'High / Referral Required' : 'Annual Preventive Cycle',
-      clinicalNotes: 'Non-invasive stool-based immunological assay detecting hemoglobin globin chain markers.',
-      targetTarget: 'Annual interval, Ages 45-75 years'
+      priority: isAbnormal ? 'High / Referral Required' : 'Routine Stool-Based Cycle',
+      clinicalNotes: 'Non-invasive stool-based screening that requires colonoscopy follow-up after a positive result.',
+      targetTarget: 'FIT yearly, stool DNA-FIT every 1-3 years depending on modality'
     };
   } else if (cleanType.includes('mammogram') || cleanType.includes('mammography') || cleanType.includes('breast')) {
     return {
@@ -341,6 +351,8 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
        testLabel = 'Colonoscopy';
     } else if (cleanType.includes('fit')) {
        testLabel = 'FIT Test';
+    } else if (cleanType.includes('cologuard') || cleanType.includes('stool')) {
+       testLabel = 'Stool DNA Test';
     } else if (cleanType.includes('ldct') || cleanType.includes('lung')) {
        testLabel = 'Lung LDCT';
     } else if (cleanType.includes('psa') || cleanType.includes('prostate')) {

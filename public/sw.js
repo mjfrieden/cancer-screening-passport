@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cancer-passport-v3';
+const CACHE_NAME = 'cancer-passport-v4';
 const CORE_ASSETS = [
   '/',
   '/offline.html',

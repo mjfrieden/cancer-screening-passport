@@ -50,6 +50,7 @@ jobs:
       VITE_FIREBASE_FIRESTORE_DATABASE_ID: ${{ vars.VITE_FIREBASE_FIRESTORE_DATABASE_ID }}
       SMOKE_AUTH_STATE_B64: ${{ secrets.SMOKE_AUTH_STATE_B64 }}
       SMOKE_EXPECTED_EMAIL: ${{ vars.SMOKE_EXPECTED_EMAIL }}
+      SMOKE_DELETE_ACCOUNT: 'false'
 
     steps:
       - name: Checkout

@@ -53,6 +53,16 @@ describe('guideline recommendation engine', () => {
     expect(crc?.status).toBe('due_now');
   });
 
+  it('treats stool DNA screening history like a colorectal stool-based test', () => {
+    const recommendations = getRecommendations(baseProfile(), [
+      event({ id: 'cologuard-1', type: 'cologuard', date: '2024-05-05', result: 'Negative / Normal', isAbnormal: false }),
+    ]);
+
+    const crc = recommendations.find(rec => rec.id === 'crc-rec');
+    expect(crc?.source).toBe('USPSTF');
+    expect(crc?.due_date).toBe('2027-05-05');
+  });
+
   it('shortens surveillance after an abnormal colonoscopy with adenomatous findings', () => {
     const recommendations = getRecommendations(baseProfile(), [
       event({ id: 'col-1', type: 'colonoscopy', date: '2022-05-05', result: 'Adenomatous polyp(s)', isAbnormal: true }),

@@ -7,6 +7,7 @@ const baseUrl = process.env.SMOKE_BASE_URL || 'http://127.0.0.1:3000';
 const staticOnly = process.env.SMOKE_STATIC_ONLY === 'true';
 const authRequired = process.env.SMOKE_AUTH_REQUIRED === 'true';
 const expectedEmail = process.env.SMOKE_EXPECTED_EMAIL?.trim() || null;
+const skipDelete = process.env.SMOKE_DELETE_ACCOUNT === 'false';
 
 const checks = [
   {
@@ -122,22 +123,42 @@ async function runAuthenticatedSmoke(baseUrl, authStatePath) {
     const page = await context.newPage();
     page.setDefaultTimeout(30000);
     await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
-    await page.locator('[data-smoke="signed-out-shell"]').waitFor();
-
-    await page.locator('[data-smoke="sign-in-google"]').click();
     await page.waitForFunction(() => (
+      Boolean(document.querySelector('[data-smoke="signed-out-shell"]')) ||
       Boolean(document.querySelector('[data-smoke="authenticated-shell"]')) ||
       Boolean(document.querySelector('[data-smoke="consent-gate"]'))
     ));
 
+    const signedOutShell = page.locator('[data-smoke="signed-out-shell"]');
+    const authenticatedShell = page.locator('[data-smoke="authenticated-shell"]');
     const consentGate = page.locator('[data-smoke="consent-gate"]');
+
+    if ((await authenticatedShell.count()) === 0 && (await consentGate.count()) === 0) {
+      await signedOutShell.waitFor();
+      await page.waitForFunction(() => (
+        Boolean(document.querySelector('[data-smoke="authenticated-shell"]')) ||
+        Boolean(document.querySelector('[data-smoke="consent-gate"]')) ||
+        Boolean(document.querySelector('[data-smoke="sign-in-google"]'))
+      ), { timeout: 10000 });
+
+      if ((await authenticatedShell.count()) > 0 || (await consentGate.count()) > 0) {
+        // Stored auth state can restore asynchronously after the signed-out shell flashes.
+      } else {
+      await page.locator('[data-smoke="sign-in-google"]').click();
+      await page.waitForFunction(() => (
+        Boolean(document.querySelector('[data-smoke="authenticated-shell"]')) ||
+        Boolean(document.querySelector('[data-smoke="consent-gate"]'))
+      ));
+      }
+    }
+
     if (await consentGate.count()) {
       await consentGate.locator('input[type="checkbox"]').nth(0).check();
       await consentGate.locator('input[type="checkbox"]').nth(1).check();
       await page.locator('[data-smoke="accept-consent"]').click();
     }
 
-    await page.locator('[data-smoke="authenticated-shell"]').waitFor();
+    await authenticatedShell.waitFor();
     await page.locator('[data-smoke="nav-profile"]').click();
 
     await page.locator('#profile-name').fill(smokeProfile.name);
@@ -179,16 +200,20 @@ async function runAuthenticatedSmoke(baseUrl, authStatePath) {
       throw new Error(`Account export email mismatch: expected ${expectedEmail}, saw ${exportPayload.user?.email || 'missing'}.`);
     }
 
-    page.once('dialog', async dialog => {
-      if (dialog.type() === 'prompt') {
-        await dialog.accept('DELETE');
-        return;
-      }
-      await dialog.dismiss();
-    });
-    await page.locator('[data-smoke="delete-account"]').click();
-    await page.locator('[data-smoke="signed-out-shell"]').waitFor();
-    await page.locator('[data-smoke="sign-in-google"]').waitFor();
+    if (!skipDelete) {
+      page.once('dialog', async dialog => {
+        if (dialog.type() === 'prompt') {
+          await dialog.accept('DELETE');
+          return;
+        }
+        await dialog.dismiss();
+      });
+      await page.locator('[data-smoke="delete-account"]').click();
+      await page.waitForFunction(() => (
+        Boolean(document.querySelector('[data-smoke="signed-out-shell"]')) &&
+        Boolean(document.querySelector('[data-smoke="sign-in-google"]'))
+      ), { timeout: 120000 });
+    }
     console.log('ok - authenticated smoke path');
   } finally {
     await browser.close();
@@ -214,6 +239,6 @@ if (!staticOnly) {
   if (authStatePath) {
     await runAuthenticatedSmoke(baseUrl, authStatePath);
   } else if (authRequired) {
-    console.log('skip - authenticated smoke path (no auth state provided)');
+    throw new Error('Authenticated smoke requires SMOKE_AUTH_STATE_PATH or SMOKE_AUTH_STATE_B64.');
   }
 }

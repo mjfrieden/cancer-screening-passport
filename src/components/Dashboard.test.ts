@@ -22,6 +22,20 @@ describe('calculateNextDueDate', () => {
     });
   });
 
+  it('uses a 3-year interval for a negative stool DNA test', () => {
+    expect(calculateNextDueDate('cologuard', '2026-06-27', false, 'Negative / Normal')).toMatchObject({
+      date: '2029-06-27',
+      isUrgent: false,
+    });
+  });
+
+  it('routes a positive stool DNA test to diagnostic colonoscopy follow-up', () => {
+    expect(calculateNextDueDate('cologuard', '2026-06-27', true, 'Positive')).toMatchObject({
+      date: '2026-06-27',
+      isUrgent: true,
+    });
+  });
+
   it('uses a six month interval for a probably benign mammogram finding', () => {
     expect(calculateNextDueDate('mammogram', '2026-06-27', false, 'BI-RADS 3 - Probably benign')).toMatchObject({
       date: '2026-12-27',

@@ -26,7 +26,7 @@ export interface SurvivorshipPlan {
 export interface ScreeningEvent {
   id: string;
   userId: string;
-  type: "mammogram" | "pap" | "hpv" | "colonoscopy" | "fit" | "ldct" | "psa" | "surveillance_imaging" | "marker_check";
+  type: "mammogram" | "pap" | "hpv" | "colonoscopy" | "fit" | "cologuard" | "ldct" | "psa" | "surveillance_imaging" | "marker_check";
   date: string;
   result: string;
   isAbnormal: boolean;
