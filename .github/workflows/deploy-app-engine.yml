@@ -48,6 +48,8 @@ jobs:
       VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
       VITE_FIREBASE_MEASUREMENT_ID: ${{ vars.VITE_FIREBASE_MEASUREMENT_ID }}
       VITE_FIREBASE_FIRESTORE_DATABASE_ID: ${{ vars.VITE_FIREBASE_FIRESTORE_DATABASE_ID }}
+      SMOKE_AUTH_STATE_B64: ${{ secrets.SMOKE_AUTH_STATE_B64 }}
+      SMOKE_EXPECTED_EMAIL: ${{ vars.SMOKE_EXPECTED_EMAIL }}
 
     steps:
       - name: Checkout
@@ -72,6 +74,9 @@ jobs:
       - name: Build application
         run: npm run build
 
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -87,4 +92,4 @@ jobs:
       - name: Smoke deployed application
         env:
           SMOKE_BASE_URL: https://${{ vars.FIREBASE_PROJECT_ID }}.uc.r.appspot.com
-        run: npm run smoke
+        run: npm run smoke:auth
