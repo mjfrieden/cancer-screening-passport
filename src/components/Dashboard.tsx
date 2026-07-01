@@ -24,31 +24,38 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
   let rationale = '';
 
   const cleanType = type.toLowerCase();
+  const cleanResult = resultText.toLowerCase();
   
   if (cleanType.includes('colonoscopy')) {
-    if (
-      isAbnormal ||
-      resultText.toLowerCase().includes('adenomatous') ||
-      resultText.toLowerCase().includes('abnormal') ||
-      resultText.toLowerCase().includes('suspicious') ||
-      resultText.toLowerCase().includes('malignant')
-    ) {
-      yearsToAdd = 3;
-      rationale = 'Accelerated 3-year surveillance for high-risk adenomas or polyps per clinical criteria.';
+    const explicitlyNormal = cleanResult.includes('normal') || cleanResult.includes('no polyp') || cleanResult.includes('no polyps') || cleanResult.includes('negative') || cleanResult.includes('hyperplastic') || cleanResult.includes('benign');
+    const highRisk = cleanResult.includes('advanced') || cleanResult.includes('villous') || cleanResult.includes('high-grade dysplasia') || cleanResult.includes('high grade') || cleanResult.includes('multiple') || cleanResult.includes('10 mm') || cleanResult.includes('sessile serrated') || cleanResult.includes('serrated');
+    const immediateReview = cleanResult.includes('suspicious') || cleanResult.includes('malignant') || cleanResult.includes('cancer') || cleanResult.includes('residual') || cleanResult.includes('incomplete') || cleanResult.includes('piecemeal');
+
+    if (immediateReview) {
+      yearsToAdd = 0;
+      rationale = 'Concerning colonoscopy findings or incomplete resection should prompt immediate physician review and diagnostic follow-up.';
+    } else if (!explicitlyNormal && (isAbnormal || cleanResult.includes('adenomatous') || cleanResult.includes('polyp') || cleanResult.includes('abnormal'))) {
+      yearsToAdd = highRisk ? 3 : 7;
+      rationale = highRisk
+        ? 'High-risk adenoma findings generally shorten colonoscopy surveillance to about 3 years.'
+        : 'Low-risk adenoma findings generally shorten colonoscopy surveillance to about 7 years.';
     } else {
       yearsToAdd = 10;
       rationale = 'Routine 10-year surveillance cycle for average-risk patient.';
     }
   } else if (cleanType.includes('fit')) {
-    if (isAbnormal || resultText.toLowerCase().includes('positive')) {
+    if (isAbnormal || cleanResult.includes('positive') || cleanResult.includes('blood detected') || cleanResult.includes('abnormal')) {
       yearsToAdd = 0; // Immediate
-      rationale = 'Urgent diagnostic Colonoscopy follow-up within 1 month recommended for positive stool test.';
+      rationale = 'Positive FIT requires physician review and diagnostic colonoscopy follow-up.';
     } else {
       yearsToAdd = 1;
       rationale = 'Standard 1-year annual cycle for non-invasive FIT screening.';
     }
   } else if (cleanType.includes('mammogram') || cleanType.includes('mammography') || cleanType.includes('breast')) {
-    if (isAbnormal || resultText.toLowerCase().includes('birads 4') || resultText.toLowerCase().includes('birads 5') || resultText.toLowerCase().includes('birads 0') || resultText.toLowerCase().includes('suspicious') || resultText.toLowerCase().includes('incomplete')) {
+    if (cleanResult.includes('birads 4') || cleanResult.includes('birads 5') || cleanResult.includes('suspicious') || cleanResult.includes('incomplete')) {
+      yearsToAdd = 0;
+      rationale = 'Suspicious mammography findings should trigger diagnostic imaging and physician review.';
+    } else if (isAbnormal || cleanResult.includes('bi-rads 3') || cleanResult.includes('birads 3')) {
       yearsToAdd = 0.5; // 6 months
       rationale = 'Short-interval diagnostic evaluation (6 months) requested due to abnormal findings.';
     } else {
@@ -56,15 +63,36 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
       rationale = 'Standard 2-year screening mammography interval for average-risk profile.';
     }
   } else if (cleanType.includes('pap') || cleanType.includes('cervical') || cleanType.includes('hpv')) {
-    if (isAbnormal || resultText.toLowerCase().includes('asc-us') || resultText.toLowerCase().includes('lsil') || resultText.toLowerCase().includes('hsil') || resultText.toLowerCase().includes('positive')) {
+    const highGrade = cleanResult.includes('hsil') || cleanResult.includes('asc-h') || cleanResult.includes('agc') || cleanResult.includes('cin 2') || cleanResult.includes('cin 3') || cleanResult.includes('high grade') || cleanResult.includes('carcinoma') || cleanResult.includes('cancer');
+    const lowGrade = isAbnormal || cleanResult.includes('asc-us') || cleanResult.includes('ascus') || cleanResult.includes('lsil') || cleanResult.includes('hpv positive') || cleanResult.includes('positive') || cleanResult.includes('abnormal');
+
+    if (highGrade) {
+      yearsToAdd = 0.5;
+      rationale = 'Higher-grade cervical abnormality logged. ASCCP-style follow-up should be clinician-reviewed and short interval.';
+    } else if (cleanType.includes('hpv') && cleanResult.includes('negative')) {
+      yearsToAdd = 5;
+      rationale = 'Negative hrHPV result supports a standard 5-year interval when used for primary HPV or cotesting.';
+    } else if (cleanType.includes('hpv')) {
       yearsToAdd = 1;
-      rationale = 'Annual surveillance and cytological follow-up due to atypical cells or positive HPV.';
+      rationale = 'HPV positivity shortens follow-up under ASCCP-style risk-based management.';
+    } else if (lowGrade) {
+      yearsToAdd = 1;
+      rationale = 'Low-grade cervical abnormality logged. ASCCP-style follow-up commonly shortens to 1 year.';
     } else {
       yearsToAdd = 3;
       rationale = 'Routine 3-year interval for cervical cytology screening.';
     }
   } else if (cleanType.includes('ldct') || cleanType.includes('lung')) {
-    if (isAbnormal || resultText.toLowerCase().includes('suspicious') || resultText.toLowerCase().includes('high suspicion')) {
+    if (cleanResult.includes('lung-rads 4b') || cleanResult.includes('lung-rads 4x') || cleanResult.includes('suspicious') || cleanResult.includes('high suspicion')) {
+      yearsToAdd = 0;
+      rationale = 'Suspicious lung screening findings should prompt physician review and diagnostic work-up.';
+    } else if (cleanResult.includes('lung-rads 4a')) {
+      yearsToAdd = 0.25;
+      rationale = 'Lung-RADS 4A commonly uses 3-month LDCT follow-up.';
+    } else if (cleanResult.includes('lung-rads 3')) {
+      yearsToAdd = 0.5;
+      rationale = 'Lung-RADS 3 commonly uses 6-month LDCT follow-up.';
+    } else if (isAbnormal) {
       yearsToAdd = 0.5;
       rationale = 'Frequent 6-month CT intervals suggested for indeterminate nodules.';
     } else {
@@ -72,9 +100,9 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
       rationale = 'Annual low-dose computed tomography (LDCT) for qualifying lung screening cohort.';
     }
   } else if (cleanType.includes('psa') || cleanType.includes('prostate')) {
-    if (isAbnormal || resultText.toLowerCase().includes('elevated')) {
-      yearsToAdd = 1;
-      rationale = 'Follow-up consultation and annual PSA monitor recommended for elevated levels.';
+    if (cleanResult.includes('elevated') || cleanResult.includes('high') || cleanResult.includes('abnormal')) {
+      yearsToAdd = 0;
+      rationale = 'Elevated PSA should prompt physician review and individualized follow-up.';
     } else {
       yearsToAdd = 2;
       rationale = 'Standard 2-year follow-up for prostate specific antigen tracking.';
@@ -88,8 +116,10 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
   const nextDate = new Date(date);
   if (yearsToAdd === 0.5) {
     nextDate.setMonth(nextDate.getMonth() + 6);
+  } else if (yearsToAdd === 0.25) {
+    nextDate.setMonth(nextDate.getMonth() + 3);
   } else if (yearsToAdd === 0) {
-    nextDate.setMonth(nextDate.getMonth() + 1); // 1 month from original
+    // Immediate follow-up uses the logged date rather than inventing a future interval.
   } else {
     nextDate.setFullYear(nextDate.getFullYear() + Math.floor(yearsToAdd));
   }
@@ -274,9 +304,10 @@ interface DashboardProps {
   recommendations: Recommendation[];
   events: ScreeningEvent[];
   profile: UserProfile | null;
+  onAddEvent?: () => void;
 }
 
-export default function Dashboard({ recommendations, events, profile }: DashboardProps) {
+export default function Dashboard({ recommendations, events, profile, onAddEvent }: DashboardProps) {
   const [hoveredPointId, setHoveredPointId] = useState<string | null>(null);
   const planRecommendations = recommendations.filter(r => r.status !== 'prevention');
 
@@ -287,36 +318,8 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
     { label: 'Completed', value: 'completed', icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50' },
   ];
 
-  // Combine real events and a fallback baseline timeline if no personal history exists yet
-  const hasHistory = events && events.filter(e => e.status === 'completed').length > 0;
-  
-  // Custom baseline fallback events tailored to age and sex
-  const defaultPlaceholderEvents: ScreeningEvent[] = [
-    { id: 'placeholder-col-1', type: 'colonoscopy', date: '2021-03-15', result: 'Normal', isAbnormal: false, status: 'completed', userId: profile?.userId || '' }
-  ];
-
-  if (profile?.sexAssignedAtBirth === 'female') {
-    defaultPlaceholderEvents.push(
-      { id: 'placeholder-mam-1', type: 'mammogram', date: '2023-06-10', result: 'Normal', isAbnormal: false, status: 'completed', userId: profile?.userId || '' },
-      { id: 'placeholder-pap-1', type: 'pap', date: '2024-11-20', result: 'NILM', isAbnormal: false, status: 'completed', userId: profile?.userId || '' }
-    );
-  } else if (profile?.sexAssignedAtBirth === 'male') {
-    const age = profile?.dob ? calculateAge(profile.dob) : 50;
-    if (age >= 55) {
-      defaultPlaceholderEvents.push(
-        { id: 'placeholder-psa-1', type: 'psa', date: '2024-05-15', result: 'Normal (1.2 ng/mL)', isAbnormal: false, status: 'completed', userId: profile?.userId || '' }
-      );
-    }
-  } else {
-    defaultPlaceholderEvents.push(
-      { id: 'placeholder-mam-1', type: 'mammogram', date: '2023-06-10', result: 'Normal', isAbnormal: false, status: 'completed', userId: profile?.userId || '' },
-      { id: 'placeholder-pap-1', type: 'pap', date: '2024-11-20', result: 'NILM', isAbnormal: false, status: 'completed', userId: profile?.userId || '' }
-    );
-  }
-
-  const displayEvents = hasHistory 
-    ? events.filter(e => e.status === 'completed')
-    : defaultPlaceholderEvents;
+  const displayEvents = events.filter(e => e.status === 'completed');
+  const hasHistory = displayEvents.length > 0;
 
   // Map events to gather completed and project future due dates
   const parsedEvents = displayEvents.map((evt, idx) => {
@@ -484,6 +487,8 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
     };
   });
 
+  const hasTimelineData = testSeries.some(series => series.points.length > 0);
+
   const allYears = new Set<number>();
   testSeries.forEach(series => {
     series.points.forEach(pt => {
@@ -524,14 +529,14 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
           <span className="text-xs font-normal text-gray-400 bg-gray-50 px-2 py-1 rounded-full">USPSTF Guideline-Based</span>
         </h3>
 
-        {planRecommendations.length === 0 ? (
-          <div className="p-8 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+          {planRecommendations.length === 0 ? (
+          <div data-smoke="recommendation-empty" className="p-8 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
             <Info className="w-8 h-8 text-gray-300 mx-auto mb-3" />
             <p className="text-gray-500">
               {profile
                 ? hasHistory
                   ? 'No screening actions are currently due based on your saved profile and history.'
-                  : 'No screening actions are currently due. Add prior screenings to improve your timeline.'
+                  : 'No screening actions are currently due. Add prior screenings or abnormal results to improve your timeline.'
                 : 'Complete your profile to see guideline-inspired screening reminders.'}
             </p>
           </div>
@@ -549,6 +554,7 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
                 }}
                 whileHover={{ y: -3, scale: 1.01, boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.06)" }}
                 whileTap={{ scale: 0.99 }}
+                data-smoke="recommendation-card"
                 className="group relative p-5 bg-white border border-gray-100 rounded-2xl cursor-pointer shadow-sm hover:border-blue-500/50 hover:shadow-md transition-colors"
               >
                 <div className="flex justify-between items-start mb-2">
@@ -626,13 +632,38 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
               Completed events tracked in your FHIR passport and automatic future schedule projections.
             </p>
           </div>
+          {onAddEvent && (
+            <button
+              type="button"
+              onClick={onAddEvent}
+              className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 transition-colors hover:bg-blue-100"
+            >
+              Add past screening
+            </button>
+          )}
         </div>
 
         {/* Visual History Chart */}
         <div className="p-5 sm:p-6 bg-white border border-gray-100 rounded-3xl shadow-sm space-y-4">
           <div className="text-[10px] font-extrabold uppercase tracking-widest text-gray-550">Chronological Screening Timeline and next due projections</div>
-          <div className="h-[280px] w-full font-sans text-xs">
-            <ResponsiveContainer
+          {!hasTimelineData ? (
+            <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 text-center">
+              <p className="max-w-md text-sm leading-relaxed text-gray-600">
+                No completed screenings are logged yet. Add a past screening or abnormal result to build the timeline and adjust future due dates.
+              </p>
+              {onAddEvent && (
+                <button
+                  type="button"
+                  onClick={onAddEvent}
+                  className="mt-4 rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-blue-700"
+                >
+                  Log past screening
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="h-[280px] w-full font-sans text-xs">
+          <ResponsiveContainer
               width="100%"
               height="100%"
               minWidth={0}
@@ -780,7 +811,8 @@ export default function Dashboard({ recommendations, events, profile }: Dashboar
                 ))}
               </LineChart>
             </ResponsiveContainer>
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Screening Details List with Next Due details explicitly calculated based on results */}

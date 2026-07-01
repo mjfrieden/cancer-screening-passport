@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { User } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { CheckCircle2, FileText, Loader2, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, FileText, Loader2 } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { POLICY_VERSIONS } from '../lib/policyVersions';
 
@@ -51,15 +51,6 @@ export default function ConsentGate({ user, onAccepted }: ConsentGateProps) {
         <p className="mt-3 text-sm leading-relaxed text-gray-600">
           Cancer Prevention Passport is a health education and record-organizing service operated by White Cloud Medical, LLC. It does not create a physician-patient relationship and is not individualized medical advice, diagnosis, treatment, or emergency care.
         </p>
-
-        <div className="mt-6 rounded-2xl border border-amber-100 bg-amber-50 p-4">
-          <div className="flex gap-3">
-            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
-            <p className="text-sm leading-relaxed text-amber-950">
-              This production service may store protected health information and other sensitive health records. Only continue with information you are authorized to store here, and review the privacy policy, terms, and medical disclaimer before using the service.
-            </p>
-          </div>
-        </div>
 
         <div className="mt-6 space-y-3">
           <label className="flex cursor-pointer gap-3 rounded-2xl border border-gray-200 p-4 transition-colors hover:border-blue-200 hover:bg-blue-50/40">

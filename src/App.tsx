@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { useAuth, AuthProvider } from './hooks/useAuth';
 import { db, auth, signInWithGoogle, OperationType, handleFirestoreError } from './lib/firebase';
 import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
@@ -29,13 +29,13 @@ import AccountDataControls from './components/AccountDataControls';
 import ConsentGate from './components/ConsentGate';
 import { POLICY_VERSIONS } from './lib/policyVersions';
 import { getRecommendations } from './lib/guidelineEngine';
+import { trackTelemetry } from './lib/telemetry';
 
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const ProfileForm = lazy(() => import('./components/ProfileForm'));
 const SurvivorshipForm = lazy(() => import('./components/SurvivorshipForm'));
 const HealthyLiving = lazy(() => import('./components/HealthyLiving'));
 const FHIRSharing = lazy(() => import('./components/FHIRSharing'));
-const realPhiEnabled = import.meta.env.VITE_REAL_PHI_ENABLED === 'true';
 
 function AppContent() {
   const { user, loading: authLoading } = useAuth();
@@ -47,12 +47,29 @@ function AppContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [consentChecked, setConsentChecked] = useState(false);
   const [hasCurrentConsent, setHasCurrentConsent] = useState(false);
+  const hasTrackedAppOpen = useRef(false);
+  const previousUserId = useRef<string | null>(null);
 
   // Initial Fetch
   useEffect(() => {
+    if (!hasTrackedAppOpen.current) {
+      trackTelemetry('app_open', {
+        platform: 'web',
+      });
+      hasTrackedAppOpen.current = true;
+    }
+
     if (user) {
+      if (previousUserId.current !== user.uid) {
+        trackTelemetry('auth_sign_in_success', {
+          method: 'google',
+          platform: 'web',
+        });
+      }
+      previousUserId.current = user.uid;
       fetchConsentAndData();
     } else {
+      previousUserId.current = null;
       setConsentChecked(false);
       setHasCurrentConsent(false);
       setProfile(null);
@@ -60,6 +77,17 @@ function AppContent() {
       setRecommendations([]);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    trackTelemetry('screen_view', {
+      screen: activeTab,
+      platform: 'web',
+    });
+  }, [activeTab, user]);
 
   const hasAcceptedCurrentPolicies = (data: any) => (
     data?.privacyVersion === POLICY_VERSIONS.privacy &&
@@ -108,7 +136,12 @@ function AppContent() {
   };
 
   const fetchRecommendations = async (prof: UserProfile, history: ScreeningEvent[]) => {
-    setRecommendations(getRecommendations(prof, history));
+    const nextRecommendations = getRecommendations(prof, history);
+    setRecommendations(nextRecommendations);
+    trackTelemetry('recommendations_generated', {
+      count: nextRecommendations.length,
+      source: 'profile_or_screening_update',
+    });
   };
 
   const handleSaveProfile = async (data: UserProfile) => {
@@ -119,6 +152,9 @@ function AppContent() {
       await setDoc(doc(db, 'user_profiles', user.uid), profileWithId);
       setProfile(profileWithId);
       await fetchRecommendations(profileWithId, events);
+      trackTelemetry('profile_saved', {
+        source: 'profile_form',
+      });
       
       if (profileWithId.personalHistoryOfCancer && profileWithId.survivorshipPlan) {
         setActiveTab('survivorship');
@@ -151,6 +187,9 @@ function AppContent() {
       if (profile) {
         await fetchRecommendations(profile, updatedEvents);
       }
+      trackTelemetry('screening_saved', {
+        source: 'add_screening_modal',
+      });
       setIsModalOpen(false);
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, `screening_events/${eventId}`);
@@ -227,7 +266,13 @@ function AppContent() {
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <button
-                onClick={signInWithGoogle}
+                onClick={() => {
+                  trackTelemetry('auth_sign_in_click', {
+                    method: 'google',
+                    platform: 'web',
+                  });
+                  void signInWithGoogle();
+                }}
                 data-smoke="sign-in-google"
                 className="inline-flex items-center justify-center gap-3 rounded-full bg-slate-900 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 hover:bg-slate-800"
               >
@@ -412,10 +457,12 @@ function AppContent() {
 
   if (!hasCurrentConsent) return (
     <>
-      {!realPhiEnabled && <SyntheticDataBanner />}
       <ConsentGate
         user={user}
         onAccepted={() => {
+          trackTelemetry('consent_accepted', {
+            source: 'consent_gate',
+          });
           setHasCurrentConsent(true);
           setConsentChecked(true);
           void fetchData();
@@ -447,7 +494,11 @@ function AppContent() {
           </div>
           <button
             type="button"
-            onClick={() => auth.signOut()}
+            onClick={() => {
+              auth.signOut().catch((error) => {
+                console.error('Sign out failed:', error);
+              });
+            }}
             aria-label="Sign out"
             className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-full transition-colors"
           >
@@ -458,7 +509,6 @@ function AppContent() {
       <div className="border-b border-amber-100 bg-amber-50 px-4 py-2 text-center text-[11px] font-medium text-amber-950">
         Health education only. Not medical advice, diagnosis, treatment, or emergency care. Verify recommendations with your clinician.
       </div>
-      {!realPhiEnabled && <SyntheticDataBanner />}
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="app-main max-w-2xl mx-auto p-4 pt-8">
@@ -466,9 +516,19 @@ function AppContent() {
           <AnimatePresence mode="wait">
             {activeTab === 'dashboard' && (
                <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                 <Dashboard recommendations={recommendations} events={events} profile={profile} />
+                 <Dashboard
+                   recommendations={recommendations}
+                   events={events}
+                   profile={profile}
+                   onAddEvent={() => {
+                     trackTelemetry('screening_modal_opened', {
+                       source: 'dashboard_timeline_empty_state',
+                     });
+                     setIsModalOpen(true);
+                   }}
+                 />
                </motion.div>
-             )}
+            )}
             {activeTab === 'profile' && (
               <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <ProfileForm initialData={profile || undefined} onSave={handleSaveProfile} loading={loading} />
@@ -490,7 +550,12 @@ function AppContent() {
                   loading={loading} 
                   recommendations={recommendations}
                   events={events}
-                  onAddEvent={() => setIsModalOpen(true)}
+                  onAddEvent={() => {
+                    trackTelemetry('screening_modal_opened', {
+                      source: 'survivorship_form',
+                    });
+                    setIsModalOpen(true);
+                  }}
                 />
               </motion.div>
             )}
@@ -519,7 +584,12 @@ function AppContent() {
       <div className="safe-bottom-fab fixed right-6 z-40">
         <button 
           type="button"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            trackTelemetry('screening_modal_opened', {
+              source: 'floating_action_button',
+            });
+            setIsModalOpen(true);
+          }}
           aria-label="Add screening record"
           className="p-4 bg-blue-600 text-white rounded-full shadow-2xl shadow-blue-300 hover:scale-110 active:scale-95 transition-all"
         >
@@ -549,17 +619,6 @@ function AppContent() {
           <LegalLinks compact />
         </div>
       </div>
-    </div>
-  );
-}
-
-function SyntheticDataBanner() {
-  return (
-    <div
-      role="status"
-      className="w-full border-y border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-bold text-red-900"
-    >
-      Production service: only enter information you are authorized to store here.
     </div>
   );
 }

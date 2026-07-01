@@ -12,34 +12,37 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
   if (age >= 45 && age <= 75) {
     const lastColonoscopy = getLastCompleted(history, 'colonoscopy');
     const lastFit = getLastCompleted(history, 'fit');
+    const colorectalFollowUp = getColorectalFollowUp(lastColonoscopy, lastFit);
 
     let status: Recommendation['status'] = 'due_now';
     let reason = "Based on your age (45-75), routine colorectal screening is recommended.";
     let dueDate = formatDate(today);
+    let recommendedAction = "Colonoscopy (every 10y), FIT (yearly), or sDNA-FIT (every 3y)";
+    let requiresClinicianReview = false;
+    let source = "USPSTF";
 
-    if (lastColonoscopy) {
-      dueDate = addYears(lastColonoscopy.date, 10);
-      status = getDueStatus(dueDate, today);
-      reason = "Prior colonoscopy recorded. Next screening is projected at 10 years unless higher-risk findings or clinician guidance indicate otherwise.";
-    } else if (lastFit) {
-      dueDate = addYears(lastFit.date, 1);
-      status = getDueStatus(dueDate, today);
-      reason = "Prior FIT recorded. Annual stool-based screening is commonly repeated yearly unless diagnostic follow-up is needed.";
+    if (colorectalFollowUp) {
+      dueDate = colorectalFollowUp.followUpDate;
+      status = colorectalFollowUp.status;
+      reason = colorectalFollowUp.reason;
+      recommendedAction = colorectalFollowUp.recommendedAction;
+      requiresClinicianReview = colorectalFollowUp.requiresClinicianReview;
+      source = colorectalFollowUp.source;
     }
 
     recommendations.push({
       id: "crc-rec",
       cancer_type: "colorectal",
       status,
-      recommended_action: "Colonoscopy (every 10y), FIT (yearly), or sDNA-FIT (every 3y)",
+      recommended_action: recommendedAction,
       screening_modality: "Colonoscopy / Stool-based Test",
       due_date: dueDate,
       reason,
-      source: "USPSTF",
+      source,
       source_version: "2021",
       recommendation_grade: "A",
       confidence: "high",
-      requires_clinician_review: false
+      requires_clinician_review: requiresClinicianReview
     });
   }
 
@@ -47,20 +50,21 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
   // Age 40-74, biennial mammography
   if (profile.sexAssignedAtBirth === 'female' && age >= 40 && age <= 74) {
     const lastMammogram = getLastCompleted(history, 'mammogram');
-    const dueDate = lastMammogram ? addYears(lastMammogram.date, 2) : formatDate(today);
+    const mammogramFollowUp = getMammogramFollowUp(lastMammogram);
+    const dueDate = mammogramFollowUp ? mammogramFollowUp.followUpDate : (lastMammogram ? addYears(lastMammogram.date, 2) : formatDate(today));
     recommendations.push({
       id: "breast-rec",
       cancer_type: "breast",
-      status: getDueStatus(dueDate, today),
-      recommended_action: "Biennial (every 2 years) screening mammography",
+      status: mammogramFollowUp?.status ?? getDueStatus(dueDate, today),
+      recommended_action: mammogramFollowUp?.recommendedAction ?? "Biennial (every 2 years) screening mammography",
       screening_modality: "Mammography",
       due_date: dueDate,
-      reason: "USPSTF now recommends biennial screening mammography for women ages 40 to 74 years.",
-      source: "USPSTF",
+      reason: mammogramFollowUp?.reason ?? "USPSTF now recommends biennial screening mammography for women ages 40 to 74 years.",
+      source: mammogramFollowUp ? "ACR" : "USPSTF",
       source_version: "2024",
       recommendation_grade: "B",
       confidence: "high",
-      requires_clinician_review: false
+      requires_clinician_review: mammogramFollowUp?.requiresClinicianReview ?? false
     });
   }
 
@@ -70,8 +74,8 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
     const lastPap = getLastCompleted(history, 'pap');
     const lastHpv = getLastCompleted(history, 'hpv');
     const lastCervical = latestEvent([lastPap, lastHpv]);
-    const cervicalIntervalYears = lastHpv ? 5 : 3;
-    const dueDate = lastCervical ? addYears(lastCervical.date, cervicalIntervalYears) : formatDate(today);
+    const cervicalFollowUp = getCervicalFollowUp(lastPap, lastHpv);
+    const dueDate = lastCervical ? addMonths(lastCervical.date, cervicalFollowUp.monthsToAdd) : formatDate(today);
     recommendations.push({
       id: "cervical-rec",
       cancer_type: "cervical",
@@ -79,12 +83,12 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
       recommended_action: age < 30 ? "Cytology (Pap) every 3 years" : "hrHPV testing alone every 5 years, or Co-testing every 5 years",
       screening_modality: "Cervical Cytology / hrHPV",
       due_date: dueDate,
-      reason: "Routine screening recommended for age 21-65 with a cervix.",
-      source: "USPSTF",
+      reason: cervicalFollowUp.reason,
+      source: cervicalFollowUp.source,
       source_version: "2018",
       recommendation_grade: "A",
       confidence: "high",
-      requires_clinician_review: profile.personalHistoryOfCancer
+      requires_clinician_review: profile.personalHistoryOfCancer || cervicalFollowUp.requiresClinicianReview
     });
   }
 
@@ -92,20 +96,21 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
   // Age 55-69, shared decision making
   if (profile.sexAssignedAtBirth === 'male' && age >= 55 && age <= 69) {
     const lastPsa = getLastCompleted(history, 'psa');
-    const dueDate = lastPsa ? addYears(lastPsa.date, 2) : formatDate(today);
+    const psaFollowUp = getPsaFollowUp(lastPsa);
+    const dueDate = psaFollowUp ? psaFollowUp.followUpDate : (lastPsa ? addYears(lastPsa.date, 2) : formatDate(today));
     recommendations.push({
       id: "prostate-rec",
       cancer_type: "prostate",
-      status: getDueStatus(dueDate, today),
-      recommended_action: "Discuss shared decision-making for PSA-based prostate screening",
+      status: psaFollowUp?.status ?? getDueStatus(dueDate, today),
+      recommended_action: psaFollowUp?.recommendedAction ?? "Discuss shared decision-making for PSA-based prostate screening",
       screening_modality: "PSA Blood Test",
       due_date: dueDate,
-      reason: "For men aged 55 to 69, standard clinical guidelines suggest discussing the benefits and harms of periodic PSA checking to make an individual choice.",
-      source: "USPSTF",
+      reason: psaFollowUp?.reason ?? "For men aged 55 to 69, standard clinical guidelines suggest discussing the benefits and harms of periodic PSA checking to make an individual choice.",
+      source: psaFollowUp?.source ?? "USPSTF",
       source_version: "2018",
       recommendation_grade: "C",
       confidence: "high",
-      requires_clinician_review: false
+      requires_clinician_review: psaFollowUp?.requiresClinicianReview ?? false
     });
   }
 
@@ -120,20 +125,21 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
 
     if (packYears >= 20 && (status === 'current' || (status === 'former' && quitYears <= 15))) {
       const lastLdct = getLastCompleted(history, 'ldct');
-      const dueDate = lastLdct ? addYears(lastLdct.date, 1) : formatDate(today);
+      const lungFollowUp = getLungFollowUp(lastLdct);
+      const dueDate = lungFollowUp ? lungFollowUp.followUpDate : (lastLdct ? addYears(lastLdct.date, 1) : formatDate(today));
       recommendations.push({
         id: "lung-rec",
         cancer_type: "lung",
-        status: getDueStatus(dueDate, today),
-        recommended_action: "Annual screening with Low-Dose Computed Tomography (LDCT)",
+        status: lungFollowUp?.status ?? getDueStatus(dueDate, today),
+        recommended_action: lungFollowUp?.recommendedAction ?? "Annual screening with Low-Dose Computed Tomography (LDCT)",
         screening_modality: "LDCT",
         due_date: dueDate,
-        reason: "Recommended based on age 50-80 and a 20 pack-year smoking history.",
-        source: "USPSTF",
+        reason: lungFollowUp?.reason ?? "Recommended based on age 50-80 and a 20 pack-year smoking history.",
+        source: lungFollowUp?.source ?? "USPSTF",
         source_version: "2021",
         recommendation_grade: "B",
         confidence: "high",
-        requires_clinician_review: false
+        requires_clinician_review: lungFollowUp?.requiresClinicianReview ?? false
       });
     }
   }
@@ -703,6 +709,10 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
 const guidelineSourceUrls = {
   aicrPrevention: 'https://www.aicr.org/cancer-prevention/recommendations/',
   nccnGuidelines: 'https://www.nccn.org/guidelines/category_1',
+  asccpGuidelines: 'https://www.asccp.org/management-guidelines/',
+  usmstfColorectalSurveillance: 'https://gi.org/guideline/guidelines-for-colonoscopy-surveillance-after-screening-and-polypectomy-a-consensus-update-by-the-us-multi-society-task-force-on-colorectal-cancer/',
+  acrBirads: 'https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/Reporting-and-Data-Systems/BI-RADS',
+  acrLungRads: 'https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/Reporting-and-Data-Systems/Lung-RADS',
   uspstfBreast: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening',
   uspstfCervical: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening',
   uspstfColorectal: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening',
@@ -740,6 +750,40 @@ function getGuidelineTrace(recommendation: DraftRecommendation): Pick<Recommenda
     };
   }
 
+  if (recommendation.source === 'ASCCP') {
+    return {
+      source_url: guidelineSourceUrls.asccpGuidelines,
+      clinical_review_status: 'physician_reviewed',
+      clinical_review_note: reviewNote,
+    };
+  }
+
+  if (recommendation.source === 'USMSTF') {
+    return {
+      source_url: guidelineSourceUrls.usmstfColorectalSurveillance,
+      clinical_review_status: 'physician_reviewed',
+      clinical_review_note: reviewNote,
+    };
+  }
+
+  if (recommendation.source === 'ACR') {
+    if (recommendation.id === 'breast-rec') {
+      return {
+        source_url: guidelineSourceUrls.acrBirads,
+        clinical_review_status: 'physician_reviewed',
+        clinical_review_note: reviewNote,
+      };
+    }
+
+    if (recommendation.id === 'lung-rec') {
+      return {
+        source_url: guidelineSourceUrls.acrLungRads,
+        clinical_review_status: 'physician_reviewed',
+        clinical_review_note: reviewNote,
+      };
+    }
+  }
+
   return {
     source_url: guidelineSourceUrls.nccnGuidelines,
     clinical_review_status: 'physician_reviewed',
@@ -760,6 +804,291 @@ function getLastCompleted(history: ScreeningEvent[], type: ScreeningEvent['type'
   return history
     .filter(event => event.type === type && event.status === 'completed' && isValidDate(event.date))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+}
+
+function getColorectalFollowUp(lastColonoscopy?: ScreeningEvent, lastFit?: ScreeningEvent): {
+  followUpDate: string;
+  status: Recommendation['status'];
+  reason: string;
+  recommendedAction: string;
+  requiresClinicianReview: boolean;
+  source: 'USPSTF' | 'USMSTF';
+} | null {
+  const latest = latestEvent([lastColonoscopy, lastFit]);
+  if (!latest) return null;
+
+  const resultText = (latest.result || '').toLowerCase();
+  if (latest.type === 'fit') {
+    if (latest.isAbnormal || resultText.includes('positive') || resultText.includes('blood detected') || resultText.includes('abnormal')) {
+      return {
+        followUpDate: latest.date,
+        status: 'due_now',
+        reason: 'Positive FIT requires physician review and diagnostic colonoscopy follow-up.',
+        recommendedAction: 'Diagnostic colonoscopy after abnormal FIT',
+        requiresClinicianReview: true,
+        source: 'USPSTF',
+      };
+    }
+
+    return {
+      followUpDate: addYears(latest.date, 1),
+      status: getDueStatus(addYears(latest.date, 1), startOfToday()),
+      reason: 'Prior FIT recorded. Annual stool-based screening is commonly repeated yearly unless diagnostic follow-up is needed.',
+      recommendedAction: 'Annual FIT screening or diagnostic colonoscopy if symptoms or abnormal findings develop',
+      requiresClinicianReview: false,
+      source: 'USPSTF',
+    };
+  }
+
+  const explicitlyNormal = resultText.includes('normal') || resultText.includes('no polyp') || resultText.includes('no polyps') || resultText.includes('negative') || resultText.includes('hyperplastic') || resultText.includes('benign');
+  const highRisk = resultText.includes('advanced') || resultText.includes('villous') || resultText.includes('high-grade dysplasia') || resultText.includes('high grade') || resultText.includes('multiple') || resultText.includes('10 mm') || resultText.includes('sessile serrated') || resultText.includes('serrated');
+  const immediateReview = resultText.includes('suspicious') || resultText.includes('malignant') || resultText.includes('cancer') || resultText.includes('residual') || resultText.includes('incomplete') || resultText.includes('piecemeal');
+  if (immediateReview) {
+    return {
+      followUpDate: latest.date,
+      status: 'due_now',
+      reason: 'Concerning colonoscopy findings should prompt immediate physician review and diagnostic follow-up.',
+      recommendedAction: 'Immediate gastroenterology / physician review',
+      requiresClinicianReview: true,
+      source: 'USMSTF',
+    };
+  }
+
+  if (!explicitlyNormal && (latest.isAbnormal || resultText.includes('adenomatous') || resultText.includes('polyp') || resultText.includes('abnormal'))) {
+    const highRisk = resultText.includes('advanced') || resultText.includes('villous') || resultText.includes('high-grade dysplasia') || resultText.includes('high grade') || resultText.includes('multiple') || resultText.includes('10 mm') || resultText.includes('sessile serrated') || resultText.includes('serrated');
+    return {
+      followUpDate: highRisk ? addYears(latest.date, 3) : addYears(latest.date, 7),
+      status: getDueStatus(highRisk ? addYears(latest.date, 3) : addYears(latest.date, 7), startOfToday()),
+      reason: highRisk
+        ? 'Prior colonoscopy with advanced/high-risk findings was recorded. Short-interval surveillance is generally used for advanced adenomas or serrated lesions.'
+        : 'Prior colonoscopy with low-risk adenomatous findings was recorded. USMSTF guidance generally supports a 7-10 year surveillance interval.',
+      recommendedAction: highRisk ? '3-year colonoscopy surveillance' : '7-year colonoscopy surveillance',
+      requiresClinicianReview: true,
+      source: 'USMSTF',
+    };
+  }
+
+  return {
+    followUpDate: addYears(latest.date, 10),
+    status: getDueStatus(addYears(latest.date, 10), startOfToday()),
+    reason: 'Prior colonoscopy recorded. Next screening is projected at 10 years unless higher-risk findings or clinician guidance indicate otherwise.',
+    recommendedAction: 'Colonoscopy every 10 years',
+    requiresClinicianReview: false,
+    source: 'USPSTF',
+  };
+}
+
+function getMammogramFollowUp(lastMammogram?: ScreeningEvent): {
+  followUpDate: string;
+  status: Recommendation['status'];
+  reason: string;
+  recommendedAction: string;
+  requiresClinicianReview: boolean;
+  source: 'USPSTF' | 'ACR';
+} | null {
+  if (!lastMammogram) return null;
+
+  const resultText = (lastMammogram.result || '').toLowerCase();
+  if (resultText.includes('birads 4') || resultText.includes('birads 5') || resultText.includes('suspicious') || resultText.includes('incomplete')) {
+    return {
+      followUpDate: lastMammogram.date,
+      status: 'due_now',
+      reason: 'Suspicious mammography findings should trigger diagnostic imaging and physician review.',
+      recommendedAction: 'Diagnostic breast imaging and physician review',
+      requiresClinicianReview: true,
+      source: 'ACR',
+    };
+  }
+
+  if (lastMammogram.isAbnormal || resultText.includes('birads 3')) {
+    return {
+      followUpDate: addMonths(lastMammogram.date, 6),
+      status: getDueStatus(addMonths(lastMammogram.date, 6), startOfToday()),
+      reason: 'Short-interval diagnostic evaluation is commonly used for probably benign or abnormal mammography findings.',
+      recommendedAction: 'Short-interval diagnostic breast imaging',
+      requiresClinicianReview: true,
+      source: 'ACR',
+    };
+  }
+
+  return {
+    followUpDate: addYears(lastMammogram.date, 2),
+    status: getDueStatus(addYears(lastMammogram.date, 2), startOfToday()),
+    reason: 'USPSTF now recommends biennial screening mammography for women ages 40 to 74 years.',
+    recommendedAction: 'Biennial (every 2 years) screening mammography',
+    requiresClinicianReview: false,
+    source: 'USPSTF',
+  };
+}
+
+function getPsaFollowUp(lastPsa?: ScreeningEvent): {
+  followUpDate: string;
+  status: Recommendation['status'];
+  reason: string;
+  recommendedAction: string;
+  requiresClinicianReview: boolean;
+  source: 'USPSTF' | 'NCCN';
+} | null {
+  if (!lastPsa) return null;
+
+  const resultText = (lastPsa.result || '').toLowerCase();
+  if (lastPsa.isAbnormal || resultText.includes('elevated') || resultText.includes('high') || resultText.includes('abnormal')) {
+    return {
+      followUpDate: lastPsa.date,
+      status: 'due_now',
+      reason: 'Elevated PSA should prompt physician review and individualized follow-up.',
+      recommendedAction: 'Physician review for elevated PSA',
+      requiresClinicianReview: true,
+      source: 'NCCN',
+    };
+  }
+
+  return {
+    followUpDate: addYears(lastPsa.date, 2),
+    status: getDueStatus(addYears(lastPsa.date, 2), startOfToday()),
+    reason: 'For men aged 55 to 69, standard clinical guidelines suggest discussing the benefits and harms of periodic PSA checking to make an individual choice.',
+    recommendedAction: 'Discuss shared decision-making for PSA-based prostate screening',
+    requiresClinicianReview: false,
+    source: 'USPSTF',
+  };
+}
+
+function getLungFollowUp(lastLdct?: ScreeningEvent): {
+  followUpDate: string;
+  status: Recommendation['status'];
+  reason: string;
+  recommendedAction: string;
+  requiresClinicianReview: boolean;
+  source: 'USPSTF' | 'ACR';
+} | null {
+  if (!lastLdct) return null;
+
+  const resultText = (lastLdct.result || '').toLowerCase();
+  if (resultText.includes('lung-rads 4b') || resultText.includes('lung-rads 4x') || resultText.includes('suspicious') || resultText.includes('high suspicion')) {
+    return {
+      followUpDate: lastLdct.date,
+      status: 'due_now',
+      reason: 'Suspicious lung screening findings should prompt physician review and diagnostic work-up.',
+      recommendedAction: 'Diagnostic chest imaging and physician review',
+      requiresClinicianReview: true,
+      source: 'ACR',
+    };
+  }
+
+  if (resultText.includes('lung-rads 4a')) {
+    return {
+      followUpDate: addMonths(lastLdct.date, 3),
+      status: getDueStatus(addMonths(lastLdct.date, 3), startOfToday()),
+      reason: 'Lung-RADS 4A commonly uses 3-month LDCT follow-up.',
+      recommendedAction: '3-month LDCT follow-up',
+      requiresClinicianReview: true,
+      source: 'ACR',
+    };
+  }
+
+  if (resultText.includes('lung-rads 3')) {
+    return {
+      followUpDate: addMonths(lastLdct.date, 6),
+      status: getDueStatus(addMonths(lastLdct.date, 6), startOfToday()),
+      reason: 'Lung-RADS 3 commonly uses 6-month LDCT follow-up.',
+      recommendedAction: '6-month LDCT follow-up',
+      requiresClinicianReview: true,
+      source: 'ACR',
+    };
+  }
+
+  if (lastLdct.isAbnormal) {
+    return {
+      followUpDate: addMonths(lastLdct.date, 6),
+      status: getDueStatus(addMonths(lastLdct.date, 6), startOfToday()),
+      reason: 'Indeterminate lung findings often require short-interval CT follow-up.',
+      recommendedAction: 'Short-interval LDCT follow-up',
+      requiresClinicianReview: true,
+      source: 'ACR',
+    };
+  }
+
+  return {
+    followUpDate: addYears(lastLdct.date, 1),
+    status: getDueStatus(addYears(lastLdct.date, 1), startOfToday()),
+    reason: 'Annual low-dose CT screening remains the usual interval for eligible patients.',
+    recommendedAction: 'Annual screening with Low-Dose Computed Tomography (LDCT)',
+    requiresClinicianReview: false,
+    source: 'USPSTF',
+  };
+}
+
+function getCervicalFollowUp(lastPap?: ScreeningEvent, lastHpv?: ScreeningEvent): {
+  monthsToAdd: number;
+  reason: string;
+  requiresClinicianReview: boolean;
+  source: 'USPSTF' | 'ASCCP';
+} {
+  const latest = latestEvent([lastPap, lastHpv]);
+  if (!latest) {
+    return {
+      monthsToAdd: 0,
+      reason: 'Routine cervical screening is due now until a prior completed Pap or HPV result is logged.',
+      requiresClinicianReview: false,
+      source: 'USPSTF',
+    };
+  }
+
+  const resultText = (latest.result || '').toLowerCase();
+  const highGrade = [
+    'hsil',
+    'asc-h',
+    'agc',
+    'cin 2',
+    'cin 3',
+    'high grade',
+    'carcinoma',
+    'cancer',
+    'suspicious',
+  ].some((needle) => resultText.includes(needle));
+
+  if (highGrade) {
+    return {
+      monthsToAdd: 6,
+      reason: 'Higher-grade cervical abnormality recorded. ASCCP risk-based management generally requires clinician review and short-interval follow-up.',
+      requiresClinicianReview: true,
+      source: 'ASCCP',
+    };
+  }
+
+  if (latest.type === 'hpv') {
+    if (resultText.includes('negative')) {
+      return {
+        monthsToAdd: 60,
+        reason: 'Negative hrHPV result supports the standard 5-year interval when used for primary HPV or cotesting.',
+        requiresClinicianReview: false,
+        source: 'USPSTF',
+      };
+    }
+
+    return {
+      monthsToAdd: 12,
+      reason: 'HPV positivity shortens follow-up under ASCCP-style risk-based management.',
+      requiresClinicianReview: true,
+      source: 'ASCCP',
+    };
+  }
+
+  if (resultText.includes('asc-us') || resultText.includes('ascus') || resultText.includes('lsil') || resultText.includes('positive') || resultText.includes('abnormal')) {
+    return {
+      monthsToAdd: 12,
+      reason: 'Low-grade cervical abnormality logged. ASCCP risk-based management commonly shortens the interval to 1 year.',
+      requiresClinicianReview: true,
+      source: 'ASCCP',
+    };
+  }
+
+  return {
+    monthsToAdd: 36,
+    reason: 'Routine cervical cytology interval for a negative screening result.',
+    requiresClinicianReview: false,
+    source: 'USPSTF',
+  };
 }
 
 function latestEvent(events: Array<ScreeningEvent | undefined>): ScreeningEvent | undefined {

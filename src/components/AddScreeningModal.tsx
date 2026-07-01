@@ -142,7 +142,12 @@ export default function AddScreeningModal({ isOpen, onClose, onSave, loading }: 
             className="relative z-10 w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl overflow-hidden"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 id="add-screening-title" className="text-xl font-bold text-gray-900">Add Past Screening</h2>
+              <div>
+                <h2 id="add-screening-title" className="text-xl font-bold text-gray-900">Add Past Screening</h2>
+                <p className="mt-1 text-xs text-gray-500">
+                  Use this to log completed history, including older abnormal results from outside records.
+                </p>
+              </div>
               <button 
                 type="button"
                 onClick={onClose}

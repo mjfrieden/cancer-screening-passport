@@ -26,25 +26,38 @@ function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean
   let rationale = '';
 
   const cleanType = type.toLowerCase();
+  const cleanResult = resultText.toLowerCase();
   
   if (cleanType.includes('colonoscopy')) {
-    if (isAbnormal || resultText.toLowerCase().includes('adenomatous') || resultText.toLowerCase().includes('polyp') || resultText.toLowerCase().includes('abnormal')) {
-      yearsToAdd = 3;
-      rationale = 'Accelerated 3-year surveillance for high-risk adenomas/polyps.';
+    const explicitlyNormal = cleanResult.includes('normal') || cleanResult.includes('no polyp') || cleanResult.includes('no polyps') || cleanResult.includes('negative') || cleanResult.includes('hyperplastic') || cleanResult.includes('benign');
+    const highRisk = cleanResult.includes('advanced') || cleanResult.includes('villous') || cleanResult.includes('high-grade dysplasia') || cleanResult.includes('high grade') || cleanResult.includes('multiple') || cleanResult.includes('10 mm') || cleanResult.includes('sessile serrated') || cleanResult.includes('serrated');
+    const immediateReview = cleanResult.includes('suspicious') || cleanResult.includes('malignant') || cleanResult.includes('cancer') || cleanResult.includes('residual') || cleanResult.includes('incomplete') || cleanResult.includes('piecemeal');
+
+    if (immediateReview) {
+      yearsToAdd = 0;
+      rationale = 'Concerning colonoscopy findings should prompt immediate physician review and diagnostic follow-up.';
+    } else if (!explicitlyNormal && (isAbnormal || cleanResult.includes('adenomatous') || cleanResult.includes('polyp') || cleanResult.includes('abnormal'))) {
+      yearsToAdd = highRisk ? 3 : 7;
+      rationale = highRisk
+        ? 'High-risk adenoma findings generally shorten colonoscopy surveillance to about 3 years.'
+        : 'Low-risk adenoma findings generally shorten colonoscopy surveillance to about 7 years.';
     } else {
       yearsToAdd = 10;
       rationale = 'Routine 10-year surveillance cycle for average-risk patient.';
     }
   } else if (cleanType.includes('fit')) {
-    if (isAbnormal || resultText.toLowerCase().includes('positive')) {
+    if (isAbnormal || cleanResult.includes('positive') || cleanResult.includes('blood detected') || cleanResult.includes('abnormal')) {
       yearsToAdd = 0; // Immediate
-      rationale = 'Urgent diagnostic Colonoscopy follow-up within 1 month.';
+      rationale = 'Positive FIT requires physician review and diagnostic colonoscopy follow-up.';
     } else {
       yearsToAdd = 1;
       rationale = 'Standard 1-year annual cycle for non-invasive FIT.';
     }
   } else if (cleanType.includes('mammogram') || cleanType.includes('mammography') || cleanType.includes('breast')) {
-    if (isAbnormal || resultText.toLowerCase().includes('birads 4') || resultText.toLowerCase().includes('birads 5') || resultText.toLowerCase().includes('birads 0') || resultText.toLowerCase().includes('suspicious') || resultText.toLowerCase().includes('incomplete')) {
+    if (cleanResult.includes('birads 4') || cleanResult.includes('birads 5') || cleanResult.includes('suspicious') || cleanResult.includes('incomplete')) {
+      yearsToAdd = 0;
+      rationale = 'Suspicious mammography findings should trigger diagnostic imaging and physician review.';
+    } else if (isAbnormal || cleanResult.includes('bi-rads 3') || cleanResult.includes('birads 3')) {
       yearsToAdd = 0.5; // 6 months
       rationale = 'Short-interval diagnostic evaluation (6 months) due to abnormal findings.';
     } else {
@@ -52,15 +65,36 @@ function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean
       rationale = 'Standard 2-year screening mammography interval for average-risk.';
     }
   } else if (cleanType.includes('pap') || cleanType.includes('cervical') || cleanType.includes('hpv')) {
-    if (isAbnormal || resultText.toLowerCase().includes('asc-us') || resultText.toLowerCase().includes('lsil') || resultText.toLowerCase().includes('hsil') || resultText.toLowerCase().includes('positive')) {
+    const highGrade = cleanResult.includes('hsil') || cleanResult.includes('asc-h') || cleanResult.includes('agc') || cleanResult.includes('cin 2') || cleanResult.includes('cin 3') || cleanResult.includes('high grade') || cleanResult.includes('carcinoma') || cleanResult.includes('cancer');
+    const lowGrade = isAbnormal || cleanResult.includes('asc-us') || cleanResult.includes('ascus') || cleanResult.includes('lsil') || cleanResult.includes('hpv positive') || cleanResult.includes('positive') || cleanResult.includes('abnormal');
+
+    if (highGrade) {
+      yearsToAdd = 0.5;
+      rationale = 'Higher-grade cervical abnormality logged. ASCCP-style follow-up should be clinician-reviewed and short interval.';
+    } else if (cleanType.includes('hpv') && cleanResult.includes('negative')) {
+      yearsToAdd = 5;
+      rationale = 'Negative hrHPV result supports a standard 5-year interval when used for primary HPV or cotesting.';
+    } else if (cleanType.includes('hpv')) {
       yearsToAdd = 1;
-      rationale = 'Annual surveillance and cytological follow-up due to atypical cells/positive HPV.';
+      rationale = 'HPV positivity shortens follow-up under ASCCP-style risk-based management.';
+    } else if (lowGrade) {
+      yearsToAdd = 1;
+      rationale = 'Low-grade cervical abnormality logged. ASCCP-style follow-up commonly shortens to 1 year.';
     } else {
       yearsToAdd = 3;
       rationale = 'Routine 3-year interval for cervical cytology screening.';
     }
   } else if (cleanType.includes('ldct') || cleanType.includes('lung')) {
-    if (isAbnormal || resultText.toLowerCase().includes('suspicious') || resultText.toLowerCase().includes('high suspicion')) {
+    if (cleanResult.includes('lung-rads 4b') || cleanResult.includes('lung-rads 4x') || cleanResult.includes('suspicious') || cleanResult.includes('high suspicion')) {
+      yearsToAdd = 0;
+      rationale = 'Suspicious lung screening findings should prompt physician review and diagnostic work-up.';
+    } else if (cleanResult.includes('lung-rads 4a')) {
+      yearsToAdd = 0.25;
+      rationale = 'Lung-RADS 4A commonly uses 3-month LDCT follow-up.';
+    } else if (cleanResult.includes('lung-rads 3')) {
+      yearsToAdd = 0.5;
+      rationale = 'Lung-RADS 3 commonly uses 6-month LDCT follow-up.';
+    } else if (isAbnormal) {
       yearsToAdd = 0.5;
       rationale = 'Frequent 6-month CT intervals suggested for indeterminate nodules.';
     } else {
@@ -68,9 +102,9 @@ function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean
       rationale = 'Annual low-dose CT (LDCT) for qualifying lung screening cohort.';
     }
   } else if (cleanType.includes('psa') || cleanType.includes('prostate')) {
-    if (isAbnormal || resultText.toLowerCase().includes('elevated')) {
-      yearsToAdd = 1;
-      rationale = 'Annual PSA monitor recommended for elevated levels.';
+    if (cleanResult.includes('elevated') || cleanResult.includes('high') || cleanResult.includes('abnormal')) {
+      yearsToAdd = 0;
+      rationale = 'Elevated PSA should prompt physician review and individualized follow-up.';
     } else {
       yearsToAdd = 2;
       rationale = 'Standard 2-year follow-up for prostate specific antigen tracking.';
@@ -83,8 +117,10 @@ function calculateNextDueDate(type: string, dateStr: string, isAbnormal: boolean
   const nextDate = new Date(date);
   if (yearsToAdd === 0.5) {
     nextDate.setMonth(nextDate.getMonth() + 6);
+  } else if (yearsToAdd === 0.25) {
+    nextDate.setMonth(nextDate.getMonth() + 3);
   } else if (yearsToAdd === 0) {
-    nextDate.setMonth(nextDate.getMonth() + 1);
+    // Immediate follow-up uses the logged date rather than inventing a future interval.
   } else {
     nextDate.setFullYear(nextDate.getFullYear() + Math.floor(yearsToAdd));
   }

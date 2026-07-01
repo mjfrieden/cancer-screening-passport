@@ -42,6 +42,37 @@ describe('guideline recommendation engine', () => {
     expect(crc?.status).toBe('completed');
   });
 
+  it('routes a positive FIT to diagnostic colonoscopy follow-up', () => {
+    const recommendations = getRecommendations(baseProfile(), [
+      event({ id: 'fit-1', type: 'fit', date: '2024-05-05', result: 'Positive', isAbnormal: true }),
+    ]);
+
+    const crc = recommendations.find(rec => rec.id === 'crc-rec');
+    expect(crc?.recommended_action).toContain('Diagnostic colonoscopy');
+    expect(crc?.requires_clinician_review).toBe(true);
+    expect(crc?.status).toBe('due_now');
+  });
+
+  it('shortens surveillance after an abnormal colonoscopy with adenomatous findings', () => {
+    const recommendations = getRecommendations(baseProfile(), [
+      event({ id: 'col-1', type: 'colonoscopy', date: '2022-05-05', result: 'Adenomatous polyp(s)', isAbnormal: true }),
+    ]);
+
+    const crc = recommendations.find(rec => rec.id === 'crc-rec');
+    expect(crc?.due_date).toBe('2029-05-05');
+    expect(crc?.requires_clinician_review).toBe(true);
+  });
+
+  it('uses a three-year interval for advanced colonoscopy findings', () => {
+    const recommendations = getRecommendations(baseProfile(), [
+      event({ id: 'col-adv', type: 'colonoscopy', date: '2022-05-05', result: 'Advanced adenoma with villous features', isAbnormal: true }),
+    ]);
+
+    const crc = recommendations.find(rec => rec.id === 'crc-rec');
+    expect(crc?.due_date).toBe('2025-05-05');
+    expect(crc?.source).toBe('USMSTF');
+  });
+
   it('uses HPV history to project a five-year cervical screening interval', () => {
     const recommendations = getRecommendations(baseProfile(), [
       event({ id: 'hpv-1', type: 'hpv', date: '2023-05-05', result: 'HPV Negative' }),
@@ -49,6 +80,16 @@ describe('guideline recommendation engine', () => {
 
     const cervical = recommendations.find(rec => rec.id === 'cervical-rec');
     expect(cervical?.due_date).toBe('2028-05-05');
+  });
+
+  it('shortens cervical follow-up for abnormal Pap history and marks clinician review', () => {
+    const recommendations = getRecommendations(baseProfile(), [
+      event({ id: 'pap-1', type: 'pap', date: '2024-05-05', result: 'ASC-US', isAbnormal: true }),
+    ]);
+
+    const cervical = recommendations.find(rec => rec.id === 'cervical-rec');
+    expect(cervical?.due_date).toBe('2025-05-05');
+    expect(cervical?.requires_clinician_review).toBe(true);
   });
 
   it('does not recommend breast or cervical screening for male profiles', () => {
