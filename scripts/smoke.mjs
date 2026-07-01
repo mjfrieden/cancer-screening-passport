@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://127.0.0.1:3000';
@@ -100,7 +101,18 @@ async function resolveAuthStatePath() {
   const authStateB64 = process.env.SMOKE_AUTH_STATE_B64?.trim();
   if (authStateB64) {
     const tempPath = path.join(os.tmpdir(), `cancer-screening-passport-smoke-auth-${process.pid}.json`);
-    const json = Buffer.from(authStateB64, 'base64').toString('utf8');
+    const normalizedAuthState = authStateB64.replace(/\s+/g, '');
+    const decodedAuthState = Buffer.from(normalizedAuthState, 'base64');
+    const json = decodedAuthState[0] === 0x1f && decodedAuthState[1] === 0x8b
+      ? zlib.gunzipSync(decodedAuthState).toString('utf8')
+      : decodedAuthState.toString('utf8');
+
+    try {
+      JSON.parse(json);
+    } catch (error) {
+      throw new Error(`Decoded SMOKE_AUTH_STATE_B64 is not valid JSON: ${error.message}`);
+    }
+
     await fs.writeFile(tempPath, json, 'utf8');
     return tempPath;
   }
