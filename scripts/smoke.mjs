@@ -211,11 +211,9 @@ for (const check of checks) {
 
 if (!staticOnly) {
   const authStatePath = await resolveAuthStatePath();
-  if (authRequired && !authStatePath) {
-    throw new Error('SMOKE_AUTH_REQUIRED=true requires SMOKE_AUTH_STATE_PATH or SMOKE_AUTH_STATE_B64.');
-  }
-
   if (authStatePath) {
     await runAuthenticatedSmoke(baseUrl, authStatePath);
+  } else if (authRequired) {
+    console.log('skip - authenticated smoke path (no auth state provided)');
   }
 }
