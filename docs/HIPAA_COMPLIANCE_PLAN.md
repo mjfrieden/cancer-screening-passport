@@ -3,17 +3,20 @@
 Owner: White Cloud Medical, LLC  
 System: Cancer Prevention Passport  
 Support: `support@whitecloudmedical.com`  
-Status: Implementation in progress; real PHI is not yet authorized
+Status: Production real PHI is authorized; keep the safeguard plan current
+
+The current production service is authorized for real PHI under the June 30,
+2026 production controls. This plan is retained as the operating safeguard
+checklist and should stay aligned with the live production status.
 
 ## Purpose and Boundary
 
 This plan establishes the administrative, physical, and technical safeguards
-required before Cancer Prevention Passport accepts real PHI. It is an
+for Cancer Prevention Passport's current production environment. It is an
 operational plan, not a legal opinion or a declaration of compliance.
 
-The current Cloudflare Pages staging site is synthetic-data/no-PHI only.
-Production PHI must remain disabled until every launch gate below is documented
-and approved.
+The current Cloudflare Pages staging site is synthetic-data/no-PHI only. The
+production site handles real PHI under the current controls documented below.
 
 ## Governance
 

@@ -26,7 +26,9 @@ position before unrestricted production use with real health information.
 - Account export and deletion controls exist.
 - Public issue templates prohibit sensitive data; private reports use GitHub
   Security Advisories.
-- The public beta tells users not to enter protected health information.
+- The public production site and support pages now direct users to the current
+  privacy, terms, support, and consent flow before entering health
+  information.
 
 ## Federal Review Areas
 

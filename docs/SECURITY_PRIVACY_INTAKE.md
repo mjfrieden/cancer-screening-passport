@@ -2,11 +2,11 @@
 
 Last updated: 2026-06-25
 
-This is the beta intake path for security, privacy, and health-data concerns.
+This is the production intake path for security, privacy, and health-data concerns.
 
 ## Intake Channels
 
-- Public product bugs and beta feedback: GitHub issues, using the repository templates.
+- Public product bugs and product feedback: GitHub issues, using the repository templates.
 - Private security, privacy, or health-data concerns: GitHub Security Advisories.
 
 Private advisory link:
@@ -32,8 +32,8 @@ Do not collect protected health information, real medical records, or sensitive 
 4. Assign severity and owner.
 5. Patch and verify in staging.
 6. Update `docs/KNOWN_ISSUES.md` and `docs/BETA_RELEASE_NOTES.md` when the issue affects testers.
-7. Do not invite more testers while unresolved P0/P1 issues remain.
+7. Do not expand public release scope while unresolved P0/P1 issues remain.
 
 ## Production Gap
 
-Before public production, replace this beta process with a monitored support address, documented response owner, retention policy, breach response procedure, and vendor/compliance review if protected health information is allowed.
+The monitored support address is now live. Keep the response owner, retention policy, breach response procedure, and vendor/compliance review current as protected health information handling evolves.

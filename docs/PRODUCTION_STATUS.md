@@ -139,6 +139,11 @@ Last updated: June 30, 2026
 - App Engine version `20260630t015833` receives 100% of production traffic.
 - The deployed production bundle does not contain the synthetic-only or
   real-PHI-prohibition warning copy.
+- The production smoke workflow now uses the owner-only authenticated path in
+  `npm run smoke:auth`, backed by a dedicated Google session state secret.
+- Public privacy, terms, support, and consent messaging now reflects the
+  production real-PHI status, and policy acknowledgements are keyed to the
+  June 30, 2026 privacy and terms versions.
 
 ## Next Owner Actions
 

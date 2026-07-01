@@ -117,9 +117,9 @@ addCheck('production brand assets are wired across app surfaces', () => {
   ]);
 });
 
-addCheck('legal and support pages keep beta safety warnings', () => {
+addCheck('legal and support pages reflect production support copy', () => {
   expectIncludes('public/legal/privacy.html', [
-    'protected health information',
+    'production health education and record-organizing service',
     'Google Identity Platform and Firebase Authentication',
     'Firestore for app-record storage',
     'Google App Engine Standard',
@@ -128,7 +128,7 @@ addCheck('legal and support pages keep beta safety warnings', () => {
     '/support.html',
   ]);
   expectIncludes('public/legal/terms.html', [
-    'Beta Status',
+    'Production Service and Availability',
     'not a medical device',
     'No Medical Advice or Physician-Patient Relationship',
     'Limitation of Liability',
@@ -143,8 +143,8 @@ addCheck('legal and support pages keep beta safety warnings', () => {
   ]);
   expectIncludes('public/support.html', [
     'GitHub Security Advisories',
-    'protected health information',
-    'Public Beta Feedback',
+    'production health education and record-organizing service',
+    'Public Product Feedback',
     'support@whitecloudmedical.com',
   ]);
   for (const path of [
@@ -209,11 +209,10 @@ addCheck('real-PHI operational evidence remains wired', () => {
   }
 });
 
-addCheck('production beta keeps the real-PHI runtime lock', () => {
+addCheck('production runtime keeps the real-PHI lock', () => {
   expectIncludes('src/App.tsx', [
     "VITE_REAL_PHI_ENABLED === 'true'",
-    'Production beta: use synthetic test data only.',
-    'Do not enter real patient or health information.',
+    'Production service: only enter information you are authorized to store here.',
   ]);
   expectIncludes('scripts/validate-hipaa-production.mjs', [
     'Real-PHI App Engine deployments require HIPAA_SYNTHETIC_TESTING_APPROVED=false.',
@@ -224,6 +223,8 @@ addCheck('production beta keeps the real-PHI runtime lock', () => {
   ]);
   expectIncludes('.github/workflows/deploy-app-engine.yml', [
     "VITE_REAL_PHI_ENABLED: ${{ vars.VITE_REAL_PHI_ENABLED || 'false' }}",
+    'SMOKE_AUTH_STATE_B64: ${{ secrets.SMOKE_AUTH_STATE_B64 }}',
+    'npm run smoke:auth',
   ]);
 });
 

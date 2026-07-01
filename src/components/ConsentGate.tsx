@@ -41,7 +41,7 @@ export default function ConsentGate({ user, onAccepted }: ConsentGateProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white px-6 py-10">
+    <div data-smoke="consent-gate" className="min-h-screen bg-white px-6 py-10">
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-xl flex-col justify-center">
         <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-100">
           <FileText className="h-7 w-7" />
@@ -56,7 +56,7 @@ export default function ConsentGate({ user, onAccepted }: ConsentGateProps) {
           <div className="flex gap-3">
             <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
             <p className="text-sm leading-relaxed text-amber-950">
-              Do not enter protected health information or sensitive personal details until production privacy, compliance, and support processes are complete.
+              This production service may store protected health information and other sensitive health records. Only continue with information you are authorized to store here, and review the privacy policy, terms, and medical disclaimer before using the service.
             </p>
           </div>
         </div>
@@ -95,6 +95,7 @@ export default function ConsentGate({ user, onAccepted }: ConsentGateProps) {
         <button
           type="button"
           onClick={accept}
+          data-smoke="accept-consent"
           disabled={!canContinue}
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 p-4 text-sm font-extrabold text-white shadow-xl shadow-blue-100 transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:shadow-none"
         >

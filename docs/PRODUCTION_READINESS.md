@@ -8,6 +8,8 @@ This project is a working React/Vite prototype with Firebase Authentication, Fir
 
 The app builds successfully, but it is not yet ready for public clinical use or app-store submission.
 
+The live web app is now in production real-PHI mode; keep this document as the pre-launch readiness snapshot and use `docs/PRODUCTION_STATUS.md` for the current state.
+
 ## What Works
 
 - Google sign-in through Firebase Auth.

@@ -188,7 +188,7 @@ function AppContent() {
   );
 
   if (!user) return (
-    <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,248,237,0.95),_rgba(247,248,252,1)_45%,_rgba(236,246,248,1)_100%)] text-slate-900">
+    <div data-smoke="signed-out-shell" className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,248,237,0.95),_rgba(247,248,252,1)_45%,_rgba(236,246,248,1)_100%)] text-slate-900">
       <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_80%_20%,rgba(197,242,228,0.45),transparent_45%),radial-gradient(circle_at_15%_20%,rgba(213,232,255,0.35),transparent_40%)]" />
       <div className="absolute left-[-8rem] top-20 h-64 w-64 rounded-full bg-[#dbeafe]/45 blur-3xl" />
       <div className="absolute right-[-8rem] top-40 h-72 w-72 rounded-full bg-[#d9f99d]/25 blur-3xl" />
@@ -228,6 +228,7 @@ function AppContent() {
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <button
                 onClick={signInWithGoogle}
+                data-smoke="sign-in-google"
                 className="inline-flex items-center justify-center gap-3 rounded-full bg-slate-900 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 hover:bg-slate-800"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-900">
@@ -424,7 +425,7 @@ function AppContent() {
   );
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
+    <div data-smoke="authenticated-shell" className="min-h-screen bg-white text-gray-900">
       <a
         href="#main-content"
         className="sr-only z-50 rounded-md bg-white px-4 py-2 font-semibold text-blue-700 shadow focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
@@ -536,11 +537,11 @@ function AppContent() {
       {/* Bottom Nav */}
       <nav aria-label="Primary" className="safe-bottom-nav fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-2 pt-4">
         <div className="max-w-2xl mx-auto flex items-center justify-around">
-          <NavButton active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} icon={LayoutDashboard} label="Plan" />
-          <NavButton active={activeTab === 'lifestyle'} onClick={() => setActiveTab('lifestyle')} icon={Apple} label="Healthy" />
-          <NavButton active={activeTab === 'survivorship'} onClick={() => setActiveTab('survivorship')} icon={Shield} label="Survivor" />
-          <NavButton active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} icon={UserIcon} label="Profile" />
-          <NavButton active={activeTab === 'share'} onClick={() => setActiveTab('share')} icon={Share2} label="Share" />
+          <NavButton smokeId="nav-plan" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} icon={LayoutDashboard} label="Plan" />
+          <NavButton smokeId="nav-healthy" active={activeTab === 'lifestyle'} onClick={() => setActiveTab('lifestyle')} icon={Apple} label="Healthy" />
+          <NavButton smokeId="nav-survivor" active={activeTab === 'survivorship'} onClick={() => setActiveTab('survivorship')} icon={Shield} label="Survivor" />
+          <NavButton smokeId="nav-profile" active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} icon={UserIcon} label="Profile" />
+          <NavButton smokeId="nav-share" active={activeTab === 'share'} onClick={() => setActiveTab('share')} icon={Share2} label="Share" />
         </div>
       </nav>
       <div className="safe-bottom-links fixed left-0 right-0 z-20 pointer-events-none">
@@ -558,7 +559,7 @@ function SyntheticDataBanner() {
       role="status"
       className="w-full border-y border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-bold text-red-900"
     >
-      Production beta: use synthetic test data only. Do not enter real patient or health information.
+      Production service: only enter information you are authorized to store here.
     </div>
   );
 }
@@ -661,11 +662,12 @@ function MiniNav({
   );
 }
 
-function NavButton({ active, onClick, icon: Icon, label }: { active: boolean, onClick: () => void, icon: any, label: string }) {
+function NavButton({ active, onClick, icon: Icon, label, smokeId }: { active: boolean, onClick: () => void, icon: any, label: string, smokeId?: string }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      data-smoke={smokeId}
       aria-current={active ? 'page' : undefined}
       className={cn(
         "flex flex-col items-center gap-1 transition-all",
