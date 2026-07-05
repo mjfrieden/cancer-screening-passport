@@ -1,0 +1,20 @@
+{
+  "name": "cpp_telemetry_event_count",
+  "description": "Counts first-party PHI-free telemetry events emitted by the app.",
+  "filter": "resource.type=\"gae_app\" AND textPayload:\"\\\"kind\\\":\\\"telemetry\\\"\"",
+  "metricDescriptor": {
+    "metricKind": "DELTA",
+    "valueType": "INT64",
+    "unit": "1",
+    "labels": [
+      {
+        "key": "event_name",
+        "valueType": "STRING",
+        "description": "Allowlisted telemetry event name."
+      }
+    ]
+  },
+  "labelExtractors": {
+    "event_name": "REGEXP_EXTRACT(textPayload, \"\\\\\\\"eventName\\\\\\\":\\\\\\\"([^\\\\\\\"]+)\\\\\\\"\")"
+  }
+}

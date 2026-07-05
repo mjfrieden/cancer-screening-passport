@@ -1,0 +1,44 @@
+{
+  "displayName": "Launch-week export regressions",
+  "combiner": "OR",
+  "enabled": true,
+  "userLabels": {
+    "phase": "launch_week",
+    "surface": "telemetry"
+  },
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "## Launch-week export regressions\n\nAlerts when the combined export rate from `auth_sign_in_success` to the export actions drops below the launch-week floor.\n\n- Numerator: `export_account_data`, `export_fhir_json`, and `export_pdf_summary`\n- Denominator: `auth_sign_in_success`\n- Threshold: export rate below 10 percent for 15 minutes\n\nThis is a canary for broken export UI, broken file generation, or a hidden sharing path."
+  },
+  "conditions": [
+    {
+      "displayName": "Combined export rate falls below 10 percent",
+      "conditionThreshold": {
+        "filter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND (metric.label.\"event_name\"=\"export_account_data\" OR metric.label.\"event_name\"=\"export_fhir_json\" OR metric.label.\"event_name\"=\"export_pdf_summary\")",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "denominatorFilter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND metric.label.\"event_name\"=\"auth_sign_in_success\"",
+        "denominatorAggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "thresholdValue": 0.1,
+        "duration": "900s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

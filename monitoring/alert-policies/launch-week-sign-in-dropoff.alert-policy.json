@@ -1,0 +1,44 @@
+{
+  "displayName": "Launch-week sign-in dropoff",
+  "combiner": "OR",
+  "enabled": true,
+  "userLabels": {
+    "phase": "launch_week",
+    "surface": "telemetry"
+  },
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "## Launch-week sign-in dropoff\n\nAlerts when the success rate from `auth_sign_in_click` to `auth_sign_in_success` falls below the launch-week baseline.\n\n- Numerator: `auth_sign_in_success`\n- Denominator: `auth_sign_in_click`\n- Threshold: success rate below 60 percent for 15 minutes\n\nThis is a launch-week canary for identity regressions, not a long-term SLO."
+  },
+  "conditions": [
+    {
+      "displayName": "Auth sign-in success rate falls below 60 percent",
+      "conditionThreshold": {
+        "filter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND metric.label.\"event_name\"=\"auth_sign_in_success\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "denominatorFilter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND metric.label.\"event_name\"=\"auth_sign_in_click\"",
+        "denominatorAggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "thresholdValue": 0.6,
+        "duration": "900s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

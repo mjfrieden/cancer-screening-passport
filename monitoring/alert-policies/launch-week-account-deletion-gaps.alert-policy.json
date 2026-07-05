@@ -1,0 +1,44 @@
+{
+  "displayName": "Launch-week account deletion gaps",
+  "combiner": "OR",
+  "enabled": true,
+  "userLabels": {
+    "phase": "launch_week",
+    "surface": "telemetry"
+  },
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "## Launch-week account deletion gaps\n\nAlerts when the completion rate from `account_deletion_started` to `account_deletion_completed` falls below the launch-week floor.\n\n- Numerator: `account_deletion_completed`\n- Denominator: `account_deletion_started`\n- Threshold: completion rate below 80 percent for 15 minutes\n\nThis catches reauth failures, Firestore delete failures, and any deletion flow that starts but never finishes."
+  },
+  "conditions": [
+    {
+      "displayName": "Account deletion completion rate falls below 80 percent",
+      "conditionThreshold": {
+        "filter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND metric.label.\"event_name\"=\"account_deletion_completed\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "denominatorFilter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND metric.label.\"event_name\"=\"account_deletion_started\"",
+        "denominatorAggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "thresholdValue": 0.8,
+        "duration": "900s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "cpp_telemetry_screen_views",
+  "description": "Counts first-party screen view telemetry events emitted by the app.",
+  "filter": "resource.type=\"gae_app\" AND textPayload:\"\\\"kind\\\":\\\"telemetry\\\"\" AND textPayload:\"\\\"eventName\\\":\\\"screen_view\\\"\"",
+  "metricDescriptor": {
+    "metricKind": "DELTA",
+    "valueType": "INT64",
+    "unit": "1",
+    "labels": [
+      {
+        "key": "screen",
+        "valueType": "STRING",
+        "description": "Allowlisted screen name from the app shell."
+      }
+    ]
+  },
+  "labelExtractors": {
+    "screen": "REGEXP_EXTRACT(textPayload, \"\\\\\\\"screen\\\\\\\":\\\\\\\"([^\\\\\\\"]+)\\\\\\\"\")"
+  }
+}

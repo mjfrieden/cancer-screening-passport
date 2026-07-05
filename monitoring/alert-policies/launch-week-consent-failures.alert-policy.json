@@ -1,0 +1,44 @@
+{
+  "displayName": "Launch-week consent failures",
+  "combiner": "OR",
+  "enabled": true,
+  "userLabels": {
+    "phase": "launch_week",
+    "surface": "telemetry"
+  },
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "## Launch-week consent failures\n\nAlerts when the acceptance rate from `auth_sign_in_success` to `consent_accepted` drops below the launch-week floor.\n\n- Numerator: `consent_accepted`\n- Denominator: `auth_sign_in_success`\n- Threshold: acceptance rate below 90 percent for 15 minutes\n\nThis catches consent modal regressions, broken callbacks, or copy changes that stop the user from advancing."
+  },
+  "conditions": [
+    {
+      "displayName": "Consent acceptance rate falls below 90 percent",
+      "conditionThreshold": {
+        "filter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND metric.label.\"event_name\"=\"consent_accepted\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "denominatorFilter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" AND resource.type=\"gae_app\" AND metric.label.\"event_name\"=\"auth_sign_in_success\"",
+        "denominatorAggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": []
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "thresholdValue": 0.9,
+        "duration": "900s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "displayName": "Cancer Prevention Passport Telemetry",
+  "dashboardFilters": [],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 16,
+        "width": 48,
+        "widget": {
+          "title": "Telemetry volume over time",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" resource.type=\"gae_app\"",
+                    "aggregation": {
+                      "alignmentPeriod": "3600s",
+                      "perSeriesAligner": "ALIGN_SUM",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "Events per hour",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "yPos": 0
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Event mix by type",
+          "pieChart": {
+            "chartType": "DONUT",
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_event_count\" resource.type=\"gae_app\"",
+                    "aggregation": {
+                      "alignmentPeriod": "3600s",
+                      "perSeriesAligner": "ALIGN_SUM",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"event_name\""
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "xPos": 0,
+        "yPos": 16
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Screen views by screen",
+          "pieChart": {
+            "chartType": "PIE",
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"logging.googleapis.com/user/cpp_telemetry_screen_views\" resource.type=\"gae_app\"",
+                    "aggregation": {
+                      "alignmentPeriod": "3600s",
+                      "perSeriesAligner": "ALIGN_SUM",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"screen\""
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "xPos": 24,
+        "yPos": 16
+      },
+      {
+        "height": 12,
+        "width": 48,
+        "widget": {
+          "title": "Recent telemetry logs",
+          "logsPanel": {
+            "filter": "resource.type=\"gae_app\" AND textPayload:\"\\\"kind\\\":\\\"telemetry\\\"\"",
+            "resourceNames": [
+              "projects/cancer-passport-wcm-prod"
+            ]
+          }
+        },
+        "yPos": 32
+      },
+      {
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Error and auth failures",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": "Recent server errors, 401s, 403s, and sign-in failures"
+          }
+        },
+        "yPos": 44
+      },
+      {
+        "height": 14,
+        "width": 48,
+        "widget": {
+          "title": "Error and auth logs",
+          "logsPanel": {
+            "filter": "resource.type=\"gae_app\" AND (severity>=ERROR OR textPayload:\"auth\" OR textPayload:\"401\" OR textPayload:\"403\")",
+            "resourceNames": [
+              "projects/cancer-passport-wcm-prod"
+            ]
+          }
+        },
+        "yPos": 48
+      },
+      {
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Launch health",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": "Uptime signal and request volume for launch readiness"
+          }
+        },
+        "yPos": 62
+      },
+      {
+        "height": 14,
+        "width": 24,
+        "widget": {
+          "title": "Availability",
+          "scorecard": {
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 1
+            },
+            "timeSeriesQuery": {
+              "timeSeriesFilterRatio": {
+                "numerator": {
+                  "filter": "metric.type=\"appengine.googleapis.com/http/server/response_count\" resource.type=\"gae_app\" metric.label.\"response_code\"<\"500\"",
+                  "aggregation": {
+                    "alignmentPeriod": "300s",
+                    "perSeriesAligner": "ALIGN_SUM",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": []
+                  }
+                },
+                "denominator": {
+                  "filter": "metric.type=\"appengine.googleapis.com/http/server/response_count\" resource.type=\"gae_app\"",
+                  "aggregation": {
+                    "alignmentPeriod": "300s",
+                    "perSeriesAligner": "ALIGN_SUM",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": []
+                  }
+                },
+                "secondaryAggregation": {
+                  "alignmentPeriod": "300s",
+                  "perSeriesAligner": "ALIGN_MEAN",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "groupByFields": []
+                }
+              }
+            }
+          }
+        },
+        "xPos": 0,
+        "yPos": 66
+      },
+      {
+        "height": 14,
+        "width": 24,
+        "widget": {
+          "title": "Request volume",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"appengine.googleapis.com/http/server/response_count\" resource.type=\"gae_app\"",
+                    "aggregation": {
+                      "alignmentPeriod": "300s",
+                      "perSeriesAligner": "ALIGN_SUM",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "Requests per 5 minutes",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "xPos": 24,
+        "yPos": 66
+      }
+    ]
+  }
+}
