@@ -41,7 +41,10 @@ export default function ConsentGate({ user, onAccepted }: ConsentGateProps) {
   };
 
   return (
-    <div data-smoke="consent-gate" className="min-h-screen bg-white px-6 py-10">
+    <div
+      data-smoke="consent-gate"
+      className="min-h-screen bg-white px-6 py-[calc(2.5rem+env(safe-area-inset-top,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]"
+    >
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-xl flex-col justify-center">
         <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-100">
           <FileText className="h-7 w-7" />

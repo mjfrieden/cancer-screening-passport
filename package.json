@@ -10,7 +10,8 @@
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=server-dist/server.cjs",
     "gcp-build": "test -f dist/index.html && test -f server-dist/server.cjs",
     "build:static": "vite build",
-    "start": "node server-dist/server.cjs",
+    "start": "NODE_ENV=production node server-dist/server.cjs",
+    "start:dev": "node server-dist/server.cjs",
     "preview": "vite preview",
     "clean": "rm -rf dist server-dist",
     "lint": "tsc --noEmit",
@@ -35,6 +36,7 @@
     "cap:copy": "npm run build:static && cap copy",
     "cap:open:ios": "cap open ios",
     "cap:open:android": "cap open android",
+    "qa:store": "node scripts/store-submission-qa.mjs",
     "audit": "npm audit --audit-level=moderate"
   },
   "dependencies": {

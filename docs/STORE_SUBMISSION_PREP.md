@@ -72,6 +72,20 @@ Run this matrix after Firebase staging is configured and before TestFlight or cl
 | Keyboard behavior | Not run | Not run | Not run | Not run |
 | Safe-area layout | Not run | Not run | Not run | Not run |
 
+## Latest Local QA
+
+- Date: 2026-07-05
+- Automation: `npm run qa:store`
+- Environment: production static server plus an iPhone-sized browser viewport fallback.
+- Native simulator status on this machine: blocked because full Xcode and `simctl` are not installed, so the Capacitor iOS app could not be launched in Simulator here.
+- Results:
+  - Signed-out shell rendered in an iPhone-sized viewport.
+  - First App Store candidate screenshot captured at `artifacts/store-submission-qa/signed-out-home.png`.
+  - Signed-out footer state captured after a safe-area scroll at `artifacts/store-submission-qa/signed-out-footer.png`.
+  - Public legal pages rendered successfully with safe-area-aware viewport styling.
+  - Home footer now includes Privacy, Terms, Medical Disclaimer, Support, and Account Deletion links.
+- Report: `artifacts/store-submission-qa/store-submission-qa-report.md`
+
 ## Build Requirements
 
 For iOS:

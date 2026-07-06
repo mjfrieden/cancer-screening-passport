@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
       - name: Typecheck
         run: npm run lint
 
@@ -56,6 +59,34 @@ jobs:
 
       - name: Native identity checks
         run: npm run native:check
+
+      - name: Store submission QA
+        env:
+          STORE_QA_BASE_URL: http://127.0.0.1:3000
+        run: |
+          npm run start > /tmp/cancer-passport-store-qa.log 2>&1 &
+          echo $! > /tmp/cancer-passport-store-qa.pid
+          cleanup() {
+            if [ -f /tmp/cancer-passport-store-qa.pid ]; then
+              kill "$(cat /tmp/cancer-passport-store-qa.pid)" >/dev/null 2>&1 || true
+            fi
+          }
+          trap cleanup EXIT
+          for _ in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/api/health >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          npm run qa:store
+
+      - name: Upload store QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: store-submission-qa
+          path: artifacts/store-submission-qa
+          if-no-files-found: warn
 
       - name: Compile Android debug application
         working-directory: android

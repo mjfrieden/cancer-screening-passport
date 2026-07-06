@@ -19,6 +19,7 @@ Confirm the bundle/application ID before App Store or Play Store submission. Cha
 ```bash
 npm run cap:sync
 npm run native:check
+npm run qa:store
 npm run cap:open:ios
 npm run cap:open:android
 ```
@@ -26,6 +27,8 @@ npm run cap:open:android
 `npm run cap:sync` builds the web app and syncs assets into both native projects.
 
 `npm run native:check` verifies the checked-in native identity files still match the production app ID and app name.
+
+`npm run qa:store` runs the mobile browser store-prep pass, captures screenshots, and writes a markdown report under `artifacts/store-submission-qa/`.
 
 ## Local Prerequisites
 

@@ -241,7 +241,7 @@ function AppContent() {
       <div className="absolute left-[-8rem] top-20 h-64 w-64 rounded-full bg-[#dbeafe]/45 blur-3xl" />
       <div className="absolute right-[-8rem] top-40 h-72 w-72 rounded-full bg-[#d9f99d]/25 blur-3xl" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 pb-10 pt-6 lg:px-10">
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(1.5rem+env(safe-area-inset-top,0px))] lg:px-10">
         <header className="flex items-center justify-between gap-4">
           <div className="flex items-center">
             <img
@@ -655,6 +655,8 @@ function LegalLinks({ compact = false }: { compact?: boolean }) {
       <a className="hover:text-blue-600" href="/legal/medical-disclaimer.html" target="_blank" rel="noreferrer">Medical Disclaimer</a>
       <span aria-hidden="true">|</span>
       <a className="hover:text-blue-600" href="/support.html" target="_blank" rel="noreferrer">Support</a>
+      <span aria-hidden="true">|</span>
+      <a className="hover:text-blue-600" href="/account-deletion.html" target="_blank" rel="noreferrer">Account Deletion</a>
     </div>
   );
 }
