@@ -35,7 +35,7 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
     });
 
     // Screening Observations
-    events.forEach(event => {
+    events.filter(event => event.status === 'completed' && event.careStatus !== 'completed').forEach(event => {
       bundle.entry.push({
         resource: {
           resourceType: "Observation",
@@ -46,6 +46,7 @@ export default function FHIRSharing({ profile, events, recommendations }: FHIRSh
           },
           effectiveDateTime: event.date,
           valueString: event.result,
+          note: [{ text: event.source === 'clinician_confirmed' ? 'Clinician-confirmed' : event.source === 'imported' ? 'Imported into patient-held record' : 'Patient-entered; not verified against the medical record' }],
           component: [
             {
               code: { text: "abnormal" },

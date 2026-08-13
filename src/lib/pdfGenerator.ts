@@ -415,8 +415,8 @@ export function generateScreeningPDF(
   y += 7;
 
   // Standard historical entries
-  const displayEvents = events && events.filter(e => e.status === 'completed').length > 0
-    ? events.filter(e => e.status === 'completed')
+  const displayEvents = events && events.filter(e => e.status === 'completed' && e.careStatus !== 'completed').length > 0
+    ? events.filter(e => e.status === 'completed' && e.careStatus !== 'completed')
     : [
         { type: 'colonoscopy', date: '2021-03-15', result: 'Normal/Clear', isAbnormal: false },
         { type: 'mammogram', date: '2023-06-10', result: 'Normal (BI-RADS 1)', isAbnormal: false },

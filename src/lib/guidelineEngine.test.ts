@@ -13,6 +13,15 @@ function baseProfile(overrides: Partial<UserProfile> = {}): UserProfile {
     personalHistoryOfCancer: false,
     immunocompromised: false,
     cervixPresent: true,
+    screeningRiskFactors: {
+      familyCancerHistory: 'no',
+      knownHereditaryCancerRisk: 'no',
+      priorHighRiskFinding: 'no',
+      inflammatoryBowelDisease: 'no',
+      chestRadiationBefore30: 'no',
+      immunocompromisedOrHiv: 'no',
+      desExposure: 'no',
+    },
     ...overrides,
   };
 }
@@ -40,6 +49,22 @@ describe('guideline recommendation engine', () => {
     const crc = recommendations.find(rec => rec.id === 'crc-rec');
     expect(crc?.due_date).toBe('2034-02-20');
     expect(crc?.status).toBe('completed');
+  });
+
+  it('does not treat a completed test awaiting results as a normal screening result', () => {
+    const recommendations = getRecommendations(baseProfile(), [
+      event({
+        id: 'awaiting-result',
+        type: 'colonoscopy',
+        date: '2026-02-20',
+        result: '',
+        careStatus: 'completed',
+      }),
+    ]);
+
+    const crc = recommendations.find(rec => rec.id === 'crc-rec');
+    expect(crc?.due_date).not.toBe('2036-02-20');
+    expect(crc?.status).toBe('due_now');
   });
 
   it('routes a positive FIT to diagnostic colonoscopy follow-up', () => {
@@ -160,8 +185,7 @@ describe('guideline recommendation engine', () => {
     for (const rec of recommendations) {
       expect(rec.source_url).toMatch(/^https:\/\//);
       expect(rec.clinical_review_note.length).toBeGreaterThan(20);
-      expect(rec.clinical_review_status).toBe('physician_reviewed');
-      expect(rec.clinical_review_note).toContain('White Cloud Medical, LLC');
+      expect(['physician_reviewed', 'needs_clinical_review']).toContain(rec.clinical_review_status);
     }
   });
 
@@ -180,8 +204,53 @@ describe('guideline recommendation engine', () => {
     expect(survivorship.length).toBeGreaterThan(0);
     for (const rec of survivorship) {
       expect(rec.requires_clinician_review).toBe(true);
-      expect(rec.clinical_review_status).toBe('physician_reviewed');
+      expect(rec.clinical_review_status).toBe('needs_clinical_review');
       expect(rec.source_url).toBe('https://www.nccn.org/guidelines/category_1');
     }
+  });
+
+  it('fails safely when the screening risk review is missing', () => {
+    const profile = baseProfile();
+    delete profile.screeningRiskFactors;
+
+    const recommendations = getRecommendations(profile);
+    const screeningRecommendations = recommendations.filter(rec =>
+      ['crc-rec', 'breast-rec', 'cervical-rec'].includes(rec.id),
+    );
+
+    expect(screeningRecommendations).toHaveLength(3);
+    for (const rec of screeningRecommendations) {
+      expect(rec.status).toBe('needs_review');
+      expect(rec.due_date).toBe('Pending clinician review');
+      expect(rec.clinical_review_status).toBe('needs_clinical_review');
+    }
+  });
+
+  it('does not apply average-risk cervical timing to an immunocompromised patient', () => {
+    const profile = baseProfile({
+      immunocompromised: true,
+      screeningRiskFactors: {
+        ...baseProfile().screeningRiskFactors!,
+        immunocompromisedOrHiv: 'yes',
+      },
+    });
+
+    const cervical = getRecommendations(profile).find(rec => rec.id === 'cervical-rec');
+    expect(cervical?.status).toBe('needs_review');
+    expect(cervical?.reason).toContain('immune compromise');
+  });
+
+  it('routes hereditary or family colorectal risk to clinician review', () => {
+    const profile = baseProfile({
+      screeningRiskFactors: {
+        ...baseProfile().screeningRiskFactors!,
+        familyCancerHistory: 'yes',
+        knownHereditaryCancerRisk: 'not_sure',
+      },
+    });
+
+    const colorectal = getRecommendations(profile).find(rec => rec.id === 'crc-rec');
+    expect(colorectal?.status).toBe('needs_review');
+    expect(colorectal?.recommendation_grade).toBe('Individualized');
   });
 });

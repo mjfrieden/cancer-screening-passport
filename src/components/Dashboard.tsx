@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Recommendation, ScreeningEvent, UserProfile } from '../types';
 import InteractiveScreeningGuide from './InteractiveScreeningGuide';
 import { motion } from 'motion/react';
-import { AlertCircle, CheckCircle2, Clock, Calendar, ChevronRight, Info, Activity, Shield, Award } from 'lucide-react';
+import { CheckCircle2, Calendar, ChevronRight, Info, Edit2, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
+import ScreeningActionCenter from './ScreeningActionCenter';
 
 function cn(...inputs: any[]) {
   return twMerge(clsx(inputs));
@@ -143,82 +144,6 @@ export function calculateNextDueDate(type: string, dateStr: string, isAbnormal: 
   };
 }
 
-function getClinicalMetrics(type: string, isAbnormal: boolean) {
-  const cleanType = type.toLowerCase();
-  
-  if (cleanType.includes('colonoscopy')) {
-    return {
-      sensitivity: '95% (for adenomas ≥10mm)',
-      specificity: '89-98% (highly accurate for visual lesions)',
-      riskReduction: '60-90% reduction in colorectal cancer mortality',
-      standard: 'USPSTF Grade A',
-      priority: isAbnormal ? 'Urgently Critical' : 'Routine Surveillance',
-      clinicalNotes: 'Endoscopic visualization of the entire large bowel. Direct excision of precancerous polyps.',
-      targetTarget: 'Ages 45-75 years, every 10 years standard'
-    };
-  } else if (cleanType.includes('fit') || cleanType.includes('fecal') || cleanType.includes('cologuard') || cleanType.includes('stool')) {
-    return {
-      sensitivity: '74-79% (FIT) / 92%+ (stool DNA-FIT sensitivity for CRC)',
-      specificity: '90-94% (varies by stool-based modality)',
-      riskReduction: 'Substantial colorectal cancer mortality reduction when repeated on schedule and followed by colonoscopy after positives',
-      standard: 'USPSTF Grade A',
-      priority: isAbnormal ? 'High / Referral Required' : 'Routine Stool-Based Cycle',
-      clinicalNotes: 'Non-invasive stool-based screening that requires colonoscopy follow-up after a positive result.',
-      targetTarget: 'FIT yearly, stool DNA-FIT every 1-3 years depending on modality'
-    };
-  } else if (cleanType.includes('mammogram') || cleanType.includes('mammography') || cleanType.includes('breast')) {
-    return {
-      sensitivity: '84-87% (lower in fibrous/dense breast tissues)',
-      specificity: '88-90% (improved with comparative digital views)',
-      riskReduction: '20-30% diagnostic reduction in specific mortality',
-      standard: 'USPSTF Grade B',
-      priority: isAbnormal ? 'Diagnostic Evaluation Required' : 'Biennial Screening Follow-up',
-      clinicalNotes: 'Low-dose breast radiography mapping microcalcifications and mass densities.',
-      targetTarget: 'Ages 40-74 years, every 2 years standard'
-    };
-  } else if (cleanType.includes('pap') || cleanType.includes('cervical') || cleanType.includes('hpv')) {
-    return {
-      sensitivity: '80% (cytology alone), 95% (with HPV co-testing)',
-      specificity: '86% (cytology alone), 90% (with co-testing markers)',
-      riskReduction: 'Over 80% decrease in invasive cervical cancer incidence rates',
-      standard: 'USPSTF Grade A',
-      priority: isAbnormal ? 'Short-interval cytological surveillance' : 'Triennial Routine Surveillance',
-      clinicalNotes: 'Cytopathological evaluation of epithelial cells collected from the squamocolumnar zone.',
-      targetTarget: 'Ages 21-65 years, every 3-5 years'
-    };
-  } else if (cleanType.includes('ldct') || cleanType.includes('lung')) {
-    return {
-      sensitivity: '93% (high identification of solid focal nodules)',
-      specificity: '84% (evaluates active subsolid development)',
-      riskReduction: '20-24% lung cancer specific mortality reduction in high-risk smoking cohorts',
-      standard: 'USPSTF Grade B',
-      priority: isAbnormal ? 'Frequent diagnostic follow-up requested' : 'Annual Screening Cycle',
-      clinicalNotes: 'Low-dose helical CT imaging mapping thoracic structure morphology and volumetric nodules.',
-      targetTarget: 'Ages 50-80 years with 20+ pack-year smoking history'
-    };
-  } else if (cleanType.includes('psa') || cleanType.includes('prostate')) {
-    return {
-      sensitivity: '72-80% (high early-stage hyperplasia marker)',
-      specificity: '60-70% (limited due to benign conditions overlap)',
-      riskReduction: 'Slight reduction in specific prostate cancer lethality',
-      standard: 'USPSTF Grade C Recommendation',
-      priority: isAbnormal ? 'Urological evaluation recommended' : 'Shared Decision Standard',
-      clinicalNotes: 'Serum evaluation of glycoprotein serine protease enzyme secreted by glandular tissues.',
-      targetTarget: 'Ages 55-69 years based on individual shared choices'
-    };
-  } else {
-    return {
-      sensitivity: '85% aggregate confidence level',
-      specificity: '88% baseline control specificity',
-      riskReduction: 'Facilitates timely intervention and preemptive clinical management',
-      standard: 'Clinical Consensus Guideline',
-      priority: 'Routine Baseline',
-      clinicalNotes: 'Preventive screening and assessment derived from demographic risk profiles.',
-      targetTarget: 'As determined by clinical guidelines'
-    };
-  }
-}
-
 const CustomPoint = (props: any) => {
   const { cx, cy, payload, hoveredPointId, setHoveredPointId } = props;
   if (!cx || !cy) return null;
@@ -315,20 +240,21 @@ interface DashboardProps {
   events: ScreeningEvent[];
   profile: UserProfile | null;
   onAddEvent?: () => void;
+  onEditEvent?: (event: ScreeningEvent) => void;
+  onDeleteEvent?: (event: ScreeningEvent) => void;
+  onUpdateEvent?: (event: ScreeningEvent, patch: Partial<ScreeningEvent>) => void;
+  onStartRecommendation?: (recommendation: Recommendation, screeningType?: ScreeningEvent['type']) => void;
 }
 
-export default function Dashboard({ recommendations, events, profile, onAddEvent }: DashboardProps) {
+export default function Dashboard({ recommendations, events, profile, onAddEvent, onEditEvent, onDeleteEvent, onUpdateEvent, onStartRecommendation }: DashboardProps) {
   const [hoveredPointId, setHoveredPointId] = useState<string | null>(null);
   const planRecommendations = recommendations.filter(r => r.status !== 'prevention');
 
-  const categories = [
-    { label: 'Due Now', value: 'due_now', icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50' },
-    { label: 'Coming Soon', value: 'coming_soon', icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Survivorship', value: 'survivorship', icon: CheckCircle2, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Completed', value: 'completed', icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50' },
-  ];
-
-  const displayEvents = events.filter(e => e.status === 'completed');
+  const displayEvents = events.filter(e => (
+    e.status === 'completed'
+    && e.careStatus !== 'completed'
+    && Boolean(e.result?.trim())
+  ));
   const hasHistory = displayEvents.length > 0;
 
   // Map events to gather completed and project future due dates
@@ -447,7 +373,6 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
           dateStr: evt.completedDateStr,
           result: evt.result,
           isAbnormal: evt.isAbnormal,
-          clinicalMetrics: getClinicalMetrics(evt.type, evt.isAbnormal || false),
         });
       }
       if (evt.dueYear) {
@@ -460,7 +385,6 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
           dateStr: evt.dueDateStr,
           rationale: evt.nextDueInfo.rationale,
           isUrgent: evt.nextDueInfo.isUrgent,
-          clinicalMetrics: getClinicalMetrics(evt.type, evt.isAbnormal || false),
         });
       }
     });
@@ -484,7 +408,6 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
             dateStr: activeRec.due_date,
             rationale: activeRec.reason,
             isUrgent: activeRec.status === 'due_now',
-            clinicalMetrics: getClinicalMetrics(activeRec.screening_modality || activeRec.cancer_type, false),
           });
         }
       }
@@ -517,22 +440,15 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
-        {categories.map((cat) => {
-          const count = planRecommendations.filter(r => r.status === cat.value).length + (cat.value === 'completed' && hasHistory ? displayEvents.length : 0);
-          return (
-            <div key={cat.label} className={cn("p-2.5 sm:p-4 rounded-2xl border border-gray-100 flex items-center gap-2 sm:gap-3 transition-colors", cat.bg)}>
-              <div className="p-1.5 sm:p-2 bg-white/75 rounded-xl shrink-0">
-                <cat.icon className={cn("w-4 h-4 sm:w-5 sm:h-5", cat.color)} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-base sm:text-2xl font-extrabold leading-none text-gray-900">{count}</div>
-                <div className="text-[10px] sm:text-xs text-gray-500 font-medium truncate mt-0.5 sm:mt-1">{cat.label}</div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {onEditEvent && onUpdateEvent && onStartRecommendation && (
+        <ScreeningActionCenter
+          events={events}
+          recommendations={planRecommendations}
+          onEditEvent={onEditEvent}
+          onUpdateEvent={onUpdateEvent}
+          onStartRecommendation={onStartRecommendation}
+        />
+      )}
 
       {/* 1. Your Screening Plan */}
       <div className="space-y-4">
@@ -564,10 +480,8 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
                   ease: [0.16, 1, 0.3, 1], // Custom cubic-bezier for a smooth medical/clinical app transition
                   delay: index * 0.06,
                 }}
-                whileHover={{ y: -3, scale: 1.01, boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.06)" }}
-                whileTap={{ scale: 0.99 }}
                 data-smoke="recommendation-card"
-                className="group relative p-5 bg-white border border-gray-100 rounded-2xl cursor-pointer shadow-sm hover:border-blue-500/50 hover:shadow-md transition-colors"
+                className="group relative p-5 bg-white border border-gray-100 rounded-2xl shadow-sm transition-colors"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
@@ -579,6 +493,7 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
                   <div className={cn(
                     "px-2 py-1 rounded-md text-[10px] font-bold uppercase",
                     rec.status === 'due_now' ? 'bg-red-100 text-red-700' : 
+                    rec.status === 'needs_review' ? 'bg-amber-100 text-amber-800' :
                     rec.status === 'survivorship' ? 'bg-purple-100 text-purple-700' :
                     rec.status === 'prevention' ? 'bg-teal-100 text-teal-700' :
                     'bg-blue-100 text-blue-700'
@@ -619,7 +534,11 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
                         ? ' • Clinician review needed'
                         : ' • Source traced'}
                   </span>
-                  <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors" />
+                  {rec.status === 'needs_review' ? (
+                    <span className="text-xs font-semibold text-amber-800">Confirm before relying on a due date</span>
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors" />
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -629,7 +548,9 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
 
       {/* 🔬 Clinical Comparison & Interactive Modality Guide */}
       <div className="pt-4 border-t border-gray-100">
-        <InteractiveScreeningGuide profile={profile} />
+        {onStartRecommendation && (
+          <InteractiveScreeningGuide recommendations={planRecommendations} onChooseOption={onStartRecommendation} />
+        )}
       </div>
 
       {/* 2. Enhanced Screening Completion Timeline located underneath the screening plan as requested */}
@@ -641,7 +562,7 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
               <span className="text-xs font-normal text-emerald-650 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100/30">History & Future Projections</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
-              Completed events tracked in your FHIR passport and automatic future schedule projections.
+              Patient-entered screening history and guideline-based future projections. Confirm timing with your clinician.
             </p>
           </div>
           {onAddEvent && (
@@ -715,7 +636,6 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
-                      const metrics = data.clinicalMetrics;
                       return (
                         <div className="bg-white p-4 border border-gray-100 shadow-2xl rounded-2xl space-y-3 text-xs w-[280px] sm:w-[325px] transition-all duration-300">
                           {/* Title / Status block */}
@@ -753,40 +673,6 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
                             )}
                           </div>
 
-                          {/* Rich Clinical Performance metrics */}
-                          {metrics && (
-                            <div className="space-y-2 pt-1">
-                              <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-gray-400 tracking-wider">
-                                <Activity className="w-3.5 h-3.5 text-blue-500" />
-                                <span>Clinical metrics & guidelines</span>
-                              </div>
-                              
-                              <div className="grid grid-cols-2 gap-2 text-[10px]">
-                                <div className="bg-blue-50/30 p-2 rounded-md border border-blue-500/10 space-y-0.5">
-                                  <span className="text-gray-400 block font-medium">Sensitivity</span>
-                                  <span className="font-bold text-blue-900">{metrics.sensitivity}</span>
-                                </div>
-                                <div className="bg-teal-50/30 p-2 rounded-md border border-teal-500/10 space-y-0.5">
-                                  <span className="text-gray-400 block font-medium">Specificity</span>
-                                  <span className="font-bold text-teal-900">{metrics.specificity}</span>
-                                </div>
-                              </div>
-
-                              <div className="bg-gray-50 p-2.5 rounded-lg border border-gray-100 space-y-1">
-                                <div className="flex items-center gap-1 text-[10px] font-bold text-gray-700">
-                                  <Award className="w-3.5 h-3.5 text-emerald-600" />
-                                  <span>{metrics.standard}</span>
-                                </div>
-                                <p className="text-[10.5px] text-gray-500 leading-normal font-sans">
-                                  <span className="font-semibold text-gray-700">Preventive Value:</span> {metrics.riskReduction}
-                                </p>
-                              </div>
-
-                              <div className="text-[10px] text-gray-400 leading-normal border-t border-gray-50 pt-1.5 italic">
-                                Modality notes: {metrics.clinicalNotes}
-                              </div>
-                            </div>
-                          )}
                         </div>
                       );
                     }
@@ -855,6 +741,9 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
                   <div className="text-xs text-gray-500 space-y-1">
                     <div>Completion Date: <strong className="text-gray-700 font-semibold">{evt.date}</strong></div>
                     <div>Recorded Findings: <strong className={evt.isAbnormal ? "text-red-600 font-bold" : "text-gray-700 font-semibold"}>{evt.result}</strong></div>
+                    <div className="font-medium text-blue-700">
+                      {evt.source === 'clinician_confirmed' ? 'Clinician-confirmed record' : evt.source === 'imported' ? 'Imported record' : 'Patient-entered record • Not verified'}
+                    </div>
                   </div>
                   
                   <p className="text-xs text-gray-500 italic pt-1 border-t border-gray-55/80 mt-1 flex items-center gap-1.5 leading-relaxed">
@@ -862,6 +751,31 @@ export default function Dashboard({ recommendations, events, profile, onAddEvent
                     <span>{nextDueInfo.rationale}</span>
                   </p>
                 </div>
+
+                {(onEditEvent || onDeleteEvent) && (
+                  <div className="flex gap-2 md:flex-col">
+                    {onEditEvent && (
+                      <button
+                        type="button"
+                        onClick={() => onEditEvent(evt)}
+                        className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-800 transition-colors hover:bg-blue-100"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                        Correct
+                      </button>
+                    )}
+                    {onDeleteEvent && (
+                      <button
+                        type="button"
+                        onClick={() => onDeleteEvent(evt)}
+                        className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-800 transition-colors hover:bg-red-100"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Specific screening next due box */}
                 <div className={cn(
