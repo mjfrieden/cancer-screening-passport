@@ -186,7 +186,10 @@ async function runAuthenticatedSmoke(baseUrl, authStatePath) {
 
     const recommendationCardsBeforeSave = await page.locator('[data-smoke="recommendation-card"]').count();
     await page.locator('[data-smoke="save-profile"]').click();
-    await page.getByText('Lung Screening', { exact: false }).waitFor();
+    await page
+      .locator('[data-smoke="recommendation-card"]')
+      .getByRole('heading', { name: 'Lung Screening', exact: true })
+      .waitFor();
     const recommendationCardsAfterSave = await page.locator('[data-smoke="recommendation-card"]').count();
     if (recommendationCardsAfterSave <= recommendationCardsBeforeSave) {
       throw new Error('Recommendations did not refresh after saving the profile.');
