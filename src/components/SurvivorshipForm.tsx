@@ -129,9 +129,9 @@ export default function SurvivorshipForm({
         <div className="p-4 bg-purple-50 border border-purple-150 rounded-2xl flex items-start gap-4 shadow-sm animate-fade-in">
           <Shield className="w-6 h-6 text-purple-600 shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-extrabold text-purple-900 text-sm sm:text-base tracking-tight">Configure Survivorship Surveillance</h3>
+            <h3 className="font-extrabold text-purple-900 text-sm sm:text-base tracking-tight">Add Your Follow-Up Care Plan</h3>
             <p className="text-xs text-purple-700 leading-relaxed mt-1 font-medium">
-              Specify your primary cancer history, diagnosis timeline, and treatments. This helps generate survivorship reminders for clinician review.
+              Record your cancer history and treatments to organize questions and follow-up items for review with your oncology team. This does not replace a clinician-authored care plan.
             </p>
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function SurvivorshipForm({
               className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white p-4 rounded-2xl font-bold shadow-xl hover:bg-purple-700 transition-all disabled:opacity-50"
             >
               <Save className="w-5 h-5 max-sm:w-4 max-sm:h-4" />
-              <span>{initialData?.cancerType ? "Update Parameters" : "Generate Survivorship Program"}</span>
+              <span>{initialData?.cancerType ? "Update Follow-Up Information" : "Save Follow-Up Information"}</span>
             </button>
 
             {initialData?.cancerType && (
@@ -256,10 +256,10 @@ export default function SurvivorshipForm({
           <div className="space-y-1">
             <div className="text-[10px] font-bold uppercase tracking-widest text-purple-300 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-              <span>Survivorship Review Pathway</span>
+              <span>Patient-Held Follow-Up Care Plan</span>
             </div>
             <h2 className="text-2xl font-extrabold tracking-tight">
-              {cancerLabelMapping[data.cancerType] || "Survivorship Program"}
+              {cancerLabelMapping[data.cancerType] || "Follow-Up Care"}
             </h2>
             <p className="text-xs text-purple-100/80 font-medium">
               Stage {data.stage === 'unknown' ? 'Active Tracking' : data.stage} • Diagnosed on {new Date(data.diagnosisDate + 'T00:00:00').toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}
@@ -277,7 +277,7 @@ export default function SurvivorshipForm({
 
         {/* Treatment Tags and Summaries */}
         <div className="mt-5 pt-5 border-t border-white/10 space-y-3">
-          <span className="text-[10px] font-extrabold text-purple-300 uppercase tracking-widest block">Administered Therapies under surveillance:</span>
+          <span className="text-[10px] font-extrabold text-purple-300 uppercase tracking-widest block">Treatments you recorded:</span>
           <div className="flex flex-wrap gap-1.5">
             {data.treatments.map(t => (
               <span key={t} className="px-2.5 py-1 bg-white/10 border border-white/5 rounded-full text-[10.5px] font-bold text-purple-100 flex items-center gap-1">
@@ -296,7 +296,7 @@ export default function SurvivorshipForm({
       <div className="space-y-4">
         <div className="flex justify-between items-center px-1">
           <div className="space-y-0.5">
-            <h3 className="font-extrabold text-gray-900 text-base sm:text-lg tracking-tight">Survivorship Screening Completion Timeline</h3>
+            <h3 className="font-extrabold text-gray-900 text-base sm:text-lg tracking-tight">Follow-Up Care Timeline</h3>
             <p className="text-xs text-gray-550 leading-relaxed font-medium">
               Based on the information you enter here; confirm intervals and records with your care team.
             </p>
@@ -315,7 +315,7 @@ export default function SurvivorshipForm({
         {survivorshipRecs.length === 0 ? (
           <div className="p-8 text-center bg-gray-50 border border-dashed border-gray-200 rounded-2xl text-gray-500 text-xs font-medium space-y-2">
             <AlertCircle className="w-8 h-8 text-purple-400 mx-auto" />
-            <p>Gathering guidelines program details. Fill out oncological parameters above to trigger active surveillance protocols.</p>
+            <p>No follow-up items are available from the information entered. Ask your oncology team for a written survivorship care plan and confirm what should be tracked here.</p>
           </div>
         ) : (
           <div className="relative border-l-2 border-dashed border-purple-200/60 ml-4 pl-6 pl-8 space-y-6 pt-3">
@@ -365,11 +365,11 @@ export default function SurvivorshipForm({
                         {isCompleted ? (
                           <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-100/50 px-2.5 py-1 rounded-full border border-emerald-200">
                             <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-                            <span>COMPLIANT</span>
+                            <span>RECORDED COMPLETE</span>
                           </span>
                         ) : (
                           <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-purple-850 bg-purple-50/80 px-2.5 py-1 rounded-full border border-purple-200/50">
-                            <span>DUE: {dueFormatted}</span>
+                          <span>DISCUSS BY: {dueFormatted}</span>
                           </span>
                         )}
                       </div>

@@ -1,3 +1,15 @@
+export type RiskAnswer = "yes" | "no" | "not_sure";
+
+export interface ScreeningRiskFactors {
+  familyCancerHistory: RiskAnswer;
+  knownHereditaryCancerRisk: RiskAnswer;
+  priorHighRiskFinding: RiskAnswer;
+  inflammatoryBowelDisease: RiskAnswer;
+  chestRadiationBefore30: RiskAnswer;
+  immunocompromisedOrHiv: RiskAnswer;
+  desExposure: RiskAnswer;
+}
+
 export interface UserProfile {
   userId: string;
   name: string;
@@ -12,6 +24,7 @@ export interface UserProfile {
   personalHistoryOfCancer: boolean;
   immunocompromised: boolean;
   cervixPresent: boolean;
+  screeningRiskFactors?: ScreeningRiskFactors;
   survivorshipPlan?: SurvivorshipPlan;
 }
 
@@ -23,6 +36,18 @@ export interface SurvivorshipPlan {
   lastFollowUp?: string;
 }
 
+export type ScreeningCareStatus =
+  | "discuss"
+  | "order_requested"
+  | "ordered"
+  | "scheduled"
+  | "completed"
+  | "result_received"
+  | "follow_up_needed"
+  | "resolved";
+
+export type ReminderPreference = "none" | "one_day" | "one_week" | "both";
+
 export interface ScreeningEvent {
   id: string;
   userId: string;
@@ -31,6 +56,13 @@ export interface ScreeningEvent {
   result: string;
   isAbnormal: boolean;
   status: "completed" | "scheduled" | "ordered";
+  careStatus?: ScreeningCareStatus;
+  appointmentDate?: string;
+  reminderPreference?: ReminderPreference;
+  preparationCompleted?: string[];
+  followUpNote?: string;
+  source?: "patient_entered" | "imported" | "clinician_confirmed";
+  updatedAt?: string;
 }
 
 export interface Recommendation {

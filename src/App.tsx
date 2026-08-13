@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { useAuth, AuthProvider } from './hooks/useAuth';
 import { db, auth, signInWithGoogle, OperationType, handleFirestoreError } from './lib/firebase';
-import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { UserProfile, ScreeningEvent, Recommendation } from './types';
 import AddScreeningModal from './components/AddScreeningModal';
 import {
@@ -30,6 +30,7 @@ import ConsentGate from './components/ConsentGate';
 import { POLICY_VERSIONS } from './lib/policyVersions';
 import { getRecommendations } from './lib/guidelineEngine';
 import { trackTelemetry } from './lib/telemetry';
+import { removeScreeningEvent, upsertScreeningEvent } from './lib/screeningEvents';
 
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const ProfileForm = lazy(() => import('./components/ProfileForm'));
@@ -46,6 +47,9 @@ function AppContent() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<ScreeningEvent | null>(null);
+  const [suggestedScreeningType, setSuggestedScreeningType] = useState<ScreeningEvent['type'] | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [consentChecked, setConsentChecked] = useState(false);
   const [hasCurrentConsent, setHasCurrentConsent] = useState(false);
   const hasTrackedAppOpen = useRef(false);
@@ -156,6 +160,7 @@ function AppContent() {
   const handleSaveProfile = async (data: UserProfile) => {
     if (!user) return;
     setLoading(true);
+    setActionError(null);
     try {
       const profileWithId = { ...data, userId: user.uid };
       await setDoc(doc(db, 'user_profiles', user.uid), profileWithId);
@@ -171,7 +176,11 @@ function AppContent() {
         setActiveTab('dashboard');
       }
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, `user_profiles/${user.uid}`);
+      try {
+        handleFirestoreError(error, OperationType.WRITE, `user_profiles/${user.uid}`);
+      } catch (friendlyError) {
+        setActionError(friendlyError instanceof Error ? friendlyError.message : 'We could not save your profile. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -180,30 +189,97 @@ function AppContent() {
   const handleSaveEvent = async (eventData: Omit<ScreeningEvent, 'id' | 'userId'>) => {
     if (!user) return;
     setLoading(true);
-    let eventId = '';
+    setActionError(null);
+    let eventId = editingEvent?.id || '';
     try {
-      eventId = doc(collection(db, 'screening_events')).id;
+      if (!eventId) {
+        eventId = doc(collection(db, 'screening_events')).id;
+      }
       const newEvent: ScreeningEvent = {
+        ...editingEvent,
         ...eventData,
         id: eventId,
-        userId: user.uid
+        userId: user.uid,
+        source: editingEvent?.source ?? 'patient_entered',
+        updatedAt: new Date().toISOString(),
       };
+      if (newEvent.careStatus !== 'scheduled') {
+        delete newEvent.appointmentDate;
+      }
+      if (!eventData.followUpNote) {
+        delete newEvent.followUpNote;
+      }
       await setDoc(doc(db, 'screening_events', eventId), newEvent);
       
-      const updatedEvents = [...events, newEvent];
+      const updatedEvents = upsertScreeningEvent(events, newEvent);
       setEvents(updatedEvents);
       
       if (profile) {
         await fetchRecommendations(profile, updatedEvents);
       }
       trackTelemetry('screening_saved', {
-        source: 'add_screening_modal',
+        source: editingEvent ? 'edit_screening_modal' : 'add_screening_modal',
       });
       setIsModalOpen(false);
+      setEditingEvent(null);
+      setSuggestedScreeningType(null);
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, `screening_events/${eventId}`);
+      try {
+        handleFirestoreError(error, OperationType.WRITE, `screening_events/${eventId}`);
+      } catch (friendlyError) {
+        setActionError(friendlyError instanceof Error ? friendlyError.message : 'We could not save this screening record. Please try again.');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteEvent = async (event: ScreeningEvent) => {
+    if (!user) return;
+    const confirmed = window.confirm(`Delete the ${event.type} record from ${event.date}? This cannot be undone.`);
+    if (!confirmed) return;
+
+    setLoading(true);
+    setActionError(null);
+    try {
+      await deleteDoc(doc(db, 'screening_events', event.id));
+      const updatedEvents = removeScreeningEvent(events, event.id);
+      setEvents(updatedEvents);
+      if (profile) {
+        await fetchRecommendations(profile, updatedEvents);
+      }
+    } catch (error) {
+      try {
+        handleFirestoreError(error, OperationType.DELETE, `screening_events/${event.id}`);
+      } catch (friendlyError) {
+        setActionError(friendlyError instanceof Error ? friendlyError.message : 'We could not delete this screening record. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateEvent = async (event: ScreeningEvent, patch: Partial<ScreeningEvent>) => {
+    if (!user) return;
+    setActionError(null);
+    const updatedEvent: ScreeningEvent = {
+      ...event,
+      ...patch,
+      userId: user.uid,
+      updatedAt: new Date().toISOString(),
+    };
+
+    try {
+      await setDoc(doc(db, 'screening_events', event.id), updatedEvent);
+      const updatedEvents = upsertScreeningEvent(events, updatedEvent);
+      setEvents(updatedEvents);
+      if (profile) await fetchRecommendations(profile, updatedEvents);
+    } catch (error) {
+      try {
+        handleFirestoreError(error, OperationType.UPDATE, `screening_events/${event.id}`);
+      } catch (friendlyError) {
+        setActionError(friendlyError instanceof Error ? friendlyError.message : 'We could not update this screening step. Please try again.');
+      }
     }
   };
 
@@ -518,6 +594,14 @@ function AppContent() {
       <div className="border-b border-amber-100 bg-amber-50 px-4 py-2 text-center text-[11px] font-medium text-amber-950">
         Health education only. Not medical advice, diagnosis, treatment, or emergency care. Verify recommendations with your clinician.
       </div>
+      {actionError && (
+        <div role="alert" className="border-b border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-800">
+          {actionError}
+          <button type="button" onClick={() => setActionError(null)} className="ml-3 font-bold underline underline-offset-2">
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="app-main max-w-2xl mx-auto p-4 pt-8">
@@ -533,6 +617,20 @@ function AppContent() {
                      trackTelemetry('screening_modal_opened', {
                        source: 'dashboard_timeline_empty_state',
                      });
+                     setEditingEvent(null);
+                     setSuggestedScreeningType(null);
+                     setIsModalOpen(true);
+                   }}
+                   onEditEvent={(event) => {
+                     setEditingEvent(event);
+                     setSuggestedScreeningType(null);
+                     setIsModalOpen(true);
+                   }}
+                   onDeleteEvent={handleDeleteEvent}
+                   onUpdateEvent={handleUpdateEvent}
+                   onStartRecommendation={(recommendation, selectedType) => {
+                     setEditingEvent(null);
+                     setSuggestedScreeningType(selectedType ?? screeningTypeForRecommendation(recommendation));
                      setIsModalOpen(true);
                    }}
                  />
@@ -563,6 +661,8 @@ function AppContent() {
                     trackTelemetry('screening_modal_opened', {
                       source: 'survivorship_form',
                     });
+                    setEditingEvent(null);
+                    setSuggestedScreeningType(null);
                     setIsModalOpen(true);
                   }}
                 />
@@ -597,6 +697,8 @@ function AppContent() {
             trackTelemetry('screening_modal_opened', {
               source: 'floating_action_button',
             });
+            setEditingEvent(null);
+            setSuggestedScreeningType(null);
             setIsModalOpen(true);
           }}
           aria-label="Add screening record"
@@ -608,7 +710,13 @@ function AppContent() {
 
       <AddScreeningModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        initialEvent={editingEvent}
+        suggestedType={suggestedScreeningType}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingEvent(null);
+          setSuggestedScreeningType(null);
+        }}
         onSave={handleSaveEvent}
         loading={loading}
       />
@@ -618,7 +726,7 @@ function AppContent() {
         <div className="max-w-2xl mx-auto flex items-center justify-around">
           <NavButton smokeId="nav-plan" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} icon={LayoutDashboard} label="Plan" />
           <NavButton smokeId="nav-healthy" active={activeTab === 'lifestyle'} onClick={() => setActiveTab('lifestyle')} icon={Apple} label="Healthy" />
-          <NavButton smokeId="nav-survivor" active={activeTab === 'survivorship'} onClick={() => setActiveTab('survivorship')} icon={Shield} label="Survivor" />
+          <NavButton smokeId="nav-survivor" active={activeTab === 'survivorship'} onClick={() => setActiveTab('survivorship')} icon={Shield} label="Follow-up" />
           <NavButton smokeId="nav-profile" active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} icon={UserIcon} label="Profile" />
           <NavButton smokeId="nav-share" active={activeTab === 'share'} onClick={() => setActiveTab('share')} icon={Share2} label="Share" />
         </div>
@@ -630,6 +738,20 @@ function AppContent() {
       </div>
     </div>
   );
+}
+
+function screeningTypeForRecommendation(recommendation: Recommendation): ScreeningEvent['type'] {
+  const text = `${recommendation.cancer_type} ${recommendation.screening_modality}`.toLowerCase();
+  if (text.includes('breast') || text.includes('mammograph')) return 'mammogram';
+  if (text.includes('cervical') || text.includes('pap')) return 'pap';
+  if (text.includes('hpv')) return 'hpv';
+  if (text.includes('lung') || text.includes('ldct')) return 'ldct';
+  if (text.includes('prostate') || text.includes('psa')) return 'psa';
+  if (text.includes('fit')) return 'fit';
+  if (text.includes('stool')) return 'cologuard';
+  if (text.includes('colon')) return 'colonoscopy';
+  if (text.includes('marker') || text.includes('blood')) return 'marker_check';
+  return 'surveillance_imaging';
 }
 
 function TabLoadingState() {

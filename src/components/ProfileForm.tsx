@@ -1,7 +1,69 @@
 import React, { useState } from 'react';
-import { UserProfile } from '../types';
+import { RiskAnswer, ScreeningRiskFactors, UserProfile } from '../types';
 import { Save, User, Activity, AlertTriangle, Beaker, ChevronDown, ChevronUp, Settings2, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+
+const UNKNOWN_RISK_FACTORS: ScreeningRiskFactors = {
+  familyCancerHistory: 'not_sure',
+  knownHereditaryCancerRisk: 'not_sure',
+  priorHighRiskFinding: 'not_sure',
+  inflammatoryBowelDisease: 'not_sure',
+  chestRadiationBefore30: 'not_sure',
+  immunocompromisedOrHiv: 'not_sure',
+  desExposure: 'not_sure',
+};
+
+const NO_KNOWN_RISK_FACTORS: ScreeningRiskFactors = {
+  familyCancerHistory: 'no',
+  knownHereditaryCancerRisk: 'no',
+  priorHighRiskFinding: 'no',
+  inflammatoryBowelDisease: 'no',
+  chestRadiationBefore30: 'no',
+  immunocompromisedOrHiv: 'no',
+  desExposure: 'no',
+};
+
+const RISK_QUESTIONS: Array<{
+  key: keyof ScreeningRiskFactors;
+  label: string;
+  help: string;
+}> = [
+  {
+    key: 'familyCancerHistory',
+    label: 'Close family member with cancer',
+    help: 'Parent, sibling, or child—especially cancer at a young age or several relatives with related cancers.',
+  },
+  {
+    key: 'knownHereditaryCancerRisk',
+    label: 'Known inherited cancer risk',
+    help: 'For example BRCA1/2, Lynch syndrome, familial polyposis, or another result discussed with a genetics professional.',
+  },
+  {
+    key: 'priorHighRiskFinding',
+    label: 'Prior high-risk or precancerous finding',
+    help: 'For example an advanced polyp, CIN 2/3, atypical breast lesion, or another finding requiring special follow-up.',
+  },
+  {
+    key: 'inflammatoryBowelDisease',
+    label: 'Ulcerative colitis or Crohn’s colitis',
+    help: 'Inflammatory bowel disease involving the colon can change colorectal surveillance.',
+  },
+  {
+    key: 'chestRadiationBefore30',
+    label: 'High-dose chest radiation before age 30',
+    help: 'Radiation treatment to the chest at a young age can change breast screening.',
+  },
+  {
+    key: 'immunocompromisedOrHiv',
+    label: 'HIV or a weakened immune system',
+    help: 'This can change cervical screening and other follow-up recommendations.',
+  },
+  {
+    key: 'desExposure',
+    label: 'Possible DES exposure before birth',
+    help: 'Choose “Not sure” if you do not know whether your mother took DES during pregnancy.',
+  },
+];
 
 const VALIDATION_PRESETS: { name: string; description: string; profile: UserProfile }[] = [
   {
@@ -140,21 +202,30 @@ interface ProfileFormProps {
 
 export default function ProfileForm({ initialData, onSave, loading }: ProfileFormProps) {
   const enableClinicalSimulator = import.meta.env.VITE_ENABLE_CLINICAL_SIMULATOR === 'true';
-  const [formData, setFormData] = useState<Partial<UserProfile>>(initialData || {
+  const [formData, setFormData] = useState<Partial<UserProfile>>(() => ({
     sexAssignedAtBirth: 'female',
     smokingHistory: { status: 'never', packYears: 0 },
     personalHistoryOfCancer: false,
     immunocompromised: false,
     cervixPresent: true,
-  });
+    ...initialData,
+    screeningRiskFactors: initialData?.screeningRiskFactors ?? {
+      ...UNKNOWN_RISK_FACTORS,
+      immunocompromisedOrHiv: initialData?.immunocompromised ? 'yes' : 'not_sure',
+    },
+  }));
 
   const [showPresets, setShowPresets] = useState(false);
   const [appliedPresetName, setAppliedPresetName] = useState<string | null>(null);
 
   const applyPreset = (preset: typeof VALIDATION_PRESETS[0]) => {
-    setFormData(preset.profile);
+    const simulatedProfile = {
+      ...preset.profile,
+      screeningRiskFactors: NO_KNOWN_RISK_FACTORS,
+    };
+    setFormData(simulatedProfile);
     setAppliedPresetName(preset.name);
-    onSave(preset.profile);
+    onSave(simulatedProfile);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -166,6 +237,19 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
     setFormData(prev => ({
       ...prev,
       smokingHistory: { ...prev.smokingHistory!, [field]: value }
+    }));
+  };
+
+  const updateRiskFactor = (field: keyof ScreeningRiskFactors, value: RiskAnswer) => {
+    setFormData(prev => ({
+      ...prev,
+      immunocompromised: field === 'immunocompromisedOrHiv'
+        ? value === 'yes'
+        : prev.immunocompromised,
+      screeningRiskFactors: {
+        ...(prev.screeningRiskFactors ?? UNKNOWN_RISK_FACTORS),
+        [field]: value,
+      },
     }));
   };
 
@@ -372,6 +456,39 @@ export default function ProfileForm({ initialData, onSave, loading }: ProfileFor
               These factors help tailor guideline-inspired reminders. Confirm all screening decisions with your clinician.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="space-y-4 border-t border-gray-100 pt-6">
+        <div className="flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4">
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
+          <div>
+            <h3 className="font-bold text-blue-950">Risk factors that may change screening</h3>
+            <p className="mt-1 text-sm leading-relaxed text-blue-900">
+              These answers help us avoid applying an average-risk schedule when you may need a different plan. “Not sure” is a safe answer—we will ask you to review it with a clinician.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {RISK_QUESTIONS.map(question => (
+            <div key={question.key} className="rounded-2xl border border-gray-200 p-4">
+              <label htmlFor={`risk-${question.key}`} className="block text-sm font-semibold text-gray-900">
+                {question.label}
+              </label>
+              <p className="mt-1 text-xs leading-relaxed text-gray-600">{question.help}</p>
+              <select
+                id={`risk-${question.key}`}
+                value={formData.screeningRiskFactors?.[question.key] ?? 'not_sure'}
+                onChange={event => updateRiskFactor(question.key, event.target.value as RiskAnswer)}
+                className="mt-3 w-full rounded-xl border border-gray-200 bg-white p-3 text-sm outline-none transition-all focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="not_sure">Not sure</option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+          ))}
         </div>
       </section>
 

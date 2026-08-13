@@ -1,4 +1,4 @@
-import { UserProfile, ScreeningEvent, Recommendation } from '../types';
+import { UserProfile, ScreeningEvent, Recommendation, ScreeningRiskFactors } from '../types';
 
 type DraftRecommendation = Omit<Recommendation, 'source_url' | 'clinical_review_status' | 'clinical_review_note'>;
 
@@ -6,10 +6,37 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
   const recommendations: DraftRecommendation[] = [];
   const age = calculateAge(profile.dob);
   const today = startOfToday();
+  const colorectalRiskReview = getRiskReview(profile, [
+    'familyCancerHistory',
+    'knownHereditaryCancerRisk',
+    'priorHighRiskFinding',
+    'inflammatoryBowelDisease',
+  ]);
+  const breastRiskReview = getRiskReview(profile, [
+    'familyCancerHistory',
+    'knownHereditaryCancerRisk',
+    'priorHighRiskFinding',
+    'chestRadiationBefore30',
+  ]);
+  const cervicalRiskReview = getRiskReview(profile, [
+    'priorHighRiskFinding',
+    'immunocompromisedOrHiv',
+    'desExposure',
+  ]);
 
   // 1. Colorectal Cancer (USPSTF 2021)
   // Age 45-75
   if (age >= 45 && age <= 75) {
+    if (colorectalRiskReview.length > 0) {
+      recommendations.push(needsRiskReviewRecommendation(
+        'crc-rec',
+        'colorectal',
+        'Colorectal screening risk review',
+        colorectalRiskReview,
+        'USPSTF',
+        '2021',
+      ));
+    } else {
     const lastColonoscopy = getLastCompleted(history, 'colonoscopy');
     const lastFit = getLastCompleted(history, 'fit');
     const colorectalFollowUp = getColorectalFollowUp(lastColonoscopy, lastFit);
@@ -44,11 +71,22 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
       confidence: "high",
       requires_clinician_review: requiresClinicianReview
     });
+    }
   }
 
   // 2. Breast Cancer (USPSTF 2024 Updated)
   // Age 40-74, biennial mammography
   if (profile.sexAssignedAtBirth === 'female' && age >= 40 && age <= 74) {
+    if (breastRiskReview.length > 0) {
+      recommendations.push(needsRiskReviewRecommendation(
+        'breast-rec',
+        'breast',
+        'Breast screening risk review',
+        breastRiskReview,
+        'USPSTF',
+        '2024',
+      ));
+    } else {
     const lastMammogram = getLastCompleted(history, 'mammogram');
     const mammogramFollowUp = getMammogramFollowUp(lastMammogram);
     const dueDate = mammogramFollowUp ? mammogramFollowUp.followUpDate : (lastMammogram ? addYears(lastMammogram.date, 2) : formatDate(today));
@@ -66,11 +104,22 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
       confidence: "high",
       requires_clinician_review: mammogramFollowUp?.requiresClinicianReview ?? false
     });
+    }
   }
 
   // 3. Cervical Cancer (USPSTF 2018)
   // Age 21-65
   if (profile.sexAssignedAtBirth === 'female' && profile.cervixPresent && age >= 21 && age <= 65) {
+    if (cervicalRiskReview.length > 0) {
+      recommendations.push(needsRiskReviewRecommendation(
+        'cervical-rec',
+        'cervical',
+        'Cervical screening risk review',
+        cervicalRiskReview,
+        'USPSTF',
+        '2018',
+      ));
+    } else {
     const lastPap = getLastCompleted(history, 'pap');
     const lastHpv = getLastCompleted(history, 'hpv');
     const lastCervical = latestEvent([lastPap, lastHpv]);
@@ -90,6 +139,7 @@ export function getRecommendations(profile: UserProfile, history: ScreeningEvent
       confidence: "high",
       requires_clinician_review: profile.personalHistoryOfCancer || cervicalFollowUp.requiresClinicianReview
     });
+    }
   }
 
   // 3b. Prostate Cancer (USPSTF 2018)
@@ -733,6 +783,17 @@ function attachGuidelineTrace(recommendation: DraftRecommendation): Recommendati
 
 function getGuidelineTrace(recommendation: DraftRecommendation): Pick<Recommendation, 'source_url' | 'clinical_review_status' | 'clinical_review_note'> {
   const reviewNote = 'Content reviewed for medical accuracy by a physician on behalf of White Cloud Medical, LLC on 2026-06-28. Patient-specific clinician review remains required.';
+  const needsReviewNote = 'This recommendation is a general guideline abstraction and has not been confirmed for this patient. Review the source, risk factors, and follow-up plan with a qualified clinician.';
+
+  if (recommendation.status === 'needs_review' || recommendation.source.startsWith('NCCN')) {
+    return {
+      source_url: recommendation.source.startsWith('NCCN')
+        ? guidelineSourceUrls.nccnGuidelines
+        : uspstfSourceUrl(recommendation.id),
+      clinical_review_status: 'needs_clinical_review',
+      clinical_review_note: needsReviewNote,
+    };
+  }
 
   if (recommendation.source === 'AICR') {
     return {
@@ -786,9 +847,63 @@ function getGuidelineTrace(recommendation: DraftRecommendation): Pick<Recommenda
 
   return {
     source_url: guidelineSourceUrls.nccnGuidelines,
-    clinical_review_status: 'physician_reviewed',
-    clinical_review_note: reviewNote,
+    clinical_review_status: 'needs_clinical_review',
+    clinical_review_note: needsReviewNote,
   };
+}
+
+const riskFactorLabels: Record<keyof ScreeningRiskFactors, string> = {
+  familyCancerHistory: 'family cancer history',
+  knownHereditaryCancerRisk: 'a known or possible inherited cancer risk',
+  priorHighRiskFinding: 'a prior high-risk or precancerous finding',
+  inflammatoryBowelDisease: 'inflammatory bowel disease involving the colon',
+  chestRadiationBefore30: 'high-dose chest radiation at a young age',
+  immunocompromisedOrHiv: 'HIV or immune compromise',
+  desExposure: 'possible DES exposure before birth',
+};
+
+function getRiskReview(profile: UserProfile, fields: Array<keyof ScreeningRiskFactors>): string[] {
+  const factors = profile.screeningRiskFactors;
+  if (!factors) {
+    return ['the screening risk review has not been completed'];
+  }
+
+  return fields.flatMap(field => {
+    const answer = factors[field];
+    if (answer === 'yes') return [riskFactorLabels[field]];
+    if (answer === 'not_sure') return [`uncertainty about ${riskFactorLabels[field]}`];
+    return [];
+  });
+}
+
+function needsRiskReviewRecommendation(
+  id: string,
+  cancerType: string,
+  screeningModality: string,
+  reviewReasons: string[],
+  source: string,
+  sourceVersion: string,
+): DraftRecommendation {
+  return {
+    id,
+    cancer_type: cancerType,
+    status: 'needs_review',
+    recommended_action: 'Review your screening plan with a clinician',
+    screening_modality: screeningModality,
+    due_date: 'Pending clinician review',
+    reason: `An average-risk schedule may not fit because your profile includes ${formatReasonList(reviewReasons)}. Confirm the appropriate test and timing before relying on a routine due date.`,
+    source,
+    source_version: sourceVersion,
+    recommendation_grade: 'Individualized',
+    confidence: 'low',
+    requires_clinician_review: true,
+  };
+}
+
+function formatReasonList(reasons: string[]): string {
+  if (reasons.length === 1) return reasons[0];
+  if (reasons.length === 2) return `${reasons[0]} and ${reasons[1]}`;
+  return `${reasons.slice(0, -1).join(', ')}, and ${reasons.at(-1)}`;
 }
 
 function uspstfSourceUrl(id: string): string {
@@ -802,7 +917,12 @@ function uspstfSourceUrl(id: string): string {
 
 function getLastCompleted(history: ScreeningEvent[], type: ScreeningEvent['type']): ScreeningEvent | undefined {
   return history
-    .filter(event => matchesScreeningType(event.type, type) && event.status === 'completed' && isValidDate(event.date))
+    .filter(event => (
+      matchesScreeningType(event.type, type) &&
+      event.status === 'completed' &&
+      event.careStatus !== 'completed' &&
+      isValidDate(event.date)
+    ))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
 }
 
